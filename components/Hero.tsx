@@ -25,7 +25,13 @@ const coderData = {
   ],
 };
 
-const GlitchText = ({ children, className = "" }) => {
+const GlitchText = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   const [glitch, setGlitch] = useState(false);
 
   useEffect(() => {
