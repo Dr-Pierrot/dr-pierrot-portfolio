@@ -1,390 +1,285 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const coderData = {
   name: "DR-PIERROT",
-  role: "Frontend Developer",
+  alias: "Jaycee Capulong",
+  role: "Fullstack Developer",
   seniority: "Mid-Level",
   location: "Philippines",
-  skills: [
-    "React",
-    "Next.js",
-    "JavaScript",
-    "TypeScript",
-    "TailwindCSS",
-    "CSS",
-    "Figma",
-    "GitHub",
-    "HTML",
-    "Astro",
-    "Node.js",
-    "Express",
-    "MongoDB",
-    "Firebase",
-    "Git",
-  ],
+  learning: ["Vue.js", "Svelte"],
+  skills: {
+    frontend: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "JavaScript",
+      "TailwindCSS",
+      "CSS",
+      "HTML",
+      "Astro",
+    ],
+    backend: ["Laravel", "Node.js", "Express", "PHP"],
+    database: ["MySQL", "MongoDB", "Firebase"],
+    tools: ["Git", "GitHub", "Figma", "Vite", "Swagger"],
+  },
 };
 
-const GlitchText = ({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  const [glitch, setGlitch] = useState(false);
-
+/* ── Hellfire flicker text ── */
+const FlameText = ({ children }: { children: React.ReactNode }) => {
+  const [flicker, setFlicker] = useState(false);
   useEffect(() => {
-    const interval = setInterval(
+    const id = setInterval(
       () => {
-        setGlitch(true);
-        setTimeout(() => setGlitch(false), 200);
+        setFlicker(true);
+        setTimeout(() => setFlicker(false), 120 + Math.random() * 80);
       },
-      3000 + Math.random() * 2000,
+      2500 + Math.random() * 2000,
     );
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   }, []);
-
   return (
     <span
-      className={className}
       style={{
         position: "relative",
         display: "inline-block",
-        animation: glitch ? "glitch 0.2s steps(2) forwards" : "none",
+        filter: flicker
+          ? "brightness(1.6) drop-shadow(0 0 12px #ff3300)"
+          : "drop-shadow(0 0 6px #8b0000)",
+        transition: "filter 0.05s",
       }}
     >
       {children}
-      {glitch && (
-        <>
-          <span
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "2px",
-              color: "#ff0000",
-              opacity: 0.8,
-              clipPath: "polygon(0 20%, 100% 20%, 100% 40%, 0 40%)",
-            }}
-            aria-hidden
-          >
-            {children}
-          </span>
-          <span
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "-2px",
-              color: "#ff6666",
-              opacity: 0.6,
-              clipPath: "polygon(0 60%, 100% 60%, 100% 80%, 0 80%)",
-            }}
-            aria-hidden
-          >
-            {children}
-          </span>
-        </>
-      )}
     </span>
   );
 };
 
-const CoderProfileCard = () => {
-  const lines = [
-    <span key="0">
-      <span style={{ color: "#cc0000" }}>const</span>{" "}
-      <span style={{ color: "#ff6666" }}>coder</span>{" "}
-      <span style={{ color: "#cc0000" }}>=</span>{" "}
-      <span style={{ color: "#553333" }}>{"{"}</span>
-    </span>,
-    <span key="1" style={{ paddingLeft: "1.5em" }}>
-      <span style={{ color: "#dddddd" }}>name:</span>{" "}
-      <span style={{ color: "#553333" }}>&apos;</span>
-      <span style={{ color: "#ff3333" }}>{coderData.name}</span>
-      <span style={{ color: "#553333" }}>&apos;,</span>
-    </span>,
-    <span key="2" style={{ paddingLeft: "1.5em" }}>
-      <span style={{ color: "#dddddd" }}>role:</span>{" "}
-      <span style={{ color: "#553333" }}>&apos;</span>
-      <span style={{ color: "#ff3333" }}>{coderData.role}</span>
-      <span style={{ color: "#553333" }}>&apos;,</span>
-    </span>,
-    <span key="3" style={{ paddingLeft: "1.5em" }}>
-      <span style={{ color: "#dddddd" }}>seniority:</span>{" "}
-      <span style={{ color: "#553333" }}>&apos;</span>
-      <span style={{ color: "#ff3333" }}>{coderData.seniority}</span>
-      <span style={{ color: "#553333" }}>&apos;,</span>
-    </span>,
-    <span key="4" style={{ paddingLeft: "1.5em" }}>
-      <span style={{ color: "#dddddd" }}>location:</span>{" "}
-      <span style={{ color: "#553333" }}>&apos;</span>
-      <span style={{ color: "#ff3333" }}>{coderData.location}</span>
-      <span style={{ color: "#553333" }}>&apos;,</span>
-    </span>,
-    <span key="5" style={{ paddingLeft: "1.5em" }}>
-      <span style={{ color: "#dddddd" }}>skills:</span>{" "}
-      <span style={{ color: "#553333" }}>{"["}</span>
-    </span>,
-    <span
-      key="6"
-      style={{
-        paddingLeft: "3em",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "2px",
-      }}
-    >
-      {coderData.skills.map((skill, i) => (
-        <span key={skill}>
-          <span style={{ color: "#553333" }}>&apos;</span>
-          <span style={{ color: "#ff8888" }}>{skill}</span>
-          <span style={{ color: "#553333" }}>
-            &apos;{i < coderData.skills.length - 1 ? ", " : ""}
-          </span>
-        </span>
-      ))}
-    </span>,
-    <span key="7" style={{ paddingLeft: "1.5em" }}>
-      <span style={{ color: "#553333" }}>{"],"}</span>
-    </span>,
-    <span key="8">
-      <span style={{ color: "#553333" }}>{"  };"}</span>
-    </span>,
-  ];
-
-  return (
+/* ── Skill Category Block ── */
+const SkillBlock = ({
+  label,
+  icon,
+  skills,
+  delay,
+}: {
+  label: string;
+  icon: string;
+  skills: string[];
+  delay: number;
+}) => (
+  <div
+    style={{
+      background: "rgba(10,0,0,0.6)",
+      border: "1px solid rgba(100,0,0,0.35)",
+      borderRadius: "3px",
+      padding: "14px 16px",
+      position: "relative",
+      overflow: "hidden",
+      animation: `fade-in-up 0.7s ease-out ${delay}s both`,
+    }}
+  >
     <div
       style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "1px",
         background:
-          "linear-gradient(135deg, #0d0000 0%, #110000 50%, #0a0000 100%)",
-        border: "1px solid rgba(180,0,0,0.45)",
-        borderRadius: "8px",
-        overflow: "hidden",
-        position: "relative",
-        boxShadow:
-          "0 0 40px rgba(150,0,0,0.15), inset 0 0 40px rgba(100,0,0,0.05)",
+          "linear-gradient(90deg,transparent,rgba(180,0,0,0.6),transparent)",
+      }}
+    />
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        marginBottom: "10px",
       }}
     >
-      {/* Top gradient line */}
-      <div
+      <span style={{ fontSize: "12px" }}>{icon}</span>
+      <span
         style={{
-          height: "2px",
-          background:
-            "linear-gradient(90deg, transparent, #cc0000, #660000, transparent)",
-        }}
-      />
-
-      {/* Window chrome */}
-      <div
-        style={{
-          padding: "12px 20px",
-          background: "rgba(0,0,0,0.7)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderBottom: "1px solid rgba(160,0,0,0.3)",
+          fontFamily: "'Cinzel',serif",
+          fontSize: "9px",
+          color: "#5a1515",
+          letterSpacing: "2px",
+          textTransform: "uppercase" as const,
         }}
       >
-        <div style={{ display: "flex", gap: "7px" }}>
-          {["#cc2200", "#662200", "#440000"].map((c, i) => (
-            <div
-              key={i}
-              style={{
-                width: 11,
-                height: 11,
-                borderRadius: "50%",
-                background: c,
-              }}
-            />
-          ))}
-        </div>
+        {label}
+      </span>
+    </div>
+    <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "6px" }}>
+      {skills.map((s) => (
         <span
+          key={s}
           style={{
-            fontSize: 11,
-            color: "#660000",
-            letterSpacing: "2px",
-            fontFamily: "'Courier New', monospace",
+            padding: "3px 10px",
+            background: "rgba(60,0,0,0.3)",
+            border: "1px solid rgba(100,0,0,0.25)",
+            borderRadius: "2px",
+            color: "#c04040",
+            fontSize: "11px",
+            fontFamily: "'Courier New',monospace",
+            letterSpacing: "0.5px",
+            transition: "all 0.2s",
+            cursor: "default",
+          }}
+          onMouseEnter={(e) => {
+            const el = e.target as HTMLElement;
+            el.style.background = "rgba(100,0,0,0.35)";
+            el.style.color = "#ff5533";
+            el.style.borderColor = "rgba(180,0,0,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            const el = e.target as HTMLElement;
+            el.style.background = "rgba(60,0,0,0.3)";
+            el.style.color = "#c04040";
+            el.style.borderColor = "rgba(100,0,0,0.25)";
           }}
         >
-          coder.js
+          {s}
         </span>
-      </div>
-
-      {/* Code area */}
-      <div style={{ padding: "20px 24px", position: "relative" }}>
-        {/* Scanline overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(180,0,0,0.04) 22px, rgba(180,0,0,0.04) 23px)",
-            pointerEvents: "none",
-          }}
-        />
-        <div style={{ display: "flex", position: "relative", zIndex: 1 }}>
-          {/* Line numbers */}
-          <div
-            style={{
-              paddingRight: "16px",
-              color: "#440000",
-              fontSize: "12px",
-              lineHeight: "1.85",
-              textAlign: "right",
-              minWidth: "24px",
-              fontFamily: "'Courier New', monospace",
-              userSelect: "none",
-            }}
-          >
-            {lines.map((_, i) => (
-              <div key={i}>{i + 1}</div>
-            ))}
-          </div>
-          {/* Code */}
-          <code
-            style={{
-              fontFamily: "'Courier New', monospace",
-              fontSize: "12px",
-              lineHeight: "1.85",
-              width: "100%",
-            }}
-          >
-            {lines.map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
-          </code>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div
-        style={{
-          padding: "10px 20px",
-          borderTop: "1px solid rgba(160,0,0,0.2)",
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "10px",
-          color: "#440000",
-          letterSpacing: "1px",
-          fontFamily: "'Courier New', monospace",
-        }}
-      >
-        <span>UTF-8</span>
-        <span>JavaScript</span>
-        <span>Ln 12, Col 2</span>
-      </div>
+      ))}
     </div>
-  );
-};
+  </div>
+);
 
+/* ── Floating ember ── */
+const Ember = ({ style }: { style: React.CSSProperties }) => (
+  <div
+    style={{
+      position: "absolute",
+      width: "2px",
+      height: "2px",
+      borderRadius: "50%",
+      background: "radial-gradient(circle,#ff6600 0%,#ff2200 100%)",
+      pointerEvents: "none",
+      ...style,
+    }}
+  />
+);
+
+/* ── Main Hero ── */
 const Portfolio = () => {
   const [mounted, setMounted] = useState(false);
+  const [embers, setEmbers] = useState<
+    { id: number; style: React.CSSProperties }[]
+  >([]);
 
   useEffect(() => {
     setMounted(true);
+    const spawnEmber = () => {
+      const id = Date.now() + Math.random();
+      const drift = (Math.random() - 0.5) * 120;
+      setEmbers((prev) => [
+        ...prev.slice(-25),
+        {
+          id,
+          style: {
+            left: `${20 + Math.random() * 60}%`,
+            bottom: "0",
+            animation: `rise-ember ${2.5 + Math.random() * 2}s ease-out forwards`,
+            "--drift": `${drift}px`,
+          } as React.CSSProperties,
+        },
+      ]);
+    };
+    const iv = setInterval(spawnEmber, 400);
+    return () => clearInterval(iv);
   }, []);
 
-  const tags = ["MERN Stack", "Clean Code", "Innovation"];
+  const tags = ["Fullstack Dev", "API Architect", "UI Ritualist"];
+  const totalSkills = Object.values(coderData.skills).flat().length;
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap');
 
-        @keyframes glitch {
-          0% { transform: translate(0); }
-          20% { transform: translate(-2px, 1px); }
-          40% { transform: translate(2px, -1px); }
-          60% { transform: translate(-1px, 2px); }
-          80% { transform: translate(1px, -2px); }
-          100% { transform: translate(0); }
+        @keyframes rise-ember {
+          0%   { transform:translate(0,0);opacity:0; }
+          15%  { opacity:1; }
+          85%  { opacity:0.5; }
+          100% { transform:translate(var(--drift,0px),-300px);opacity:0; }
         }
-
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(28px); }
-          to { opacity: 1; transform: translateY(0); }
+        @keyframes fade-in-up {
+          from { opacity:0;transform:translateY(28px); }
+          to   { opacity:1;transform:translateY(0); }
         }
-
-        @keyframes pulse-dot {
-          0%, 100% { opacity: 1; box-shadow: 0 0 6px #ff0000; }
-          50% { opacity: 0.5; box-shadow: 0 0 2px #ff0000; }
+        @keyframes pulse-sigil {
+          0%,100% { opacity:0.12;transform:scale(1) rotate(0deg); }
+          50%      { opacity:0.2;transform:scale(1.04) rotate(180deg); }
         }
-
-        @keyframes border-flow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        @keyframes flicker-bg {
+          0%,100% { opacity:1; }
+          93% { opacity:0.93; } 94% { opacity:1; }
+          96% { opacity:0.96; } 97% { opacity:1; }
         }
-
-        .drp-tag {
-          padding: 6px 14px;
-          background: rgba(180,0,0,0.08);
-          border: 1px solid rgba(200,0,0,0.3);
-          border-radius: 4px;
-          color: #ff4444;
-          font-size: 11px;
-          letter-spacing: 1.5px;
-          font-family: 'Share Tech Mono', monospace;
-          transition: all 0.2s;
-          cursor: default;
+        @keyframes glow-pulse {
+          0%,100% { box-shadow:0 0 20px rgba(139,0,0,0.4),inset 0 0 10px rgba(60,0,0,0.2); }
+          50%       { box-shadow:0 0 40px rgba(180,0,0,0.7),inset 0 0 20px rgba(80,0,0,0.3); }
         }
-        .drp-tag:hover {
-          background: rgba(180,0,0,0.18);
-          border-color: rgba(200,0,0,0.6);
-          box-shadow: 0 0 10px rgba(200,0,0,0.15);
+        @keyframes blood-drip {
+          0%   { transform:scaleY(0);opacity:0; }
+          40%  { opacity:1; }
+          100% { transform:scaleY(1);opacity:0.8; }
+        }
+        @keyframes learning-pulse {
+          0%,100% { opacity:0.6; }
+          50% { opacity:1; }
+        }
+        @keyframes pulse-blood {
+          0%,100% { box-shadow:0 0 0 0 rgba(180,0,0,0.6);opacity:1; }
+          50%       { box-shadow:0 0 0 6px rgba(180,0,0,0);opacity:0.7; }
         }
 
-        .drp-btn-primary {
-          padding: 11px 28px;
-          background: #990000;
-          color: #fff;
-          border: 1px solid #cc0000;
-          border-radius: 4px;
-          font-family: 'Share Tech Mono', monospace;
-          font-size: 13px;
-          letter-spacing: 1.5px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .drp-btn-primary:hover {
-          background: #cc0000;
-          box-shadow: 0 0 20px rgba(200,0,0,0.35);
-          transform: translateY(-1px);
-        }
-        .drp-btn-primary:active { transform: scale(0.97); }
+        .dem-hero-wrap { animation:flicker-bg 8s infinite; }
+        .dem-fade       { animation:fade-in-up 0.8s ease-out both; }
+        .dem-fade-delay { animation:fade-in-up 0.8s ease-out 0.2s both; }
 
-        .drp-btn-ghost {
-          padding: 11px 28px;
-          background: transparent;
-          color: #cc0000;
-          border: 1px solid rgba(180,0,0,0.5);
-          border-radius: 4px;
-          font-family: 'Share Tech Mono', monospace;
-          font-size: 13px;
-          letter-spacing: 1.5px;
-          cursor: pointer;
-          transition: all 0.2s;
+        .dem-tag {
+          padding:5px 14px;
+          background:rgba(80,0,0,0.12);
+          border:1px solid rgba(120,0,0,0.35);
+          border-radius:2px; color:#8b2020;
+          font-size:10px; letter-spacing:1.5px;
+          font-family:'Cinzel',serif; transition:all 0.25s; cursor:default;
+          clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
         }
-        .drp-btn-ghost:hover {
-          border-color: #cc0000;
-          background: rgba(180,0,0,0.08);
-          box-shadow: 0 0 12px rgba(200,0,0,0.15);
-          transform: translateY(-1px);
+        .dem-tag:hover { background:rgba(120,0,0,0.22);border-color:rgba(160,0,0,0.6);box-shadow:0 0 12px rgba(139,0,0,0.25);color:#cc2200; }
+
+        .dem-btn-primary {
+          padding:12px 30px;
+          background:linear-gradient(135deg,#6b0000,#3d0000);
+          color:#ffccaa; border:1px solid #8b0000; border-radius:2px;
+          font-family:'Cinzel',serif; font-size:11px; letter-spacing:2px;
+          cursor:pointer; transition:all 0.25s;
+          clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+          text-transform:uppercase; animation:glow-pulse 3s infinite;
         }
-        .drp-btn-ghost:active { transform: scale(0.97); }
+        .dem-btn-primary:hover { background:linear-gradient(135deg,#8b0000,#5a0000);box-shadow:0 0 30px rgba(139,0,0,0.6);transform:translateY(-2px);color:#fff; }
+        .dem-btn-primary:active { transform:scale(0.97); }
 
-        .drp-fade { animation: fadeInUp 0.65s ease-out both; }
-        .drp-fade-delay { animation: fadeInUp 0.65s ease-out 0.2s both; }
+        .dem-btn-ghost {
+          padding:12px 30px; background:transparent; color:#8b0000;
+          border:1px solid rgba(120,0,0,0.5); border-radius:2px;
+          font-family:'Cinzel',serif; font-size:11px; letter-spacing:2px;
+          cursor:pointer; transition:all 0.25s; text-transform:uppercase;
+          text-decoration:none; display:inline-block;
+          clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+        }
+        .dem-btn-ghost:hover { border-color:#8b0000;background:rgba(80,0,0,0.12);transform:translateY(-2px);color:#cc2200; }
+        .dem-btn-ghost:active { transform:scale(0.97); }
 
-        .drp-dot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: #ff2222;
-          display: inline-block;
-          animation: pulse-dot 2s infinite;
+        .dem-blood-dot {
+          width:7px;height:7px;border-radius:50%;background:#cc0000;
+          animation:pulse-blood 2s infinite; display:inline-block;
         }
       `}</style>
 
       <div
+        className="dem-hero-wrap"
         style={{
           minHeight: "100vh",
           width: "100%",
@@ -392,179 +287,232 @@ const Portfolio = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "'Share Tech Mono', monospace",
+          fontFamily: "'Crimson Text',serif",
           overflow: "hidden",
           background:
-            "radial-gradient(125% 125% at 50% 100%, #050000 40%, #1a0000 100%)",
-          padding: "2rem 1.5rem",
+            "radial-gradient(120% 120% at 50% 110%,#0e0000 30%,#1a0000 65%,#0a0000 100%)",
+          padding: "6rem 1.5rem 2rem",
         }}
       >
-        {/* Scanline overlay */}
+        {/* Ground hellfire */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
+            bottom: "-10%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "80%",
+            height: "40%",
             background:
-              "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(200,0,0,0.025) 3px, rgba(200,0,0,0.025) 4px)",
+              "radial-gradient(ellipse,rgba(120,10,0,0.5) 0%,rgba(80,0,0,0.2) 40%,transparent 70%)",
+            filter: "blur(40px)",
             pointerEvents: "none",
-            zIndex: 0,
           }}
         />
-
-        {/* Corner circuit decorations */}
-        <svg
+        {/* Top void */}
+        <div
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            width: 200,
-            height: 200,
-            opacity: 0.15,
-            pointerEvents: "none",
-          }}
-          viewBox="0 0 200 200"
-        >
-          <path
-            d="M0,40 L40,40 L40,0"
-            fill="none"
-            stroke="#cc0000"
-            strokeWidth="1"
-          />
-          <path
-            d="M0,80 L80,80 L80,0"
-            fill="none"
-            stroke="#cc0000"
-            strokeWidth="0.5"
-          />
-          <circle cx="40" cy="40" r="3" fill="#cc0000" />
-          <circle cx="80" cy="80" r="2" fill="#cc0000" />
-        </svg>
-        <svg
-          style={{
-            position: "absolute",
-            bottom: 0,
             right: 0,
-            width: 200,
-            height: 200,
-            opacity: 0.15,
+            height: "35%",
+            background:
+              "linear-gradient(180deg,rgba(0,0,0,0.8) 0%,transparent 100%)",
             pointerEvents: "none",
           }}
-          viewBox="0 0 200 200"
+        />
+        {/* Giant pentagram */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            fontSize: "420px",
+            color: "rgba(80,0,0,0.06)",
+            pointerEvents: "none",
+            userSelect: "none",
+            lineHeight: 1,
+            animation: "pulse-sigil 12s ease-in-out infinite",
+          }}
         >
-          <path
-            d="M200,160 L160,160 L160,200"
-            fill="none"
-            stroke="#cc0000"
-            strokeWidth="1"
-          />
-          <path
-            d="M200,120 L120,120 L120,200"
-            fill="none"
-            stroke="#cc0000"
-            strokeWidth="0.5"
-          />
-          <circle cx="160" cy="160" r="3" fill="#cc0000" />
-          <circle cx="120" cy="120" r="2" fill="#cc0000" />
-        </svg>
-
-        {/* Red glow orbs */}
+          ⛧
+        </div>
+        {/* Side vignettes */}
         <div
           style={{
             position: "absolute",
-            top: "-5%",
-            left: "-5%",
-            width: "35%",
-            height: "35%",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: "20%",
             background:
-              "radial-gradient(circle, rgba(180,0,0,0.12) 0%, transparent 70%)",
+              "linear-gradient(90deg,rgba(60,0,0,0.4) 0%,transparent 100%)",
             pointerEvents: "none",
           }}
         />
         <div
           style={{
             position: "absolute",
-            bottom: "-5%",
-            right: "-5%",
-            width: "35%",
-            height: "35%",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: "20%",
             background:
-              "radial-gradient(circle, rgba(180,0,0,0.08) 0%, transparent 70%)",
+              "linear-gradient(270deg,rgba(60,0,0,0.4) 0%,transparent 100%)",
             pointerEvents: "none",
           }}
         />
+        {/* Embers */}
+        {embers.map((e) => (
+          <Ember key={e.id} style={e.style} />
+        ))}
+        {/* Corner sigils */}
+        {[
+          "top:2rem;left:2rem",
+          "top:2rem;right:2rem",
+          "bottom:2rem;left:2rem",
+          "bottom:2rem;right:2rem",
+        ].map((pos, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              ...Object.fromEntries(pos.split(";").map((p) => p.split(":"))),
+              fontSize: "18px",
+              color: "rgba(100,0,0,0.3)",
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+          >
+            ⛧
+          </div>
+        ))}
 
         {/* Main grid */}
         <div
           style={{
-            maxWidth: "1100px",
+            maxWidth: "1200px",
             width: "100%",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "3rem",
+            gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
+            gap: "3.5rem",
             alignItems: "center",
             position: "relative",
             zIndex: 1,
           }}
         >
-          {/* Left: Text */}
+          {/* LEFT */}
           <div
-            className={mounted ? "drp-fade" : ""}
-            style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+            className={mounted ? "dem-fade" : ""}
+            style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}
           >
-            {/* Badge */}
             <div
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "8px",
-                padding: "6px 14px",
-                background: "rgba(180,0,0,0.12)",
-                border: "1px solid rgba(220,0,0,0.35)",
-                borderRadius: "999px",
-                fontSize: "10px",
-                color: "#ff3333",
-                letterSpacing: "2px",
+                gap: "10px",
+                padding: "7px 16px",
+                background: "rgba(80,0,0,0.15)",
+                border: "1px solid rgba(139,0,0,0.4)",
                 width: "fit-content",
               }}
             >
-              <span className="drp-dot" />
-              WELCOME TO MY UNIVERSE
-            </div>
-
-            {/* Heading */}
-            <div>
-              <h1
+              <span className="dem-blood-dot" />
+              <span
                 style={{
-                  fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                  fontFamily: "'Orbitron', sans-serif",
-                  fontWeight: 900,
-                  lineHeight: 1.15,
-                  color: "#ffffff",
-                  letterSpacing: "-1px",
-                  margin: 0,
+                  fontFamily: "'Cinzel',serif",
+                  fontSize: "9px",
+                  color: "#8b2020",
+                  letterSpacing: "3px",
+                  textTransform: "uppercase",
                 }}
               >
-                Hello
-                <br />
+                Soul Awakened
+              </span>
+            </div>
+
+            <div>
+              <p
+                style={{
+                  fontFamily: "'Crimson Text',serif",
+                  fontSize: "13px",
+                  color: "#4a1010",
+                  letterSpacing: "3px",
+                  textTransform: "uppercase",
+                  margin: "0 0 4px",
+                }}
+              >
+                ⛧ &nbsp; I am summoned &nbsp; ⛧
+              </p>
+              <h1
+                style={{
+                  fontFamily: "'Cinzel Decorative',serif",
+                  fontWeight: 900,
+                  fontSize: "clamp(1.8rem,4.5vw,3rem)",
+                  lineHeight: 1.2,
+                  color: "#ffffff",
+                  margin: 0,
+                  textShadow: "0 0 60px rgba(139,0,0,0.3)",
+                }}
+              >
                 I&apos;m{" "}
-                <GlitchText>
+                <FlameText>
                   <span
                     style={{
-                      color: "#cc0000",
-                      textShadow:
-                        "0 0 30px rgba(200,0,0,0.4), 0 0 60px rgba(200,0,0,0.15)",
+                      background:
+                        "linear-gradient(180deg,#cc2200 0%,#8b0000 60%,#4a0000 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
                     }}
                   >
                     DR-PIERROT
                   </span>
-                </GlitchText>
+                </FlameText>
               </h1>
+              <p
+                style={{
+                  fontFamily: "'Crimson Text',serif",
+                  fontStyle: "italic",
+                  fontSize: "14px",
+                  color: "#4a2020",
+                  margin: "4px 0 0",
+                  letterSpacing: "1px",
+                }}
+              >
+                {coderData.alias} — {coderData.role}
+              </p>
+            </div>
+
+            {/* Rune divider */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                style={{
+                  flex: 1,
+                  height: "1px",
+                  background:
+                    "linear-gradient(90deg,transparent,rgba(100,0,0,0.5))",
+                }}
+              />
+              <span style={{ color: "rgba(100,0,0,0.5)", fontSize: "12px" }}>
+                ⛧
+              </span>
+              <div
+                style={{
+                  flex: 1,
+                  height: "1px",
+                  background:
+                    "linear-gradient(90deg,rgba(100,0,0,0.5),transparent)",
+                }}
+              />
             </div>
 
             {/* Tags */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {tags.map((t) => (
-                <span key={t} className="drp-tag">
+                <span key={t} className="dem-tag">
                   {t.toUpperCase()}
                 </span>
               ))}
@@ -573,19 +521,61 @@ const Portfolio = () => {
             {/* Bio */}
             <p
               style={{
-                color: "#666",
-                fontSize: "14px",
-                maxWidth: "400px",
-                lineHeight: 1.75,
-                fontFamily: "'Share Tech Mono', monospace",
+                color: "#4a2020",
+                fontSize: "15px",
+                maxWidth: "420px",
+                lineHeight: 1.8,
+                fontFamily: "'Crimson Text',serif",
+                fontStyle: "italic",
               }}
             >
-              JavaScript lover <span style={{ color: "#cc0000" }}>|</span>{" "}
-              Crafting frameworks and coding the future from the shadows
-              <span style={{ color: "#cc0000" }}> ✦</span>
+              Conjurer of fullstack systems{" "}
+              <span style={{ color: "#8b0000", fontStyle: "normal" }}>✦</span>{" "}
+              Building REST APIs, scalable web apps, and cursed UIs from the
+              depths of the Philippines
+              <span style={{ color: "#8b0000" }}> ⛧</span>
             </p>
 
-            {/* CTA buttons */}
+            {/* Learning */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'Cinzel',serif",
+                  fontSize: "9px",
+                  color: "#3a1010",
+                  letterSpacing: "2px",
+                  textTransform: "uppercase",
+                }}
+              >
+                Studying dark arts:
+              </span>
+              {coderData.learning.map((l) => (
+                <span
+                  key={l}
+                  style={{
+                    padding: "2px 10px",
+                    background: "rgba(40,0,0,0.4)",
+                    border: "1px dashed rgba(100,0,0,0.4)",
+                    borderRadius: "2px",
+                    color: "#8b3030",
+                    fontSize: "11px",
+                    fontFamily: "'Courier New',monospace",
+                    animation: "learning-pulse 2.5s ease-in-out infinite",
+                  }}
+                >
+                  {l}
+                </span>
+              ))}
+            </div>
+
+            {/* CTAs */}
             <div
               style={{
                 display: "flex",
@@ -594,20 +584,152 @@ const Portfolio = () => {
                 marginTop: "0.5rem",
               }}
             >
-              <button className="drp-btn-primary">LEARN MORE</button>
+              <button className="dem-btn-primary">⛧ Behold My Works</button>
               <a
                 href="https://github.com/Dr-Pierrot"
                 target="_blank"
-                className="drp-btn-ghost"
+                className="dem-btn-ghost"
               >
-                GITHUB
+                GitHub Tome
               </a>
             </div>
           </div>
 
-          {/* Right: Code editor */}
-          <div className={mounted ? "drp-fade-delay" : ""}>
-            <CoderProfileCard />
+          {/* RIGHT — Skill Grimoire */}
+          <div className={mounted ? "dem-fade-delay" : ""}>
+            {/* Blood drips */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "20px",
+                marginBottom: "6px",
+                paddingLeft: "20%",
+              }}
+            >
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  style={{
+                    width: "1px",
+                    height: `${8 + (i % 3) * 6}px`,
+                    background:
+                      "linear-gradient(180deg,#6b0000,rgba(100,0,0,0))",
+                    borderRadius: "0 0 2px 2px",
+                    animation: `blood-drip ${1 + i * 0.3}s ease-out ${i * 0.15}s both`,
+                    transformOrigin: "top",
+                  }}
+                />
+              ))}
+            </div>
+
+            <div
+              style={{
+                background:
+                  "linear-gradient(160deg,#0c0000 0%,#0f0101 50%,#080000 100%)",
+                border: "1px solid rgba(120,0,0,0.5)",
+                borderRadius: "4px",
+                overflow: "hidden",
+                position: "relative",
+                boxShadow:
+                  "0 0 60px rgba(100,0,0,0.2),inset 0 0 60px rgba(60,0,0,0.1)",
+              }}
+            >
+              <div
+                style={{
+                  height: "2px",
+                  background:
+                    "linear-gradient(90deg,transparent,#6b0000,#cc2200,#ff4400,#cc2200,#6b0000,transparent)",
+                  boxShadow: "0 0 10px #cc2200",
+                }}
+              />
+              <div
+                style={{
+                  padding: "10px 18px",
+                  background: "rgba(0,0,0,0.8)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  borderBottom: "1px solid rgba(100,0,0,0.4)",
+                }}
+              >
+                <div style={{ display: "flex", gap: "7px" }}>
+                  {["#7a0000", "#3d0000", "#1a0000"].map((c, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        background: c,
+                        boxShadow: `0 0 4px ${c}`,
+                      }}
+                    />
+                  ))}
+                </div>
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: "#4a0000",
+                    letterSpacing: "5px",
+                    fontFamily: "'Cinzel',serif",
+                  }}
+                >
+                  ⛧ skills.soul ⛧
+                </span>
+              </div>
+
+              <div
+                style={{
+                  padding: "16px",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "10px",
+                }}
+              >
+                <SkillBlock
+                  label="Frontend Arts"
+                  icon="🔮"
+                  skills={coderData.skills.frontend}
+                  delay={0.1}
+                />
+                <SkillBlock
+                  label="Backend Rites"
+                  icon="⚗️"
+                  skills={coderData.skills.backend}
+                  delay={0.2}
+                />
+                <SkillBlock
+                  label="Data Vaults"
+                  icon="🗄️"
+                  skills={coderData.skills.database}
+                  delay={0.3}
+                />
+                <SkillBlock
+                  label="Ritual Tools"
+                  icon="⚔️"
+                  skills={coderData.skills.tools}
+                  delay={0.4}
+                />
+              </div>
+
+              <div
+                style={{
+                  padding: "10px 18px",
+                  borderTop: "1px solid rgba(80,0,0,0.25)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "10px",
+                  color: "#2a0000",
+                  letterSpacing: "1px",
+                  fontFamily: "'Courier New',monospace",
+                }}
+              >
+                <span>⛧ BOUND</span>
+                <span>{totalSkills} ARTS MASTERED</span>
+                <span>PHILIPPINES</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
