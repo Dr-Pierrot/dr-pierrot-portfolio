@@ -25,34 +25,18 @@ const coderData = {
   },
 };
 
-/* ── Hellfire flicker text ── */
-const FlameText = ({ children }: { children: React.ReactNode }) => {
-  const [flicker, setFlicker] = useState(false);
-  useEffect(() => {
-    const id = setInterval(
-      () => {
-        setFlicker(true);
-        setTimeout(() => setFlicker(false), 120 + Math.random() * 80);
-      },
-      2500 + Math.random() * 2000,
-    );
-    return () => clearInterval(id);
-  }, []);
-  return (
-    <span
-      style={{
-        position: "relative",
-        display: "inline-block",
-        filter: flicker
-          ? "brightness(1.6) drop-shadow(0 0 12px #ff3300)"
-          : "drop-shadow(0 0 6px #8b0000)",
-        transition: "filter 0.05s",
-      }}
-    >
-      {children}
-    </span>
-  );
-};
+/* ── Flame text — static glow, no flicker ── */
+const FlameText = ({ children }: { children: React.ReactNode }) => (
+  <span
+    style={{
+      position: "relative",
+      display: "inline-block",
+      filter: "drop-shadow(0 0 8px rgba(180,0,0,0.5))",
+    }}
+  >
+    {children}
+  </span>
+);
 
 /* ── Skill Category Block ── */
 const SkillBlock = ({
@@ -211,11 +195,7 @@ const Portfolio = () => {
           0%,100% { opacity:0.12;transform:scale(1) rotate(0deg); }
           50%      { opacity:0.2;transform:scale(1.04) rotate(180deg); }
         }
-        @keyframes flicker-bg {
-          0%,100% { opacity:1; }
-          93% { opacity:0.93; } 94% { opacity:1; }
-          96% { opacity:0.96; } 97% { opacity:1; }
-        }
+
         @keyframes glow-pulse {
           0%,100% { box-shadow:0 0 20px rgba(139,0,0,0.4),inset 0 0 10px rgba(60,0,0,0.2); }
           50%       { box-shadow:0 0 40px rgba(180,0,0,0.7),inset 0 0 20px rgba(80,0,0,0.3); }
@@ -234,7 +214,7 @@ const Portfolio = () => {
           50%       { box-shadow:0 0 0 6px rgba(180,0,0,0);opacity:0.7; }
         }
 
-        .dem-hero-wrap { animation:flicker-bg 8s infinite; }
+
         .dem-fade       { animation:fade-in-up 0.8s ease-out both; }
         .dem-fade-delay { animation:fade-in-up 0.8s ease-out 0.2s both; }
 

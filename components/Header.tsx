@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled]     = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -13,7 +13,9 @@ export default function Header() {
 
   // Close menu on resize to desktop
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth >= 768) setIsMenuOpen(false); };
+    const onResize = () => {
+      if (window.innerWidth >= 768) setIsMenuOpen(false);
+    };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
@@ -21,12 +23,21 @@ export default function Header() {
   // Lock body scroll when menu open
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isMenuOpen]);
 
-  const navLinks   = [{ label: "Grimoire", href: "#" }, { label: "Relics", href: "#" }, { label: "Coven", href: "#" }];
-  const rightLinks = [{ label: "Confess", href: "#" }, { label: "Enter",   href: "#" }];
-  const allLinks   = [...navLinks, ...rightLinks];
+  const navLinks = [
+    { label: "Grimoire", href: "#" },
+    { label: "Relics", href: "#" },
+    { label: "Coven", href: "#" },
+  ];
+  const rightLinks = [
+    { label: "Confess", href: "#" },
+    { label: "Enter", href: "#" },
+  ];
+  const allLinks = [...navLinks, ...rightLinks];
 
   return (
     <>
@@ -350,16 +361,21 @@ export default function Header() {
       {/* ── Header bar (slides up & hides when menu opens) ── */}
       <header className={`dem-header${isMenuOpen ? " menu-open" : ""}`}>
         <div className={`dem-header-inner${scrolled ? " scrolled" : ""}`}>
-
           {/* Ember particles */}
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="dem-ember" style={{
-              left: `${10 + i * 11}%`,
-              bottom: "8px",
-              animationDelay: `${i * 0.55}s`,
-              animationDuration: `${3 + (i % 3)}s`,
-              "--drift": `${(i % 2 === 0 ? 1 : -1) * (10 + i * 4)}px`,
-            } as React.CSSProperties} />
+            <div
+              key={i}
+              className="dem-ember"
+              style={
+                {
+                  left: `${10 + i * 11}%`,
+                  bottom: "8px",
+                  animationDelay: `${i * 0.55}s`,
+                  animationDuration: `${3 + (i % 3)}s`,
+                  "--drift": `${(i % 2 === 0 ? 1 : -1) * (10 + i * 4)}px`,
+                } as React.CSSProperties
+              }
+            />
           ))}
 
           {/* Corner runes */}
@@ -370,17 +386,23 @@ export default function Header() {
 
           {/* Left nav */}
           <nav className="dem-nav">
-            {navLinks.map(l => <a key={l.label} href={l.href}>{l.label}</a>)}
+            {navLinks.map((l) => (
+              <a key={l.label} href={l.href}>
+                {l.label}
+              </a>
+            ))}
           </nav>
 
           {/* Hamburger (mobile only) */}
           <button
             className={`dem-burger${isMenuOpen ? " open" : ""}`}
-            onClick={() => setIsMenuOpen(o => !o)}
+            onClick={() => setIsMenuOpen((o) => !o)}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
-            <span /><span /><span />
+            <span />
+            <span />
+            <span />
           </button>
 
           {/* Centred logo */}
@@ -393,14 +415,26 @@ export default function Header() {
 
           {/* Right nav */}
           <nav className="dem-nav dem-nav-right">
-            {rightLinks.map(l => <a key={l.label} href={l.href}>{l.label}</a>)}
-            <a href="#" className="dem-seal-btn dem-seal-desktop">Pledge</a>
+            {rightLinks.map((l) => (
+              <a key={l.label} href={l.href}>
+                {l.label}
+              </a>
+            ))}
+            <a href="#" className="dem-seal-btn dem-seal-desktop">
+              Pledge
+            </a>
           </nav>
         </div>
 
         {/* Blood drip SVG border */}
-        <svg className="dem-drip" viewBox="0 0 1440 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,0 L1440,0 L1440,4
+        <svg
+          className="dem-drip"
+          viewBox="0 0 1440 20"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,0 L1440,0 L1440,4
             Q1380,4 1370,8 Q1360,14 1355,18 Q1350,14 1345,8 Q1335,4 1320,4
             Q1280,4 1270,8 Q1265,14 1260,20 Q1255,14 1250,8 Q1240,4 1200,4
             Q1160,4 1150,7 Q1145,12 1140,18 Q1135,12 1130,7 Q1120,4 1080,4
@@ -419,26 +453,59 @@ export default function Header() {
       </header>
 
       {/* ── Full-screen mobile menu (z-index above header) ── */}
-      <div className={`dem-mobile-menu${isMenuOpen ? " open" : ""}`} role="dialog" aria-modal="true" aria-label="Navigation menu">
-
+      <div
+        className={`dem-mobile-menu${isMenuOpen ? " open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+      >
         {/* Explicit close button in the menu */}
-        <button className="dem-menu-close" onClick={() => setIsMenuOpen(false)} aria-label="Close menu">
+        <button
+          className="dem-menu-close"
+          onClick={() => setIsMenuOpen(false)}
+          aria-label="Close menu"
+        >
           ✕
         </button>
 
         {/* Logo inside menu */}
-        <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:10,marginBottom:"0.5rem",position:"relative",zIndex:1 }}>
-          <div className="dem-sigil-ring" style={{ width:64,height:64 }}>
-            <img src="/favicon-512x512.png" alt="DR-PIERROT" style={{ width:52,height:52 }} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 10,
+            marginBottom: "0.5rem",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <div className="dem-sigil-ring" style={{ width: 64, height: 64 }}>
+            <img
+              src="/favicon-512x512.png"
+              alt="DR-PIERROT"
+              style={{ width: 52, height: 52 }}
+            />
           </div>
-          <span style={{ fontFamily:"'Cinzel Decorative',serif",fontSize:8,letterSpacing:"4px",color:"#4a1010" }}>DR-PIERROT</span>
+          <span
+            style={{
+              fontFamily: "'Cinzel Decorative',serif",
+              fontSize: 8,
+              letterSpacing: "4px",
+              color: "#4a1010",
+            }}
+          >
+            DR-PIERROT
+          </span>
         </div>
 
         <div className="dem-mobile-divider" />
 
         {/* All nav links */}
-        {allLinks.map(l => (
-          <a key={l.label} href={l.href} onClick={() => setIsMenuOpen(false)}>{l.label}</a>
+        {allLinks.map((l) => (
+          <a key={l.label} href={l.href} onClick={() => setIsMenuOpen(false)}>
+            {l.label}
+          </a>
         ))}
 
         <div className="dem-mobile-divider" />
@@ -448,22 +515,22 @@ export default function Header() {
           href="#"
           onClick={() => setIsMenuOpen(false)}
           style={{
-            padding:"12px 38px",
-            border:"1px solid rgba(139,0,0,0.6)",
-            color:"#8b0000",
-            fontFamily:"'Cinzel Decorative',serif",
-            fontSize:"10px",
-            letterSpacing:"3px",
-            textTransform:"uppercase",
-            textDecoration:"none",
-            position:"relative", zIndex:1,
-            clipPath:"polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
-            transition:"all 0.25s",
+            padding: "12px 38px",
+            border: "1px solid rgba(139,0,0,0.6)",
+            color: "#8b0000",
+            fontFamily: "'Cinzel Decorative',serif",
+            fontSize: "10px",
+            letterSpacing: "3px",
+            textTransform: "uppercase",
+            textDecoration: "none",
+            position: "relative",
+            zIndex: 1,
+            clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
+            transition: "all 0.25s",
           }}
         >
           Pledge
         </a>
-
       </div>
     </>
   );

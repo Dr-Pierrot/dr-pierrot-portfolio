@@ -12,8 +12,8 @@ export default function Home() {
       <Hero5 />
       <AboutMe />
       <Projects />
-<ContactMe />
-<Footer />
+      <ContactMe />
+      <Footer />
     </div>
   );
 }
