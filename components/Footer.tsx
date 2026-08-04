@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { T } from "@/lib/theme";
 
 const profile = {
-  alias: "DR-PIERROT",
+  alias: "Dr-Pierrot",
   name: "Jaycee Capulong",
   role: "Fullstack Developer",
   location: "Philippines",
-  email: "jaycee.capulong@dct.edu.ph",
+  email: "capulongako16@gmail.com",
   github: "https://github.com/Dr-Pierrot",
   linkedin: "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
-  portfolio: "https://dr-pierrot-portfolio.vercel.app/",
 };
 
 const navLinks = [
@@ -59,7 +59,6 @@ const socialLinks = [
   },
 ];
 
-/* ── Scroll-to-top button ── */
 const ScrollTop = () => {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -78,253 +77,90 @@ const ScrollTop = () => {
         right: "2rem",
         width: "44px",
         height: "44px",
-        background: "rgba(80,0,0,0.5)",
-        border: "1px solid rgba(180,0,0,0.5)",
-        borderRadius: "2px",
-        color: "#cc2200",
-        fontSize: "18px",
+        background: T.color.text,
+        border: `1px solid ${T.color.text}`,
+        borderRadius: "10px",
+        color: "#fff",
+        fontSize: "16px",
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
-        transition: "all 0.3s ease",
+        transition: "all 0.25s ease",
         zIndex: 200,
-        clipPath: "polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)",
-        backdropFilter: "blur(8px)",
-        boxShadow: visible ? "0 0 20px rgba(139,0,0,0.4)" : "none",
+        boxShadow: visible ? "0 4px 16px rgba(17,24,39,0.2)" : "none",
         transform: visible ? "translateY(0)" : "translateY(10px)",
       }}
       onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.background = "rgba(120,0,0,0.7)";
-        el.style.color = "#ff4422";
-        el.style.boxShadow = "0 0 30px rgba(180,0,0,0.5)";
+        (e.currentTarget as HTMLElement).style.background = T.color.accentHover;
       }}
       onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.background = "rgba(80,0,0,0.5)";
-        el.style.color = "#cc2200";
-        el.style.boxShadow = "0 0 20px rgba(139,0,0,0.4)";
+        (e.currentTarget as HTMLElement).style.background = T.color.text;
       }}
     >
-      ⛧
+      ↑
     </button>
   );
 };
 
-/* ── Ember particle ── */
-const Ember = ({ style }: { style: React.CSSProperties }) => (
-  <div
-    style={{
-      position: "absolute",
-      width: "2px",
-      height: "2px",
-      borderRadius: "50%",
-      background: "radial-gradient(circle,#ff6600 0%,#ff2200 100%)",
-      pointerEvents: "none",
-      ...style,
-    }}
-  />
-);
-
-/* ── Main Footer ── */
 const Footer = () => {
   const year = new Date().getFullYear();
-  const [embers, setEmbers] = useState<
-    { id: number; style: React.CSSProperties }[]
-  >([]);
-
-  useEffect(() => {
-    const spawn = () => {
-      const id = Date.now() + Math.random();
-      const drift = (Math.random() - 0.5) * 80;
-      setEmbers((prev) => [
-        ...prev.slice(-20),
-        {
-          id,
-          style: {
-            left: `${10 + Math.random() * 80}%`,
-            bottom: "0",
-            animation: `rise-ember ${2 + Math.random() * 2}s ease-out forwards`,
-            "--drift": `${drift}px`,
-          } as React.CSSProperties,
-        },
-      ]);
-    };
-    const iv = setInterval(spawn, 500);
-    return () => clearInterval(iv);
-  }, []);
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
-
-        @keyframes rise-ember {
-          0%   { transform:translate(0,0);opacity:0; }
-          15%  { opacity:1; }
-          85%  { opacity:0.4; }
-          100% { transform:translate(var(--drift,0px),-120px);opacity:0; }
-        }
-        @keyframes pulse-sigil {
-          0%,100% { opacity:0.06;transform:rotate(0deg) scale(1); }
-          50%      { opacity:0.12;transform:rotate(180deg) scale(1.03); }
-        }
-
-
-        @keyframes spin-slow {
-          from { transform:rotate(0deg); }
-          to   { transform:rotate(360deg); }
-        }
+        ${T.fontImport}
 
         .footer-nav-link {
-          font-family:'Cinzel',serif;
-          font-size:10px;
-          letter-spacing:2px;
-          color:#4a1010;
-          text-decoration:none;
-          text-transform:uppercase;
-          transition:color 0.25s;
-          position:relative;
-          padding-bottom:3px;
+          font-size: 13px;
+          color: ${T.color.textSecondary};
+          text-decoration: none;
+          transition: color 0.15s;
         }
-        .footer-nav-link::after {
-          content:'';
-          position:absolute;
-          bottom:0;left:0;
-          width:0;height:1px;
-          background:linear-gradient(90deg,#8b0000,#cc2200);
-          transition:width 0.3s ease;
-          box-shadow:0 0 6px rgba(200,50,0,0.5);
-        }
-        .footer-nav-link:hover { color:#cc2200; }
-        .footer-nav-link:hover::after { width:100%; }
+        .footer-nav-link:hover { color: ${T.color.text}; }
 
         .footer-social-btn {
-          width:38px;height:38px;
-          display:flex;align-items:center;justify-content:center;
-          background:rgba(50,0,0,0.4);
-          border:1px solid rgba(100,0,0,0.35);
-          border-radius:2px;
-          color:#5a1a1a;
-          text-decoration:none;
-          transition:all 0.25s;
-          clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+          width: 36px; height: 36px;
+          display: flex; align-items: center; justify-content: center;
+          background: ${T.color.bg};
+          border: 1px solid ${T.color.border};
+          border-radius: 8px;
+          color: ${T.color.textSecondary};
+          text-decoration: none;
+          transition: all 0.2s;
         }
         .footer-social-btn:hover {
-          background:rgba(100,0,0,0.4);
-          border-color:rgba(180,0,0,0.6);
-          color:#cc2200;
-          box-shadow:0 0 16px rgba(139,0,0,0.35);
-          transform:translateY(-2px);
+          border-color: ${T.color.borderStrong};
+          color: ${T.color.text};
         }
       `}</style>
 
-      {/* Scroll-to-top */}
       <ScrollTop />
 
       <footer
         style={{
           width: "100%",
-          position: "relative",
-          overflow: "hidden",
-          background:
-            "linear-gradient(180deg,#030000 0%,#060000 40%,#020000 100%)",
-          borderTop: "1px solid rgba(100,0,0,0.4)",
-          fontFamily: "'Crimson Text',serif",
+          background: T.color.gradientDark,
+          fontFamily: T.font.body,
         }}
       >
-        {/* Top blood drip */}
-        <svg
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "22px",
-            pointerEvents: "none",
-          }}
-          viewBox="0 0 1440 22"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0,22 L0,4 Q60,4 70,10 Q75,16 80,22 Q85,16 90,10 Q100,4 140,4 Q180,4 190,8 Q195,14 200,20 Q205,14 210,8 Q220,4 260,4 Q300,4 310,9 Q315,15 320,22 Q325,15 330,9 Q340,4 380,4 Q420,4 430,8 Q435,13 440,18 Q445,13 450,8 Q460,4 500,4 Q540,4 550,9 Q555,16 560,22 Q565,16 570,9 Q580,4 620,4 Q660,4 670,8 Q675,14 680,20 Q685,14 690,8 Q700,4 740,4 Q780,4 790,9 Q795,15 800,22 Q805,15 810,9 Q820,4 860,4 Q900,4 910,8 Q915,13 920,17 Q925,13 930,8 Q940,4 980,4 Q1020,4 1030,9 Q1035,16 1040,22 Q1045,16 1050,9 Q1060,4 1100,4 Q1140,4 1150,8 Q1155,14 1160,20 Q1165,14 1170,8 Q1180,4 1220,4 Q1260,4 1270,9 Q1275,15 1280,22 Q1285,15 1290,9 Q1300,4 1340,4 Q1380,4 1390,8 Q1395,13 1400,18 Q1405,13 1410,8 Q1420,4 1440,4 L1440,22 Z"
-            fill="rgba(70,0,0,0.7)"
-          />
-        </svg>
-
-        {/* Ground hellfire glow */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "70%",
-            height: "60%",
-            background:
-              "radial-gradient(ellipse,rgba(100,5,0,0.35) 0%,rgba(60,0,0,0.1) 50%,transparent 70%)",
-            filter: "blur(30px)",
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Giant background sigil */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%,-50%)",
-            fontSize: "380px",
-            color: "rgba(50,0,0,0.06)",
-            pointerEvents: "none",
-            userSelect: "none",
-            lineHeight: 1,
-            animation: "pulse-sigil 14s ease-in-out infinite",
-          }}
-        >
-          ⛧
-        </div>
-
-        {/* Crack texture */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "repeating-linear-gradient(170deg,transparent,transparent 80px,rgba(50,0,0,0.03) 80px,rgba(50,0,0,0.03) 81px)",
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Embers */}
-        {embers.map((e) => (
-          <Ember key={e.id} style={e.style} />
-        ))}
-
-        {/* ── Main content ── */}
         <div
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
             padding: "3.5rem 1.5rem 2rem",
-            position: "relative",
-            zIndex: 1,
           }}
         >
-          {/* Top section: logo + nav + socials */}
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
               gap: "2.5rem",
-              marginBottom: "3rem",
+              marginBottom: "2.5rem",
               paddingBottom: "2.5rem",
-              borderBottom: "1px solid rgba(80,0,0,0.25)",
+              borderBottom: `1px solid ${T.color.darkBorder}`,
             }}
           >
             {/* Brand */}
@@ -335,86 +171,64 @@ const Footer = () => {
                 gap: "14px",
               }}
             >
-              {/* Rotating sigil logo */}
               <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
                 <div
                   style={{
-                    position: "relative",
-                    width: "42px",
-                    height: "42px",
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
                     flexShrink: 0,
                   }}
                 >
-                  {/* Rotating rune ring */}
-                  <div
+                  <img
+                    src="/favicon-512x512.png"
+                    alt="Dr-Pierrot logo"
                     style={{
-                      position: "absolute",
-                      inset: 0,
-                      borderRadius: "50%",
-                      background:
-                        "conic-gradient(from 0deg,transparent 0%,#6b0000 15%,transparent 30%,#cc2200 45%,transparent 60%,#6b0000 75%,transparent 90%)",
-                      animation: "spin-slow 8s linear infinite",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
                     }}
                   />
-                  {/* Inner circle */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: "3px",
-                      borderRadius: "50%",
-                      background: "#060000",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "16px",
-                    }}
-                  >
-                    ⛧
-                  </div>
                 </div>
                 <div>
                   <div
                     style={{
-                      fontFamily: "'Cinzel Decorative',serif",
+                      fontFamily: T.font.heading,
                       fontSize: "14px",
-                      color: "#cc2200",
-                      letterSpacing: "1px",
+                      fontWeight: 600,
+                      color: T.color.darkText,
                       lineHeight: 1,
                     }}
                   >
-                    {profile.alias}
+                    {profile.name}
                   </div>
                   <div
                     style={{
-                      fontFamily: "'Crimson Text',serif",
-                      fontStyle: "italic",
                       fontSize: "12px",
-                      color: "#3a1010",
+                      color: T.color.darkTextSecondary,
                       marginTop: "3px",
                     }}
                   >
-                    {profile.name}
+                    {profile.role}
                   </div>
                 </div>
               </div>
 
               <p
                 style={{
-                  color: "#3a1515",
+                  color: T.color.darkTextSecondary,
                   fontSize: "13px",
-                  lineHeight: 1.8,
-                  fontFamily: "'Crimson Text',serif",
-                  fontStyle: "italic",
+                  lineHeight: 1.7,
                   maxWidth: "240px",
+                  margin: 0,
                 }}
               >
-                Fullstack Developer forging scalable systems from the depths of
-                the Philippines.
+                Fullstack developer building scalable systems from the
+                Philippines.
               </p>
 
-              {/* Status dot */}
               <div
                 style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
@@ -423,17 +237,11 @@ const Footer = () => {
                     width: "6px",
                     height: "6px",
                     borderRadius: "50%",
-                    background: "#009944",
+                    background: T.color.accent,
                   }}
                 />
                 <span
-                  style={{
-                    fontFamily: "'Cinzel',serif",
-                    fontSize: "8px",
-                    color: "#2a3a2a",
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                  }}
+                  style={{ fontSize: "12px", color: T.color.darkTextSecondary }}
                 >
                   Available for work
                 </span>
@@ -444,19 +252,15 @@ const Footer = () => {
             <div>
               <div
                 style={{
-                  fontFamily: "'Cinzel',serif",
-                  fontSize: "8px",
-                  color: "#3a1010",
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  color: "#6B7280",
                   marginBottom: "16px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
+                  textTransform: "uppercase" as const,
+                  letterSpacing: "0.5px",
                 }}
               >
-                <span style={{ color: "rgba(139,0,0,0.4)" }}>⛧</span>
-                <span>Navigation</span>
+                Navigation
               </div>
               <nav
                 style={{
@@ -477,63 +281,39 @@ const Footer = () => {
             <div>
               <div
                 style={{
-                  fontFamily: "'Cinzel',serif",
-                  fontSize: "8px",
-                  color: "#3a1010",
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  color: "#6B7280",
                   marginBottom: "16px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
+                  textTransform: "uppercase" as const,
+                  letterSpacing: "0.5px",
                 }}
               >
-                <span style={{ color: "rgba(139,0,0,0.4)" }}>⛧</span>
-                <span>Summon Me</span>
+                Contact
               </div>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column" as const,
-                  gap: "12px",
+                  gap: "10px",
                 }}
               >
-                {[
-                  { icon: "📍", value: profile.location },
-                  { icon: "✉️", value: profile.email },
-                ].map((item) => (
-                  <div
-                    key={item.value}
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "12px",
-                        marginTop: "2px",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {item.icon}
-                    </span>
-                    <span
-                      style={{
-                        color: "#4a2020",
-                        fontSize: "13px",
-                        fontFamily: "'Crimson Text',serif",
-                        wordBreak: "break-word" as const,
-                      }}
-                    >
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
+                <span
+                  style={{ color: T.color.darkTextSecondary, fontSize: "13px" }}
+                >
+                  {profile.location}
+                </span>
+                <span
+                  style={{
+                    color: T.color.darkTextSecondary,
+                    fontSize: "13px",
+                    wordBreak: "break-word" as const,
+                  }}
+                >
+                  {profile.email}
+                </span>
               </div>
 
-              {/* Social icons */}
               <div style={{ display: "flex", gap: "8px", marginTop: "18px" }}>
                 {socialLinks.map((s) => (
                   <a
@@ -552,7 +332,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* ── Bottom bar ── */}
           <div
             style={{
               display: "flex",
@@ -562,33 +341,11 @@ const Footer = () => {
               gap: "12px",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ color: "rgba(100,0,0,0.4)", fontSize: "12px" }}>
-                ⛧
-              </span>
-              <p
-                style={{
-                  fontFamily: "'Crimson Text',serif",
-                  fontSize: "12px",
-                  color: "#2a1010",
-                  margin: 0,
-                }}
-              >
-                © {year} {profile.alias} — {profile.name}. All rights reserved.
-              </p>
-            </div>
-
-            <p
-              style={{
-                fontFamily: "'Cinzel',serif",
-                fontSize: "8px",
-                color: "#2a1010",
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Forged in darkness · Philippines
+            <p style={{ fontSize: "13px", color: "#6B7280", margin: 0 }}>
+              © {year} {profile.name}. All rights reserved.
+            </p>
+            <p style={{ fontSize: "12px", color: "#6B7280", margin: 0 }}>
+              Built with Next.js · Philippines
             </p>
           </div>
         </div>

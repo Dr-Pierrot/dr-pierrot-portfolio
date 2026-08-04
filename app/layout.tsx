@@ -1,34 +1,27 @@
 import type { Metadata } from "next";
-import {
-  Geist,
-  Geist_Mono,
-  Noto_Sans,
-  Playfair_Display,
-} from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const playfairDisplayHeading = Playfair_Display({
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
 });
 
-const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Dr-Pierrot - Jaycee Capulong",
+  title: "Jaycee Capulong — Fullstack Developer",
   description:
-    "Hi, I’m Jaycee Capulong, also known as Dr-Pierrot on GitHub. I’m a full-stack developer passionate about building scalable, efficient, and user-focused web applications. My work spans both front-end and back-end development, where I enjoy turning complex problems into clean, functional solutions. This portfolio highlights my projects, technical skills, and continuous growth in the field of software development.",
+    "Hi, I'm Jaycee Capulong, also known as Dr-Pierrot on GitHub. I'm a fullstack developer focused on building practical, scalable web applications — from REST APIs to full product interfaces. This portfolio highlights my projects, technical skills, and ongoing growth in software development.",
 };
 
 export default function RootLayout({
@@ -42,11 +35,10 @@ export default function RootLayout({
       className={cn(
         "h-full",
         "antialiased",
-        geistSans.variable,
-        geistMono.variable,
+        inter.variable,
+        spaceGrotesk.variable,
+        jetbrainsMono.variable,
         "font-sans",
-        notoSans.variable,
-        playfairDisplayHeading.variable,
       )}
     >
       <body className="min-h-full flex flex-col">{children}</body>
