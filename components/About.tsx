@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { T } from "@/lib/theme";
+import GitHubActivity from "@/components/GitHubActivity";
 
 const profile = {
   name: "Jaycee Capulong",
@@ -403,6 +404,9 @@ const AboutMe = () => {
                   );
                 })}
               </div>
+
+              {/* GitHub contribution activity */}
+              <GitHubActivity />
 
               {/* Contact links */}
               <div
