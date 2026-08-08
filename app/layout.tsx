@@ -29,6 +29,12 @@ export const metadata: Metadata = {
     default: SITE_TITLE,
     template: "%s | Jaycee Capulong",
   },
+  verification: {
+    google: "eDBZFKCxJy--z00bHVxlvMh_b9bgk3n0SrnJlHVA5W0",
+    other: {
+      "msvalidate.01": "118D32B26853BE29D1E445BDF98815A5",
+    },
+  },
   description: SITE_DESCRIPTION,
   keywords: [
     "Jaycee Capulong",
