@@ -1,22 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
 
 const SITE_URL = "https://dr-pierrot-portfolio.vercel.app";
 const SITE_TITLE = "Jaycee Capulong — Fullstack Developer";
@@ -130,17 +113,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn(
-        "h-full",
-        "antialiased",
-        inter.variable,
-        spaceGrotesk.variable,
-        jetbrainsMono.variable,
-        "font-sans",
-      )}
-    >
+    <html lang="en">
       <body className="min-h-full flex flex-col">
         <script
           type="application/ld+json"
