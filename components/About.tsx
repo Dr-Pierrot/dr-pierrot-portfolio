@@ -1,545 +1,149 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { T } from "@/lib/theme";
-import GitHubActivity from "@/components/GitHubActivity";
+import { Kicker, SectionHead, ArrowLink } from "@/components/editorial";
 
 const profile = {
   name: "Jaycee Capulong",
   alias: "Dr-Pierrot",
-  roles: ["Web Developer", "Software Engineer", "Fullstack Developer"],
+  roles: "Web Developer · Software Engineer · Fullstack Developer",
   seniority: "Junior",
   location: "Philippines",
   email: "capulongako16@gmail.com",
   github: "https://github.com/Dr-Pierrot",
   linkedin: "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
-  bio: "A passionate fullstack developer focused on building practical, real-world web applications that solve everyday problems. I enjoy turning ideas into functional systems — especially those that improve workflows, automate processes, and enhance user experience.",
+  bio: "I'm a fullstack developer focused on building practical, real-world web applications that solve everyday problems — the kind of software that replaces a spreadsheet or a manual process with something that just works. I enjoy the whole stack: modeling the data, building the API, and shaping the interface people actually touch.",
   currently: "Building a Human Resource Management System",
-  traits: [
-    {
-      icon: "🎯",
-      label: "Problem solver",
-      desc: "Turning complex requirements into clean, working systems.",
-    },
-    {
-      icon: "🔌",
-      label: "API architect",
-      desc: "Crafting robust REST APIs with proper auth, docs, and structure.",
-    },
-    {
-      icon: "🖥️",
-      label: "UI craftsman",
-      desc: "Building interfaces that are both functional and visually sharp.",
-    },
-    {
-      icon: "🚀",
-      label: "Fast learner",
-      desc: "Quick to pick up new tools, frameworks, and workflows.",
-    },
-  ],
-  stats: [
-    { label: "Repositories", value: "8" },
-    { label: "Languages", value: "5+" },
-    { label: "Followers", value: "1" },
-    { label: "Following", value: "5" },
-  ],
 };
+
+const skillGroups: { label: string; items: string[] }[] = [
+  { label: "Frontend", items: ["React", "Next.js", "TypeScript", "JavaScript", "TailwindCSS", "CSS", "HTML", "Astro"] },
+  { label: "Backend", items: ["Laravel", "Node.js", "PHP"] },
+  { label: "Database", items: ["MySQL", "MongoDB", "Firebase"] },
+  { label: "Tools", items: ["Git", "GitHub", "Figma", "WordPress"] },
+];
+
+const traits = [
+  { n: "01", label: "Problem solver", desc: "Turning ambiguous requirements into clean, working systems." },
+  { n: "02", label: "API architect", desc: "REST APIs with proper auth, documentation, and structure." },
+  { n: "03", label: "UI craftsman", desc: "Interfaces that are functional first, sharp second." },
+  { n: "04", label: "Always learning", desc: "Currently expanding into Vue.js and Svelte." },
+];
 
 const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   const [inView, setInView] = useState(false);
   useEffect(() => {
     if (!ref.current) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setInView(true);
-      },
-      { threshold: 0.15 },
-    );
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold: 0.1 });
     obs.observe(ref.current);
     return () => obs.disconnect();
   }, [ref]);
   return inView;
 };
 
-const TRAIT_PALETTES = [
-  { bg: T.color.accentSoft, border: T.color.accentBorder },
-  { bg: T.color.accent2Soft, border: T.color.accent2Border },
-  { bg: T.color.accent3Soft, border: T.color.accent3Border },
-  { bg: T.color.accentSoft, border: T.color.accentBorder },
-];
-
-const TraitCard = ({
-  trait,
-  delay,
-  index,
-}: {
-  trait: (typeof profile.traits)[0];
-  delay: number;
-  index: number;
-}) => {
-  const [hovered, setHovered] = useState(false);
-  const p = TRAIT_PALETTES[index % TRAIT_PALETTES.length];
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: T.color.bg,
-        border: `1px solid ${hovered ? T.color.borderStrong : T.color.border}`,
-        borderRadius: "10px",
-        padding: "18px",
-        transition: "all 0.2s ease",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
-        boxShadow: hovered ? "0 6px 20px rgba(17,24,39,0.06)" : "none",
-        animation: `fade-in-up 0.6s ease-out ${delay}s both`,
-      }}
-    >
-      <div
-        style={{
-          width: "36px",
-          height: "36px",
-          borderRadius: "9px",
-          background: p.bg,
-          border: `1px solid ${p.border}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "16px",
-          marginBottom: "12px",
-        }}
-      >
-        {trait.icon}
-      </div>
-      <h4
-        style={{
-          fontFamily: T.font.heading,
-          fontSize: "14px",
-          fontWeight: 600,
-          color: T.color.text,
-          margin: "0 0 6px",
-        }}
-      >
-        {trait.label}
-      </h4>
-      <p
-        style={{
-          color: T.color.textSecondary,
-          fontSize: "13px",
-          lineHeight: 1.6,
-          margin: 0,
-        }}
-      >
-        {trait.desc}
-      </p>
-    </div>
-  );
-};
-
-const AboutMe = () => {
+export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const inView = useInView(sectionRef);
 
   return (
     <>
       <style>{`
-        ${T.fontImport}
-        @keyframes fade-in-up {
-          from { opacity:0; transform:translateY(20px); }
-          to   { opacity:1; transform:translateY(0); }
-        }
-        @keyframes reveal {
-          from { opacity:0; transform:translateY(24px); }
-          to   { opacity:1; transform:translateY(0); }
-        }
-        .about-revealed    { animation: reveal 0.7s ease-out both; }
-        .about-revealed-d1 { animation: reveal 0.7s ease-out 0.1s both; }
-        .about-revealed-d2 { animation: reveal 0.7s ease-out 0.2s both; }
-
-        .about-link {
-          display: inline-flex; align-items: center; gap: 8px;
-          padding: 9px 18px;
-          background: ${T.color.bg};
-          border: 1px solid ${T.color.border};
-          border-radius: 8px;
-          color: ${T.color.text};
-          font-size: 13px;
-          font-weight: 500;
-          text-decoration: none;
-          transition: all 0.2s;
-        }
-        .about-link:hover {
-          border-color: ${T.color.borderStrong};
-          background: ${T.color.bgAlt};
-        }
+        @keyframes about-in { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+        .about-in { animation: about-in 0.8s cubic-bezier(0.16,1,0.3,1) both; }
+        .skill-row { display: flex; align-items: baseline; gap: 1.1rem; padding: 14px 0; border-bottom: 1px solid ${T.color.border}; }
+        .skill-row:last-child { border-bottom: none; }
+        .skill-label { font-family: ${T.font.mono}; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: ${T.color.textMuted}; width: 92px; flex-shrink: 0; }
+        .skill-items { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .skill-chip { font-family: ${T.font.body}; font-size: 0.86rem; color: ${T.color.text}; }
+        .skill-chip:not(:last-child)::after { content: '·'; margin-left: 0.5rem; color: ${T.color.borderStrong}; }
+        .trait-card { padding: 1.4rem 0; border-top: 1px solid ${T.color.border}; }
+        .trait-card:last-child { border-bottom: 1px solid ${T.color.border}; }
+        .about-grid { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,0.9fr); gap: clamp(2.5rem,6vw,5rem); margin-top: 3rem; }
+        @media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; } }
       `}</style>
 
-      <section
-        id="about"
-        ref={sectionRef}
-        style={{
-          width: "100%",
-          background: T.color.bgAlt,
-          padding: "5rem 1.5rem",
-          fontFamily: T.font.body,
-        }}
-      >
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          {/* Header */}
-          <div
-            className={inView ? "about-revealed" : ""}
-            style={{ textAlign: "center", marginBottom: "3.5rem" }}
-          >
-            <p
-              style={{
-                fontFamily: T.font.mono,
-                fontSize: "13px",
-                color: T.color.accentText,
-                margin: "0 0 10px",
-              }}
-            >
-              ~/about
-            </p>
-            <h2
-              style={{
-                fontFamily: T.font.heading,
-                fontWeight: 700,
-                fontSize: "clamp(1.8rem,4vw,2.6rem)",
-                color: T.color.text,
-                margin: "0 0 0.8rem",
-              }}
-            >
-              About me
-            </h2>
-            <p
-              style={{
-                color: T.color.textSecondary,
-                fontSize: "15px",
-                maxWidth: "440px",
-                margin: "0 auto",
-                lineHeight: 1.7,
-              }}
-            >
-              A quick look at who I am, what I do, and what I&apos;m working on
-            </p>
+      <section id="about" ref={sectionRef} style={{ width: "100%", background: T.color.paper, padding: "clamp(4rem,8vw,6.5rem) 0" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 clamp(1.25rem,4vw,2.75rem)" }}>
+          <div className={inView ? "about-in" : ""}>
+            <SectionHead kicker="02 — About" title={<>The person <em style={{ fontStyle: "italic", color: T.color.accent }}>behind</em> the commits</>} />
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(290px,1fr))",
-              gap: "3rem",
-              alignItems: "start",
-            }}
-          >
-            {/* LEFT — Identity */}
-            <div
-              className={inView ? "about-revealed-d1" : ""}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.4rem",
-              }}
-            >
-              <div
-                style={{
-                  background: T.color.bg,
-                  border: `1px solid ${T.color.border}`,
-                  borderRadius: "12px",
-                  padding: "28px",
-                  boxShadow: "0 1px 3px rgba(17,24,39,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "18px",
-                    marginBottom: "22px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "92px",
-                      height: "92px",
-                      borderRadius: "50%",
-                      flexShrink: 0,
-                      padding: "3px",
-                      background: T.color.gradientButton,
-                    }}
-                  >
-                    <img
-                      src="/profile.jpg"
-                      alt={profile.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        border: "3px solid #fff",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <h3
-                      style={{
-                        fontFamily: T.font.heading,
-                        fontSize: "19px",
-                        fontWeight: 600,
-                        color: T.color.text,
-                        margin: 0,
-                      }}
-                    >
-                      {profile.name}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        color: T.color.textSecondary,
-                        margin: "4px 0 0",
-                      }}
-                    >
-                      {profile.roles.join(" · ")}
-                    </p>
-                    <p
-                      style={{
-                        fontFamily: T.font.mono,
-                        fontSize: "12px",
-                        color: T.color.textMuted,
-                        margin: "4px 0 0",
-                      }}
-                    >
-                      @{profile.alias} · {profile.seniority}
-                    </p>
-                  </div>
-                </div>
+          <div className="about-grid">
+            {/* LEFT column */}
+            <div className={inView ? "about-in" : ""}>
+              <p style={{ fontFamily: T.font.display, fontSize: "clamp(1.3rem,2.2vw,1.6rem)", lineHeight: 1.5, color: T.color.text, fontWeight: 400, margin: 0 }}>
+                {profile.bio}
+              </p>
 
-                <p
-                  style={{
-                    color: T.color.textSecondary,
-                    fontSize: "14px",
-                    lineHeight: 1.8,
-                    margin: "0 0 22px",
-                  }}
-                >
-                  {profile.bio}
-                </p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "1.5rem", marginTop: "2.5rem" }}>
+                {[
+                  { label: "Based in", value: profile.location },
+                  { label: "Role", value: profile.roles },
+                  { label: "Level", value: profile.seniority },
+                  { label: "Currently", value: profile.currently },
+                ].map((row) => (
+                  <div key={row.label}>
+                    <div style={{ fontFamily: T.font.mono, fontSize: "0.68rem", letterSpacing: "0.08em", textTransform: "uppercase", color: T.color.textMuted, marginBottom: 4 }}>
+                      {row.label}
+                    </div>
+                    <div style={{ fontFamily: T.font.body, fontSize: "0.95rem", color: T.color.text }}>{row.value}</div>
+                  </div>
+                ))}
+              </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column" as const,
-                    gap: "12px",
-                  }}
-                >
-                  {[
-                    { label: "Location", value: profile.location },
-                    { label: "Email", value: profile.email },
-                    { label: "Currently", value: profile.currently },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      style={{ display: "flex", gap: "12px", fontSize: "13px" }}
-                    >
-                      <span
-                        style={{
-                          color: T.color.textMuted,
-                          minWidth: "70px",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {item.label}
+              <div style={{ display: "flex", gap: "1.6rem", marginTop: "2.5rem", flexWrap: "wrap" }}>
+                <ArrowLink href={profile.github} external>GitHub</ArrowLink>
+                <ArrowLink href={profile.linkedin} external>LinkedIn</ArrowLink>
+                <ArrowLink href={`mailto:${profile.email}`}>{profile.email}</ArrowLink>
+              </div>
+
+              {/* Traits */}
+              <div style={{ marginTop: "3rem" }}>
+                {traits.map((t) => (
+                  <div key={t.n} className="trait-card" style={{ display: "flex", gap: "1.2rem" }}>
+                    <span style={{ fontFamily: T.font.mono, fontSize: "0.78rem", color: T.color.accent, paddingTop: 3 }}>{t.n}</span>
+                    <div>
+                      <div style={{ fontFamily: T.font.heading, fontSize: "0.98rem", fontWeight: 600, color: T.color.text }}>{t.label}</div>
+                      <div style={{ fontFamily: T.font.body, fontSize: "0.88rem", color: T.color.textSecondary, marginTop: 3 }}>{t.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT column — capability index */}
+            <div className={inView ? "about-in" : ""}>
+              <div style={{ background: T.color.surface, border: `1px solid ${T.color.border}`, padding: "clamp(1.5rem,3vw,2.5rem)" }}>
+                <Kicker>Capability index</Kicker>
+                <div style={{ marginTop: "1.2rem" }}>
+                  {skillGroups.map((g) => (
+                    <div className="skill-row" key={g.label}>
+                      <span className="skill-label">{g.label}</span>
+                      <span className="skill-items">
+                        {g.items.map((s) => (
+                          <span className="skill-chip" key={s}>{s}</span>
+                        ))}
                       </span>
-                      <span style={{ color: T.color.text }}>{item.value}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Stats */}
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4,1fr)",
-                  gap: "8px",
+                  marginTop: "1.5rem",
+                  background: T.color.ink,
+                  color: T.color.darkText,
+                  padding: "1.75rem clamp(1.5rem,3vw,2.25rem)",
+                  position: "relative",
                 }}
               >
-                {profile.stats.map((s, i) => {
-                  const statColors = [
-                    T.color.accentText,
-                    T.color.accent2Text,
-                    T.color.accent3Text,
-                    T.color.accentText,
-                  ];
-                  return (
-                    <div
-                      key={s.label}
-                      style={{
-                        background: T.color.bg,
-                        border: `1px solid ${T.color.border}`,
-                        borderRadius: "10px",
-                        padding: "14px 8px",
-                        textAlign: "center" as const,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontFamily: T.font.heading,
-                          fontSize: "18px",
-                          fontWeight: 700,
-                          color: statColors[i % statColors.length],
-                        }}
-                      >
-                        {s.value}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: T.color.textMuted,
-                          marginTop: "4px",
-                        }}
-                      >
-                        {s.label}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* GitHub contribution activity */}
-              <GitHubActivity />
-
-              {/* Contact links */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap" as const,
-                  gap: "10px",
-                }}
-              >
-                <a
-                  href={profile.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="about-link"
-                >
-                  GitHub
-                </a>
-                <a
-                  href={profile.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="about-link"
-                >
-                  LinkedIn
-                </a>
-                <a href={`mailto:${profile.email}`} className="about-link">
-                  Email
-                </a>
-              </div>
-            </div>
-
-            {/* RIGHT — Traits */}
-            <div
-              className={inView ? "about-revealed-d2" : ""}
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-            >
-              <span
-                style={{
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  color: T.color.textMuted,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "1px",
-                }}
-              >
-                What I bring
-              </span>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "10px",
-                }}
-              >
-                {profile.traits.map((t, i) => (
-                  <TraitCard
-                    key={t.label}
-                    trait={t}
-                    delay={0.08 * i}
-                    index={i}
-                  />
-                ))}
-              </div>
-
-              <div
-                style={{
-                  marginTop: "0.5rem",
-                  background: T.color.bg,
-                  border: `1px solid ${T.color.border}`,
-                  borderRadius: "10px",
-                  padding: "20px 22px",
-                }}
-              >
-                <p
-                  style={{
-                    color: T.color.textSecondary,
-                    fontSize: "15px",
-                    lineHeight: 1.8,
-                    fontStyle: "italic",
-                    margin: 0,
-                  }}
-                >
-                  &quot;I don&apos;t just write code — I build systems that
-                  outlast the moment. Every project is functionality, clarity,
-                  and craft, bound together in working software.&quot;
+                <span style={{ fontFamily: T.font.display, fontSize: "2.4rem", color: T.color.accentBright, lineHeight: 1, display: "block" }}>“</span>
+                <p style={{ fontFamily: T.font.display, fontStyle: "italic", fontSize: "1.15rem", lineHeight: 1.55, margin: "0.5rem 0 0" }}>
+                  I don&apos;t just write code — I build systems that outlast the moment they were written for.
                 </p>
-                <div
-                  style={{
-                    marginTop: "12px",
-                    fontSize: "13px",
-                    color: T.color.textMuted,
-                  }}
-                >
-                  — {profile.name}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: T.color.accent2Soft,
-                  border: `1px solid ${T.color.accent2Border}`,
-                  borderRadius: "10px",
-                  padding: "16px 20px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "14px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "8px",
-                    height: "8px",
-                    borderRadius: "50%",
-                    background: T.color.accent2,
-                    flexShrink: 0,
-                  }}
-                />
-                <div>
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      color: T.color.accent2Text,
-                      fontWeight: 600,
-                      display: "block",
-                      marginBottom: "3px",
-                    }}
-                  >
-                    Active project
-                  </span>
-                  <span style={{ fontSize: "14px", color: T.color.text }}>
-                    {profile.currently}
-                  </span>
+                <div style={{ marginTop: "1.2rem", fontFamily: T.font.mono, fontSize: "0.72rem", letterSpacing: "0.06em", color: T.color.darkTextSecondary }}>
+                  — {profile.alias}
                 </div>
               </div>
             </div>
@@ -548,6 +152,4 @@ const AboutMe = () => {
       </section>
     </>
   );
-};
-
-export default AboutMe;
+}

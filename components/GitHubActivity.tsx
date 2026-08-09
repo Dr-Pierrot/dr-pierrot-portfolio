@@ -107,7 +107,7 @@ const GitHubActivity = () => {
             letterSpacing: "0.5px",
           }}
         >
-          // github.activity
+          {"// github.activity"}
         </span>
         {totalCount !== null && (
           <span

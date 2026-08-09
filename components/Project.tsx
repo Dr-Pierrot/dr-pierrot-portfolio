@@ -1,1170 +1,165 @@
 "use client";
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import Link from "next/link";
 import { T } from "@/lib/theme";
+import { SectionHead, Tag } from "@/components/editorial";
+import { projects, ALL_TYPES } from "@/lib/projects";
 
-type Project = {
-  id: number;
-  name: string;
-  desc: string;
-  longDesc: string;
-  stack: string[];
-  link: string;
-  status: "In Progress" | "Complete";
-  type: string;
-  icon: string;
-  highlight: boolean;
-  year: number;
-  features: string[];
-};
-
-const projects: Project[] = [
-  {
-    id: 1,
-    name: "Human Resource Management System",
-    desc: "A fullstack HRMS built with Laravel 13 & React/TypeScript via Inertia.js for real-world organizational use.",
-    longDesc:
-      "A comprehensive fullstack Human Resource Management System designed to streamline HR operations. Built with Laravel 13 as the backend and React/TypeScript via Inertia.js for a seamless SPA experience. Handles the full employee lifecycle — from onboarding to offboarding — alongside payroll computation, attendance tracking, and leave management.",
-    stack: [
-      "Laravel",
-      "TypeScript",
-      "React",
-      "Inertia.js",
-      "MySQL",
-      "TailwindCSS",
-      "Vite",
-    ],
-    link: "https://github.com/Dr-Pierrot/human-resource-management-system",
-    status: "In Progress",
-    type: "Fullstack App",
-    icon: "🧩",
-    highlight: true,
-    year: 2025,
-    features: [
-      "Employee records & lifecycle management",
-      "Payroll computation engine",
-      "Attendance & leave tracking",
-      "Role-based access control",
-      "Inertia.js SPA architecture",
-      "MySQL relational database design",
-    ],
-  },
-  {
-    id: 2,
-    name: "PSGC API",
-    desc: "Production-ready REST API exposing 43,768 Philippine geographic records with Sanctum auth & Swagger docs.",
-    longDesc:
-      "A production-grade REST API built on Laravel that exposes the entire Philippine Standard Geographic Code (PSGC) dataset — Q1 2026 edition — covering 43,768 records across all administrative levels. Designed for developers who need reliable, structured Philippine location data. Ships with full token-based authentication via Laravel Sanctum and auto-generated OpenAPI/Swagger documentation.",
-    stack: ["Laravel", "PHP", "MySQL", "Sanctum", "Swagger", "OpenAPI"],
-    link: "https://github.com/Dr-Pierrot/psgc-api",
-    status: "Complete",
-    type: "REST API",
-    icon: "🗺️",
-    highlight: false,
-    year: 2025,
-    features: [
-      "43,768 geographic records (Q1 2026)",
-      "Regions, provinces, cities, barangays",
-      "Laravel Sanctum token authentication",
-      "OpenAPI / Swagger documentation",
-      "Optimized query performance",
-      "RESTful endpoint design",
-    ],
-  },
-  {
-    id: 3,
-    name: "Weather App",
-    desc: "Real-time weather app with live API integration, dynamic DOM updates, and a clean responsive UI.",
-    longDesc:
-      "A JavaScript weather application that integrates with a live weather API to display real-time meteorological data. Features a clean, responsive interface with dynamic DOM manipulation — no frameworks, pure vanilla JS — demonstrating solid fundamentals in API consumption, async/await patterns, and UX design.",
-    stack: ["JavaScript", "HTML", "CSS", "Weather API"],
-    link: "https://github.com/Dr-Pierrot/weather-app",
-    status: "Complete",
-    type: "Web App",
-    icon: "⛅",
-    highlight: false,
-    year: 2024,
-    features: [
-      "Live weather API integration",
-      "Real-time data updates",
-      "Responsive UI design",
-      "Async/await API patterns",
-      "Dynamic DOM manipulation",
-      "Location-based forecasts",
-    ],
-  },
-  {
-    id: 4,
-    name: "Todo List v2",
-    desc: "Feature-rich task manager with full CRUD operations built in pure vanilla JavaScript.",
-    longDesc:
-      "A refined second iteration of a task management application built entirely in vanilla JavaScript. Supports full CRUD operations — create, read, update, and delete — with local data persistence. Demonstrates clean separation of concerns and attention to micro-interactions without relying on any external libraries.",
-    stack: ["JavaScript", "HTML", "CSS"],
-    link: "https://github.com/Dr-Pierrot/todo_list2",
-    status: "Complete",
-    type: "Web App",
-    icon: "✅",
-    highlight: false,
-    year: 2024,
-    features: [
-      "Full CRUD task operations",
-      "Local data persistence",
-      "Keyboard accessibility",
-      "Micro-interaction animations",
-      "Clean vanilla JS architecture",
-      "Responsive layout",
-    ],
-  },
-  {
-    id: 5,
-    name: "IDO Prototype",
-    desc: "Java desktop app prototype with a fully finished Swing GUI, showcasing OOP architecture and MVC design.",
-    longDesc:
-      "A Java desktop application prototype featuring a fully realized user interface built with Java Swing. Demonstrates solid object-oriented programming principles — encapsulation, inheritance, and polymorphism — applied to a real GUI application with clearly separated model, view, and controller layers.",
-    stack: ["Java", "Java Swing"],
-    link: "https://github.com/Dr-Pierrot/IDOPrototype",
-    status: "Complete",
-    type: "Desktop App",
-    icon: "☕",
-    highlight: false,
-    year: 2024,
-    features: [
-      "Java Swing GUI",
-      "OOP architecture (MVC)",
-      "Encapsulation & inheritance",
-      "Desktop application design",
-      "Fully realized UI prototype",
-      "Structured component layout",
-    ],
-  },
-];
-
-const ALL_TYPES = ["All", ...Array.from(new Set(projects.map((p) => p.type)))];
-
-const STATUS_STYLE: Record<
-  string,
-  { bg: string; border: string; text: string; dot: string }
-> = {
-  "In Progress": {
-    bg: T.color.accent2Soft,
-    border: T.color.accent2Border,
-    text: T.color.accent2Text,
-    dot: "#D97706",
-  },
-  Complete: {
-    bg: T.color.accentSoft,
-    border: T.color.accentBorder,
-    text: T.color.accentText,
-    dot: T.color.accent,
-  },
-};
-
-const TYPE_ICON_STYLE: Record<string, { bg: string; border: string }> = {
-  "Fullstack App": { bg: T.color.accent3Soft, border: T.color.accent3Border },
-  "REST API": { bg: T.color.accentSoft, border: T.color.accentBorder },
-  "Web App": { bg: T.color.accent2Soft, border: T.color.accent2Border },
-  "Desktop App": { bg: T.color.accent3Soft, border: T.color.accent3Border },
+const STATUS_DOT: Record<string, string> = {
+  "In Progress": T.color.accent2,
+  "Complete": T.color.accent,
 };
 
 const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   const [inView, setInView] = useState(false);
   useEffect(() => {
     if (!ref.current) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setInView(true);
-      },
-      { threshold: 0.08 },
-    );
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold: 0.05 });
     obs.observe(ref.current);
     return () => obs.disconnect();
   }, [ref]);
   return inView;
 };
 
-const ProjectModal = ({
-  project,
-  onClose,
-}: {
-  project: Project;
-  onClose: () => void;
-}) => {
-  const sc = STATUS_STYLE[project.status];
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    const fn = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", fn);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", fn);
-    };
-  }, [onClose]);
-
-  return (
-    <>
-      <div
-        onClick={onClose}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 500,
-          background: "rgba(17,24,39,0.5)",
-          backdropFilter: "blur(2px)",
-          animation: "modal-bg 0.2s ease both",
-        }}
-      />
-      <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%,-50%)",
-          zIndex: 501,
-          width: "min(680px,94vw)",
-          maxHeight: "88vh",
-          overflowY: "auto",
-          background: T.color.bg,
-          border: `1px solid ${T.color.border}`,
-          borderRadius: "14px",
-          animation: "modal-in 0.25s cubic-bezier(0.16,1,0.3,1) both",
-          boxShadow: "0 20px 60px rgba(17,24,39,0.2)",
-        }}
-      >
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          style={{
-            position: "sticky",
-            top: 0,
-            float: "right",
-            margin: "16px 16px 0 0",
-            width: "32px",
-            height: "32px",
-            background: T.color.bgAlt,
-            border: `1px solid ${T.color.border}`,
-            borderRadius: "8px",
-            color: T.color.textSecondary,
-            fontSize: "15px",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1,
-          }}
-        >
-          ✕
-        </button>
-
-        <div style={{ padding: "16px 32px 32px", clear: "both" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "14px",
-              marginBottom: "18px",
-            }}
-          >
-            <span style={{ fontSize: "32px", lineHeight: 1, flexShrink: 0 }}>
-              {project.icon}
-            </span>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  marginBottom: "8px",
-                  flexWrap: "wrap" as const,
-                }}
-              >
-                <span style={{ fontSize: "12px", color: T.color.textMuted }}>
-                  {project.type}
-                </span>
-                <span style={{ color: T.color.border }}>·</span>
-                <span style={{ fontSize: "12px", color: T.color.textMuted }}>
-                  {project.year}
-                </span>
-              </div>
-              <h2
-                style={{
-                  fontFamily: T.font.heading,
-                  fontSize: "clamp(1.1rem,3vw,1.4rem)",
-                  fontWeight: 700,
-                  color: T.color.text,
-                  margin: "0 0 10px",
-                }}
-              >
-                {project.name}
-              </h2>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "4px 12px",
-                  background: sc.bg,
-                  border: `1px solid ${sc.border}`,
-                  borderRadius: "999px",
-                  width: "fit-content",
-                }}
-              >
-                <div
-                  style={{
-                    width: "6px",
-                    height: "6px",
-                    borderRadius: "50%",
-                    background: sc.dot,
-                  }}
-                />
-                <span
-                  style={{ fontSize: "11px", fontWeight: 600, color: sc.text }}
-                >
-                  {project.status}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <p
-            style={{
-              color: T.color.textSecondary,
-              fontSize: "14px",
-              lineHeight: 1.85,
-              marginBottom: "24px",
-            }}
-          >
-            {project.longDesc}
-          </p>
-
-          <div style={{ marginBottom: "24px" }}>
-            <div
-              style={{
-                fontSize: "12px",
-                fontWeight: 600,
-                color: T.color.textMuted,
-                marginBottom: "12px",
-              }}
-            >
-              Key features
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "8px",
-              }}
-            >
-              {project.features.map((f) => (
-                <div
-                  key={f}
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <span
-                    style={{
-                      color: T.color.accent,
-                      fontSize: "13px",
-                      marginTop: "1px",
-                      flexShrink: 0,
-                    }}
-                  >
-                    ✓
-                  </span>
-                  <span
-                    style={{
-                      color: T.color.text,
-                      fontSize: "13px",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {f}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "28px" }}>
-            <div
-              style={{
-                fontSize: "12px",
-                fontWeight: 600,
-                color: T.color.textMuted,
-                marginBottom: "10px",
-              }}
-            >
-              Tech stack
-            </div>
-            <div
-              style={{ display: "flex", flexWrap: "wrap" as const, gap: "7px" }}
-            >
-              {project.stack.map((s) => (
-                <span
-                  key={s}
-                  style={{
-                    padding: "4px 12px",
-                    background: T.color.bgAlt,
-                    border: `1px solid ${T.color.border}`,
-                    borderRadius: "6px",
-                    color: T.color.text,
-                    fontSize: "12px",
-                    fontFamily: T.font.mono,
-                  }}
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px 22px",
-              background: T.color.text,
-              border: `1px solid ${T.color.text}`,
-              borderRadius: "8px",
-              color: "#fff",
-              fontSize: "13px",
-              fontWeight: 600,
-              textDecoration: "none",
-            }}
-          >
-            View on GitHub →
-          </a>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const FilterTabs = ({
-  active,
-  onChange,
-  counts,
-}: {
-  active: string;
-  onChange: (t: string) => void;
-  counts: Record<string, number>;
-}) => (
-  <div
-    style={{
-      display: "flex",
-      flexWrap: "wrap" as const,
-      gap: "8px",
-      justifyContent: "center",
-      marginBottom: "2.5rem",
-    }}
-  >
-    {ALL_TYPES.map((t) => {
-      const isActive = t === active;
-      return (
-        <button
-          key={t}
-          onClick={() => onChange(t)}
-          style={{
-            padding: "7px 16px",
-            background: isActive ? T.color.text : T.color.bg,
-            border: `1px solid ${isActive ? T.color.text : T.color.border}`,
-            borderRadius: "999px",
-            cursor: "pointer",
-            color: isActive ? "#fff" : T.color.textSecondary,
-            fontSize: "13px",
-            fontWeight: 500,
-            transition: "all 0.2s",
-            display: "flex",
-            alignItems: "center",
-            gap: "7px",
-          }}
-        >
-          <span>{t}</span>
-          <span
-            style={{
-              background: isActive ? "rgba(255,255,255,0.2)" : T.color.bgAlt,
-              borderRadius: "999px",
-              padding: "1px 7px",
-              fontSize: "11px",
-              color: isActive ? "#fff" : T.color.textMuted,
-            }}
-          >
-            {counts[t] ?? 0}
-          </span>
-        </button>
-      );
-    })}
-  </div>
-);
-
-const FeaturedCard = ({
-  project,
-  onOpen,
-}: {
-  project: Project;
-  onOpen: () => void;
-}) => {
-  const [hovered, setHovered] = useState(false);
-  const sc = STATUS_STYLE[project.status];
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: T.color.bg,
-        border: `1px solid ${hovered ? T.color.borderStrong : T.color.border}`,
-        borderRadius: "14px",
-        padding: "36px",
-        transition: "all 0.25s ease",
-        transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        boxShadow: hovered
-          ? "0 12px 40px rgba(17,24,39,0.08)"
-          : "0 1px 3px rgba(17,24,39,0.04)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "3px",
-          background: T.color.gradientText,
-        }}
-      />
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          marginBottom: "12px",
-          flexWrap: "wrap" as const,
-        }}
-      >
-        <span style={{ fontSize: "12px", color: T.color.textMuted }}>
-          {project.type}
-        </span>
-        <span style={{ color: T.color.border }}>·</span>
-        <span
-          style={{
-            fontSize: "11px",
-            fontWeight: 600,
-            color: T.color.accent3Text,
-            background: T.color.accent3Soft,
-            border: `1px solid ${T.color.accent3Border}`,
-            padding: "2px 9px",
-            borderRadius: "999px",
-          }}
-        >
-          ★ Featured
-        </span>
-        <span style={{ color: T.color.border }}>·</span>
-        <span style={{ fontSize: "12px", color: T.color.textMuted }}>
-          {project.year}
-        </span>
-        <div
-          style={{
-            marginLeft: "auto",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            padding: "4px 12px",
-            background: sc.bg,
-            border: `1px solid ${sc.border}`,
-            borderRadius: "999px",
-          }}
-        >
-          <div
-            style={{
-              width: "6px",
-              height: "6px",
-              borderRadius: "50%",
-              background: sc.dot,
-            }}
-          />
-          <span
-            style={{
-              fontSize: "11px",
-              fontWeight: 600,
-              color: sc.text,
-              whiteSpace: "nowrap" as const,
-            }}
-          >
-            {project.status}
-          </span>
-        </div>
-      </div>
-
-      <h3
-        style={{
-          fontFamily: T.font.heading,
-          fontWeight: 700,
-          fontSize: "clamp(1.2rem,3vw,1.6rem)",
-          color: T.color.text,
-          margin: "0 0 14px",
-        }}
-      >
-        {project.icon} {project.name}
-      </h3>
-
-      <p
-        style={{
-          color: T.color.textSecondary,
-          fontSize: "14px",
-          lineHeight: 1.8,
-          margin: "0 0 20px",
-          maxWidth: "680px",
-        }}
-      >
-        {project.longDesc}
-      </p>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))",
-          gap: "6px",
-          marginBottom: "22px",
-        }}
-      >
-        {project.features.map((f) => (
-          <div
-            key={f}
-            style={{ display: "flex", gap: "7px", alignItems: "flex-start" }}
-          >
-            <span
-              style={{
-                color: T.color.accent,
-                fontSize: "12px",
-                marginTop: "2px",
-                flexShrink: 0,
-              }}
-            >
-              ✓
-            </span>
-            <span
-              style={{
-                color: T.color.textSecondary,
-                fontSize: "12px",
-                lineHeight: 1.5,
-              }}
-            >
-              {f}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap" as const,
-          gap: "7px",
-          marginBottom: "22px",
-        }}
-      >
-        {project.stack.map((s) => (
-          <span
-            key={s}
-            style={{
-              padding: "4px 12px",
-              background: T.color.bgAlt,
-              border: `1px solid ${T.color.border}`,
-              borderRadius: "6px",
-              color: T.color.text,
-              fontSize: "12px",
-              fontFamily: T.font.mono,
-            }}
-          >
-            {s}
-          </span>
-        ))}
-      </div>
-
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" as const }}>
-        <button
-          onClick={onOpen}
-          style={{
-            padding: "10px 22px",
-            background: T.color.gradientButton,
-            border: "1px solid transparent",
-            borderRadius: "8px",
-            color: "#fff",
-            fontSize: "13px",
-            fontWeight: 600,
-            cursor: "pointer",
-            boxShadow: "0 1px 2px rgba(17,24,39,0.15)",
-          }}
-        >
-          Full details
-        </button>
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            padding: "10px 22px",
-            background: "transparent",
-            border: `1px solid ${T.color.border}`,
-            borderRadius: "8px",
-            color: T.color.text,
-            fontSize: "13px",
-            fontWeight: 600,
-            textDecoration: "none",
-            display: "inline-block",
-          }}
-        >
-          GitHub →
-        </a>
-      </div>
-    </div>
-  );
-};
-
-const ProjectCard = ({
-  project,
-  index,
-  onOpen,
-}: {
-  project: Project;
-  index: number;
-  onOpen: () => void;
-}) => {
-  const [hovered, setHovered] = useState(false);
-  const sc = STATUS_STYLE[project.status];
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "flex",
-        flexDirection: "column" as const,
-        background: T.color.bg,
-        border: `1px solid ${hovered ? T.color.borderStrong : T.color.border}`,
-        borderRadius: "12px",
-        padding: "22px",
-        transition: "all 0.2s ease",
-        transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        boxShadow: hovered ? "0 8px 26px rgba(17,24,39,0.08)" : "none",
-        animation: `fade-in-up 0.55s ease-out ${0.06 * index}s both`,
-        height: "100%",
-        boxSizing: "border-box" as const,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "14px",
-        }}
-      >
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            borderRadius: "10px",
-            background: (
-              TYPE_ICON_STYLE[project.type] ?? TYPE_ICON_STYLE["Web App"]
-            ).bg,
-            border: `1px solid ${(TYPE_ICON_STYLE[project.type] ?? TYPE_ICON_STYLE["Web App"]).border}`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "18px",
-          }}
-        >
-          {project.icon}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column" as const,
-            alignItems: "flex-end",
-            gap: "5px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              padding: "3px 10px",
-              background: sc.bg,
-              border: `1px solid ${sc.border}`,
-              borderRadius: "999px",
-            }}
-          >
-            <div
-              style={{
-                width: "5px",
-                height: "5px",
-                borderRadius: "50%",
-                background: sc.dot,
-              }}
-            />
-            <span style={{ fontSize: "10px", fontWeight: 600, color: sc.text }}>
-              {project.status}
-            </span>
-          </div>
-          <span style={{ fontSize: "11px", color: T.color.textMuted }}>
-            {project.year}
-          </span>
-        </div>
-      </div>
-
-      <span
-        style={{
-          fontSize: "11px",
-          color: T.color.textMuted,
-          display: "block",
-          marginBottom: "5px",
-        }}
-      >
-        {project.type}
-      </span>
-      <h3
-        style={{
-          fontFamily: T.font.heading,
-          fontWeight: 600,
-          fontSize: "15px",
-          color: T.color.text,
-          margin: "0 0 10px",
-          lineHeight: 1.4,
-        }}
-      >
-        {project.name}
-      </h3>
-      <p
-        style={{
-          color: T.color.textSecondary,
-          fontSize: "13px",
-          lineHeight: 1.7,
-          margin: "0 0 14px",
-          flex: 1,
-        }}
-      >
-        {project.desc}
-      </p>
-
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap" as const,
-          gap: "5px",
-          marginBottom: "14px",
-        }}
-      >
-        {project.stack.slice(0, 4).map((s) => (
-          <span
-            key={s}
-            style={{
-              padding: "2px 9px",
-              background: T.color.bgAlt,
-              border: `1px solid ${T.color.border}`,
-              borderRadius: "6px",
-              color: T.color.textSecondary,
-              fontSize: "10px",
-              fontFamily: T.font.mono,
-            }}
-          >
-            {s}
-          </span>
-        ))}
-        {project.stack.length > 4 && (
-          <span
-            style={{
-              padding: "2px 9px",
-              background: T.color.bgAlt,
-              border: `1px solid ${T.color.border}`,
-              borderRadius: "6px",
-              color: T.color.textMuted,
-              fontSize: "10px",
-              fontFamily: T.font.mono,
-            }}
-          >
-            +{project.stack.length - 4}
-          </span>
-        )}
-      </div>
-
-      <div style={{ display: "flex", gap: "8px", marginTop: "auto" }}>
-        <button
-          onClick={onOpen}
-          style={{
-            flex: 1,
-            padding: "8px 12px",
-            background: T.color.bgAlt,
-            border: `1px solid ${T.color.border}`,
-            borderRadius: "8px",
-            color: T.color.text,
-            fontSize: "12px",
-            fontWeight: 500,
-            cursor: "pointer",
-          }}
-        >
-          Details
-        </button>
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            padding: "8px 12px",
-            background: "transparent",
-            border: `1px solid ${T.color.border}`,
-            borderRadius: "8px",
-            color: T.color.textSecondary,
-            fontSize: "12px",
-            fontWeight: 500,
-            textDecoration: "none",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  );
-};
-
-const Projects = () => {
+export default function Projects() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const inView = useInView(sectionRef);
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [modalProject, setModalProject] = useState<Project | null>(null);
-  const [animKey, setAnimKey] = useState(0);
+  const [filter, setFilter] = useState("All");
 
-  const filtered =
-    activeFilter === "All"
-      ? projects
-      : projects.filter((p) => p.type === activeFilter);
-  const featured = filtered.filter((p) => p.highlight);
-  const rest = filtered.filter((p) => !p.highlight);
-
-  const counts: Record<string, number> = { All: projects.length };
-  ALL_TYPES.slice(1).forEach((t) => {
-    counts[t] = projects.filter((p) => p.type === t).length;
-  });
-
-  const handleFilter = (t: string) => {
-    setActiveFilter(t);
-    setAnimKey((k) => k + 1);
-  };
-  const openModal = useCallback((p: Project) => setModalProject(p), []);
-  const closeModal = useCallback(() => setModalProject(null), []);
+  const featured = projects.find((p) => p.highlight);
+  const rest = projects.filter((p) => p.id !== featured?.id && (filter === "All" || p.type === filter));
 
   return (
     <>
       <style>{`
-        ${T.fontImport}
-        @keyframes fade-in-up {
-          from { opacity:0; transform:translateY(16px); }
-          to   { opacity:1; transform:translateY(0); }
+        @keyframes proj-in { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+        .proj-in { animation: proj-in 0.8s cubic-bezier(0.16,1,0.3,1) both; }
+
+        .filter-chip {
+          font-family: ${T.font.mono}; font-size: 0.74rem; letter-spacing: 0.04em;
+          padding: 6px 14px; border: 1px solid ${T.color.border}; background: transparent;
+          color: ${T.color.textMuted}; cursor: pointer; transition: all 0.2s ease;
         }
-        @keyframes reveal {
-          from { opacity:0; transform:translateY(24px); }
-          to   { opacity:1; transform:translateY(0); }
+        .filter-chip.active { background: ${T.color.ink}; color: ${T.color.paper}; border-color: ${T.color.ink}; }
+        .filter-chip:hover:not(.active) { border-color: ${T.color.borderStrong}; color: ${T.color.text}; }
+
+        .toc-row { display: block; text-decoration: none; color: inherit; border-top: 1px solid ${T.color.border}; padding: 1.9rem 0; transition: padding-left 0.25s ease; }
+        .toc-row:last-child { border-bottom: 1px solid ${T.color.border}; }
+        .toc-row:hover { padding-left: 0.75rem; }
+        .toc-row-inner { display: grid; grid-template-columns: 56px minmax(0,1fr) auto; gap: 1.25rem; align-items: center; }
+        .toc-title { font-family: ${T.font.display}; font-size: clamp(1.2rem,2.4vw,1.7rem); color: ${T.color.ink}; transition: color 0.2s ease; }
+        .toc-row:hover .toc-title { color: ${T.color.accent}; }
+        .toc-arrow { font-family: ${T.font.heading}; font-size: 1.3rem; color: ${T.color.textMuted}; transition: transform 0.25s ease, color 0.2s ease; }
+        .toc-row:hover .toc-arrow { transform: translateX(4px); color: ${T.color.accent}; }
+
+        .featured-cover {
+          aspect-ratio: 16/10; background: ${T.color.ink};
+          display: flex; align-items: center; justify-content: center;
+          position: relative; overflow: hidden;
         }
-        @keyframes modal-bg { from { opacity:0; } to { opacity:1; } }
-        @keyframes modal-in {
-          from { opacity:0; transform:translate(-50%,calc(-50% + 16px)); }
-          to   { opacity:1; transform:translate(-50%,-50%); }
+        .featured-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(1.5rem,4vw,3rem); margin-top: 3rem; text-decoration: none; color: inherit; }
+        @media (max-width: 780px) {
+          .toc-row-inner { grid-template-columns: 32px minmax(0,1fr); }
+          .toc-arrow { display: none; }
+          .featured-grid { grid-template-columns: 1fr; }
         }
-        .proj-revealed    { animation: reveal 0.7s ease-out both; }
-        .proj-revealed-d1 { animation: reveal 0.7s ease-out 0.1s both; }
-        .proj-revealed-d2 { animation: reveal 0.7s ease-out 0.2s both; }
-        .proj-revealed-d3 { animation: reveal 0.7s ease-out 0.3s both; }
       `}</style>
 
-      {modalProject && (
-        <ProjectModal project={modalProject} onClose={closeModal} />
-      )}
-
-      <section
-        id="projects"
-        ref={sectionRef}
-        style={{
-          width: "100%",
-          background: T.color.bg,
-          padding: "5rem 1.5rem",
-          fontFamily: T.font.body,
-        }}
-      >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div
-            className={inView ? "proj-revealed" : ""}
-            style={{ textAlign: "center", marginBottom: "2.5rem" }}
-          >
-            <p
-              style={{
-                fontFamily: T.font.mono,
-                fontSize: "13px",
-                color: T.color.accentText,
-                margin: "0 0 10px",
-              }}
-            >
-              ~/projects
-            </p>
-            <h2
-              style={{
-                fontFamily: T.font.heading,
-                fontWeight: 700,
-                fontSize: "clamp(1.8rem,4vw,2.6rem)",
-                color: T.color.text,
-                margin: "0 0 0.8rem",
-              }}
-            >
-              Selected work
-            </h2>
-            <p
-              style={{
-                color: T.color.textSecondary,
-                fontSize: "15px",
-                maxWidth: "440px",
-                margin: "0 auto 1.2rem",
-                lineHeight: 1.7,
-              }}
-            >
-              A collection of projects spanning fullstack apps, APIs, and
-              desktop software
-            </p>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "5px 16px",
-                background: T.color.bgAlt,
-                border: `1px solid ${T.color.border}`,
-                borderRadius: "999px",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: T.font.heading,
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  color: T.color.text,
-                }}
-              >
-                {projects.length}
-              </span>
-              <span style={{ fontSize: "12px", color: T.color.textMuted }}>
-                projects
-              </span>
-            </div>
-          </div>
-
-          <div className={inView ? "proj-revealed-d1" : ""}>
-            <FilterTabs
-              active={activeFilter}
-              onChange={handleFilter}
-              counts={counts}
+      <section id="work" ref={sectionRef} style={{ width: "100%", background: T.color.paper, padding: "clamp(4rem,8vw,6.5rem) 0" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 clamp(1.25rem,4vw,2.75rem)" }}>
+          <div className={inView ? "proj-in" : ""} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1.5rem" }}>
+            <SectionHead
+              kicker="04 — Selected work"
+              title={<>Five projects, <em style={{ fontStyle: "italic", color: T.color.accent }}>zero</em> filler</>}
+              lede="Real systems, not clones — a production API, an in-progress HRMS, and the fundamentals work behind them."
             />
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+              {ALL_TYPES.map((t) => (
+                <button key={t} className={`filter-chip${filter === t ? " active" : ""}`} onClick={() => setFilter(t)}>
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {featured.length > 0 && (
-            <div
-              className={inView ? "proj-revealed-d2" : ""}
-              style={{ marginBottom: "16px" }}
+          {/* Featured project spread */}
+          {featured && (filter === "All" || featured.type === filter) && (
+            <Link
+              href={`/projects/${featured.slug}`}
+              className={`featured-grid${inView ? " proj-in" : ""}`}
             >
-              {featured.map((p) => (
-                <FeaturedCard
-                  key={p.id}
-                  project={p}
-                  onOpen={() => openModal(p)}
-                />
-              ))}
-            </div>
+              <div className="featured-cover">
+                <span style={{ fontFamily: T.font.display, fontSize: "5rem", color: "rgba(245,246,242,0.14)" }}>
+                  {String(featured.id).padStart(2, "0")}
+                </span>
+                <span style={{ position: "absolute", top: 16, left: 16 }}>
+                  <Tag variant="accent2">{featured.status}</Tag>
+                </span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <span style={{ fontFamily: T.font.mono, fontSize: "0.72rem", letterSpacing: "0.08em", textTransform: "uppercase", color: T.color.accent }}>
+                  Featured — {featured.type} · {featured.year}
+                </span>
+                <h3 style={{ fontFamily: T.font.display, fontSize: "clamp(1.6rem,3vw,2.3rem)", color: T.color.ink, margin: "0.6rem 0 0.9rem", lineHeight: 1.1 }}>
+                  {featured.name}
+                </h3>
+                <p style={{ fontFamily: T.font.body, fontSize: "1rem", lineHeight: 1.7, color: T.color.textSecondary, margin: 0, maxWidth: 520 }}>
+                  {featured.dek}
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "1.4rem" }}>
+                  {featured.stack.slice(0, 5).map((s) => <Tag key={s}>{s}</Tag>)}
+                </div>
+                <span style={{ fontFamily: T.font.heading, fontSize: "0.92rem", fontWeight: 600, color: T.color.ink, marginTop: "1.6rem", display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  Read the case study <span aria-hidden>→</span>
+                </span>
+              </div>
+            </Link>
           )}
 
-          {rest.length > 0 && (
-            <div
-              key={animKey}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))",
-                gap: "14px",
-              }}
-              className={inView ? "proj-revealed-d3" : ""}
-            >
-              {rest.map((p, i) => (
-                <ProjectCard
-                  key={p.id}
-                  project={p}
-                  index={i}
-                  onOpen={() => openModal(p)}
-                />
-              ))}
-            </div>
-          )}
+          {/* Contents-page list */}
+          <div className={inView ? "proj-in" : ""} style={{ marginTop: "3rem" }}>
+            {rest.map((p) => (
+              <Link href={`/projects/${p.slug}`} className="toc-row" key={p.id}>
+                <div className="toc-row-inner">
+                  <span style={{ fontFamily: T.font.mono, fontSize: "0.85rem", color: T.color.textMuted }}>
+                    {String(p.id).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <div className="toc-title">{p.name}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: T.font.mono, fontSize: "0.72rem", color: T.color.textMuted }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: STATUS_DOT[p.status] }} />
+                        {p.status}
+                      </span>
+                      <span style={{ color: T.color.borderStrong }}>·</span>
+                      <span style={{ fontFamily: T.font.mono, fontSize: "0.72rem", color: T.color.textMuted }}>{p.type}</span>
+                      <span style={{ color: T.color.borderStrong }}>·</span>
+                      <span style={{ fontFamily: T.font.mono, fontSize: "0.72rem", color: T.color.textMuted }}>{p.year}</span>
+                    </div>
+                  </div>
+                  <span className="toc-arrow" aria-hidden>→</span>
+                </div>
+              </Link>
+            ))}
+            {rest.length === 0 && (
+              <div style={{ padding: "3rem 0", textAlign: "center", color: T.color.textMuted, fontFamily: T.font.body }}>
+                No projects in this category.
+              </div>
+            )}
+          </div>
 
-          {filtered.length === 0 && (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "4rem 0",
-                color: T.color.textMuted,
-                fontSize: "15px",
-              }}
-            >
-              No projects found in this category.
-            </div>
-          )}
-
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "3.5rem",
-              paddingTop: "2.5rem",
-              borderTop: `1px solid ${T.color.border}`,
-            }}
-          >
-            <p
-              style={{
-                color: T.color.textSecondary,
-                fontSize: "14px",
-                marginBottom: "1.2rem",
-              }}
-            >
-              More projects are available on GitHub
-            </p>
+          <div style={{ textAlign: "center", marginTop: "3rem" }}>
             <a
               href="https://github.com/Dr-Pierrot"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "12px 28px",
-                background: T.color.text,
-                border: `1px solid ${T.color.text}`,
-                borderRadius: "8px",
-                color: "#fff",
-                fontSize: "13px",
-                fontWeight: 600,
-                textDecoration: "none",
-              }}
+              style={{ fontFamily: T.font.mono, fontSize: "0.82rem", letterSpacing: "0.04em", color: T.color.textSecondary, textDecoration: "none", borderBottom: `1px solid ${T.color.borderStrong}`, paddingBottom: 2 }}
             >
-              View GitHub profile →
+              See everything on GitHub ↗
             </a>
           </div>
         </div>
       </section>
     </>
   );
-};
-
-export default Projects;
+}
