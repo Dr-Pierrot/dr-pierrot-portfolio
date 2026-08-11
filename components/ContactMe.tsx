@@ -1,12 +1,14 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { T } from "@/lib/theme";
+
+/* ---------------- CONFIG ---------------- */
 
 const CONTACT_INFO = {
   email: "capulongako16@gmail.com",
   github: "https://github.com/Dr-Pierrot",
   linkedin: "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
-  location: "Philippines",
+  location: "Philippines (GMT+8)",
 };
 
 type FormState = {
@@ -17,6 +19,8 @@ type FormState = {
 };
 type FieldError = Partial<Record<keyof FormState, string>>;
 type SendStatus = "idle" | "sending" | "success" | "error";
+
+/* ---------------- HOOKS ---------------- */
 
 const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   const [inView, setInView] = useState(false);
@@ -34,6 +38,8 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   return inView;
 };
 
+/* ---------------- VALIDATION ---------------- */
+
 const validate = (form: FormState): FieldError => {
   const errors: FieldError = {};
   if (!form.name.trim()) errors.name = "Name is required";
@@ -46,6 +52,8 @@ const validate = (form: FormState): FieldError => {
     errors.message = "Message must be at least 20 characters";
   return errors;
 };
+
+/* ---------------- FORM FIELD ---------------- */
 
 const FormField = ({
   label,
@@ -138,7 +146,9 @@ const FormField = ({
   );
 };
 
-const InfoPill = ({
+/* ---------------- INFO CARD ---------------- */
+
+const InfoCard = ({
   icon,
   label,
   value,
@@ -150,6 +160,7 @@ const InfoPill = ({
   href?: string;
 }) => {
   const [hovered, setHovered] = useState(false);
+
   const inner = (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -181,12 +192,13 @@ const InfoPill = ({
       >
         {icon}
       </div>
-      <div>
+      <div style={{ flex: 1 }}>
         <div
           style={{
             fontSize: "11px",
             color: T.color.textMuted,
             marginBottom: "2px",
+            fontFamily: T.font.mono,
           }}
         >
           {label}
@@ -196,6 +208,7 @@ const InfoPill = ({
             fontSize: "13px",
             color: T.color.text,
             wordBreak: "break-all" as const,
+            lineHeight: 1.4,
           }}
         >
           {value}
@@ -215,6 +228,7 @@ const InfoPill = ({
       )}
     </div>
   );
+
   return href ? (
     <a
       href={href}
@@ -228,6 +242,8 @@ const InfoPill = ({
     inner
   );
 };
+
+/* ---------------- CONTACT SECTION ---------------- */
 
 const ContactMe = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -259,6 +275,7 @@ const ContactMe = () => {
     setTouched({ name: true, email: true, subject: true, message: true });
     if (!isValid) return;
     setSendStatus("sending");
+    // TODO: wire up real backend (e.g. Formspree, Resend, custom API)
     await new Promise((r) => setTimeout(r, 1500));
     setSendStatus("success");
     setTimeout(() => {
@@ -288,9 +305,9 @@ const ContactMe = () => {
           from { opacity:0; transform:translateY(8px) scale(0.98); }
           to   { opacity:1; transform:translateY(0) scale(1); }
         }
-        .contact-revealed    { animation: reveal 0.7s ease-out both; }
-        .contact-revealed-d1 { animation: reveal 0.7s ease-out 0.1s both; }
-        .contact-revealed-d2 { animation: reveal 0.7s ease-out 0.2s both; }
+        .contact-revealed     { animation: reveal 0.7s ease-out both; }
+        .contact-revealed-d1  { animation: reveal 0.7s ease-out 0.1s both; }
+        .contact-revealed-d2  { animation: reveal 0.7s ease-out 0.2s both; }
 
         .contact-submit-btn {
           width: 100%;
@@ -306,8 +323,14 @@ const ContactMe = () => {
           transition: all 0.2s;
           box-shadow: 0 1px 2px rgba(17,24,39,0.15);
         }
-        .contact-submit-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,118,110,0.28); }
-        .contact-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .contact-submit-btn:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 16px rgba(15,118,110,0.28);
+        }
+        .contact-submit-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
 
         .contact-subject-chip {
           padding: 5px 14px;
@@ -321,14 +344,18 @@ const ContactMe = () => {
           transition: all 0.15s;
           white-space: nowrap;
         }
-        .contact-subject-chip:hover { border-color: ${T.color.borderStrong}; }
+        .contact-subject-chip:hover {
+          border-color: ${T.color.borderStrong};
+        }
         .contact-subject-chip.active {
           background: ${T.color.text};
           border-color: ${T.color.text};
           color: #fff;
         }
 
-        ::placeholder { color: ${T.color.textMuted}; }
+        ::placeholder {
+          color: ${T.color.textMuted};
+        }
       `}</style>
 
       <section
@@ -365,19 +392,20 @@ const ContactMe = () => {
                 margin: "0 0 0.8rem",
               }}
             >
-              Let&apos;s work together
+              Let&apos;s build something useful
             </h2>
             <p
               style={{
                 color: T.color.textSecondary,
                 fontSize: "15px",
-                maxWidth: "440px",
+                maxWidth: "520px",
                 margin: "0 auto",
                 lineHeight: 1.7,
               }}
             >
-              Have a project, opportunity, or question in mind? I&apos;d love to
-              hear from you.
+              I&apos;m open to full‑time roles, freelance projects, and
+              collaborations where I can own features end‑to‑end and help ship
+              reliable web products.
             </p>
           </div>
 
@@ -389,7 +417,7 @@ const ContactMe = () => {
               alignItems: "start",
             }}
           >
-            {/* LEFT */}
+            {/* LEFT — availability + contact */}
             <div
               className={inView ? "contact-revealed-d1" : ""}
               style={{
@@ -440,8 +468,9 @@ const ContactMe = () => {
                     margin: "0 0 16px",
                   }}
                 >
-                  Open to fullstack projects, freelance work, and collaboration
-                  opportunities. Response time is typically within 24–48 hours.
+                  Focused on fullstack web roles (React/Next.js + Laravel).
+                  Comfortable owning features from requirements to deployment
+                  and working directly with founders and small teams.
                 </p>
                 <div
                   style={{
@@ -454,7 +483,7 @@ const ContactMe = () => {
                   }}
                 >
                   <span style={{ fontSize: "12px", color: T.color.textMuted }}>
-                    Average response
+                    Typical response
                   </span>
                   <span
                     style={{
@@ -464,29 +493,29 @@ const ContactMe = () => {
                       fontWeight: 500,
                     }}
                   >
-                    24–48 hours
+                    within 24–48 hours
                   </span>
                 </div>
               </div>
 
-              <InfoPill
+              <InfoCard
                 icon="📍"
                 label="Location"
                 value={CONTACT_INFO.location}
               />
-              <InfoPill
+              <InfoCard
                 icon="✉️"
                 label="Email"
                 value={CONTACT_INFO.email}
                 href={`mailto:${CONTACT_INFO.email}`}
               />
-              <InfoPill
+              <InfoCard
                 icon="🐙"
                 label="GitHub"
                 value="github.com/Dr-Pierrot"
                 href={CONTACT_INFO.github}
               />
-              <InfoPill
+              <InfoCard
                 icon="💼"
                 label="LinkedIn"
                 value="Jaycee Capulong"
@@ -569,9 +598,10 @@ const ContactMe = () => {
                             fontWeight: 500,
                             color: T.color.textSecondary,
                             marginBottom: "10px",
+                            fontFamily: T.font.mono,
                           }}
                         >
-                          Quick subject
+                          // Quick subject
                         </div>
                         <div
                           style={{
@@ -613,7 +643,7 @@ const ContactMe = () => {
                           onChange={setField("name")}
                           onBlur={touchField("name")}
                           error={visibleErrors.name}
-                          placeholder="Jaycee Capulong"
+                          placeholder="Alex Rivera"
                         />
                         <FormField
                           label="Your email"
@@ -644,7 +674,7 @@ const ContactMe = () => {
                         onChange={setField("message")}
                         onBlur={touchField("message")}
                         error={visibleErrors.message}
-                        placeholder="Describe your project, idea, or inquiry..."
+                        placeholder="Tell me about your project, role, or idea..."
                         multiline
                         rows={5}
                       />

@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { T } from "@/lib/theme";
 
+/* ---------------- TYPES & DATA ---------------- */
+
 type Project = {
   id: number;
   name: string;
@@ -15,15 +17,16 @@ type Project = {
   highlight: boolean;
   year: number;
   features: string[];
+  impact?: string; // optional business impact line
 };
 
 const projects: Project[] = [
   {
     id: 1,
     name: "Human Resource Management System",
-    desc: "A fullstack HRMS built with Laravel 13 & React/TypeScript via Inertia.js for real-world organizational use.",
+    desc: "Fullstack HRMS (Laravel 13 + React/TS via Inertia) for end‑to‑end employee lifecycle, payroll, and attendance.",
     longDesc:
-      "A comprehensive fullstack Human Resource Management System designed to streamline HR operations. Built with Laravel 13 as the backend and React/TypeScript via Inertia.js for a seamless SPA experience. Handles the full employee lifecycle — from onboarding to offboarding — alongside payroll computation, attendance tracking, and leave management.",
+      "A comprehensive Human Resource Management System designed to streamline HR operations for real organizations. Built with Laravel 13 as the backend and React/TypeScript via Inertia.js for a seamless SPA experience. Handles the full employee lifecycle — from onboarding to offboarding — alongside payroll computation, attendance tracking, and leave management.",
     stack: [
       "Laravel",
       "TypeScript",
@@ -47,11 +50,13 @@ const projects: Project[] = [
       "Inertia.js SPA architecture",
       "MySQL relational database design",
     ],
+    impact:
+      "Reduces manual HR work and standardizes payroll/attendance workflows.",
   },
   {
     id: 2,
     name: "PSGC API",
-    desc: "Production-ready REST API exposing 43,768 Philippine geographic records with Sanctum auth & Swagger docs.",
+    desc: "Production REST API exposing 43,768 Philippine geographic records with Sanctum auth & Swagger docs.",
     longDesc:
       "A production-grade REST API built on Laravel that exposes the entire Philippine Standard Geographic Code (PSGC) dataset — Q1 2026 edition — covering 43,768 records across all administrative levels. Designed for developers who need reliable, structured Philippine location data. Ships with full token-based authentication via Laravel Sanctum and auto-generated OpenAPI/Swagger documentation.",
     stack: ["Laravel", "PHP", "MySQL", "Sanctum", "Swagger", "OpenAPI"],
@@ -69,11 +74,13 @@ const projects: Project[] = [
       "Optimized query performance",
       "RESTful endpoint design",
     ],
+    impact:
+      "Enables other apps to integrate official Philippine location data without maintaining their own dataset.",
   },
   {
     id: 3,
     name: "Weather App",
-    desc: "Real-time weather app with live API integration, dynamic DOM updates, and a clean responsive UI.",
+    desc: "Real-time weather UI with live API integration, async patterns, and a clean responsive layout.",
     longDesc:
       "A JavaScript weather application that integrates with a live weather API to display real-time meteorological data. Features a clean, responsive interface with dynamic DOM manipulation — no frameworks, pure vanilla JS — demonstrating solid fundamentals in API consumption, async/await patterns, and UX design.",
     stack: ["JavaScript", "HTML", "CSS", "Weather API"],
@@ -95,7 +102,7 @@ const projects: Project[] = [
   {
     id: 4,
     name: "Todo List v2",
-    desc: "Feature-rich task manager with full CRUD operations built in pure vanilla JavaScript.",
+    desc: "Feature-rich task manager with full CRUD and local persistence in vanilla JavaScript.",
     longDesc:
       "A refined second iteration of a task management application built entirely in vanilla JavaScript. Supports full CRUD operations — create, read, update, and delete — with local data persistence. Demonstrates clean separation of concerns and attention to micro-interactions without relying on any external libraries.",
     stack: ["JavaScript", "HTML", "CSS"],
@@ -117,7 +124,7 @@ const projects: Project[] = [
   {
     id: 5,
     name: "IDO Prototype",
-    desc: "Java desktop app prototype with a fully finished Swing GUI, showcasing OOP architecture and MVC design.",
+    desc: "Java desktop app with a complete Swing GUI, showcasing OOP architecture and MVC design.",
     longDesc:
       "A Java desktop application prototype featuring a fully realized user interface built with Java Swing. Demonstrates solid object-oriented programming principles — encapsulation, inheritance, and polymorphism — applied to a real GUI application with clearly separated model, view, and controller layers.",
     stack: ["Java", "Java Swing"],
@@ -165,6 +172,8 @@ const TYPE_ICON_STYLE: Record<string, { bg: string; border: string }> = {
   "Desktop App": { bg: T.color.accent3Soft, border: T.color.accent3Border },
 };
 
+/* ---------------- HOOKS ---------------- */
+
 const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -181,6 +190,33 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   return inView;
 };
 
+/* ---------------- ICON ---------------- */
+
+const Icon = ({ path }: { path: string }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d={path} />
+  </svg>
+);
+
+const ICONS = {
+  github:
+    "M9 19c-4 1.5-4-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.8 2.8 5.8 3.1 5.8 3.1a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 4.4 9.5c0 4.6 2.7 5.7 5.5 6-.4.4-.5.9-.5 1.5V21",
+  external: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6",
+  arrowUpRight: "M7 17L17 7M17 7H7M17 7v10",
+};
+
+/* ---------------- MODAL ---------------- */
+
 const ProjectModal = ({
   project,
   onClose,
@@ -189,6 +225,7 @@ const ProjectModal = ({
   onClose: () => void;
 }) => {
   const sc = STATUS_STYLE[project.status];
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     const fn = (e: KeyboardEvent) => {
@@ -337,6 +374,40 @@ const ProjectModal = ({
             {project.longDesc}
           </p>
 
+          {project.impact && (
+            <div
+              style={{
+                marginBottom: "24px",
+                padding: "14px 16px",
+                background: T.color.accent2Soft,
+                border: `1px solid ${T.color.accent2Border}`,
+                borderRadius: "10px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  color: T.color.accent2Text,
+                  marginBottom: "4px",
+                  fontFamily: T.font.mono,
+                  letterSpacing: ".04em",
+                }}
+              >
+                IMPACT
+              </div>
+              <div
+                style={{
+                  fontSize: "13px",
+                  color: T.color.text,
+                  lineHeight: 1.6,
+                }}
+              >
+                {project.impact}
+              </div>
+            </div>
+          )}
+
           <div style={{ marginBottom: "24px" }}>
             <div
               style={{
@@ -344,9 +415,10 @@ const ProjectModal = ({
                 fontWeight: 600,
                 color: T.color.textMuted,
                 marginBottom: "12px",
+                fontFamily: T.font.mono,
               }}
             >
-              Key features
+              // Key features
             </div>
             <div
               style={{
@@ -395,9 +467,10 @@ const ProjectModal = ({
                 fontWeight: 600,
                 color: T.color.textMuted,
                 marginBottom: "10px",
+                fontFamily: T.font.mono,
               }}
             >
-              Tech stack
+              // Tech stack
             </div>
             <div
               style={{ display: "flex", flexWrap: "wrap" as const, gap: "7px" }}
@@ -439,13 +512,15 @@ const ProjectModal = ({
               textDecoration: "none",
             }}
           >
-            View on GitHub →
+            <Icon path={ICONS.github} /> View on GitHub
           </a>
         </div>
       </div>
     </>
   );
 };
+
+/* ---------------- FILTER TABS ---------------- */
 
 const FilterTabs = ({
   active,
@@ -504,6 +579,8 @@ const FilterTabs = ({
   </div>
 );
 
+/* ---------------- FEATURED CARD ---------------- */
+
 const FeaturedCard = ({
   project,
   onOpen,
@@ -513,6 +590,7 @@ const FeaturedCard = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const sc = STATUS_STYLE[project.status];
+
   return (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -720,15 +798,19 @@ const FeaturedCard = ({
             fontSize: "13px",
             fontWeight: 600,
             textDecoration: "none",
-            display: "inline-block",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
           }}
         >
-          GitHub →
+          <Icon path={ICONS.github} /> GitHub
         </a>
       </div>
     </div>
   );
 };
+
+/* ---------------- PROJECT CARD ---------------- */
 
 const ProjectCard = ({
   project,
@@ -741,6 +823,7 @@ const ProjectCard = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const sc = STATUS_STYLE[project.status];
+
   return (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -828,6 +911,7 @@ const ProjectCard = ({
           color: T.color.textMuted,
           display: "block",
           marginBottom: "5px",
+          fontFamily: T.font.mono,
         }}
       >
         {project.type}
@@ -929,14 +1013,17 @@ const ProjectCard = ({
             textDecoration: "none",
             display: "flex",
             alignItems: "center",
+            gap: "6px",
           }}
         >
-          GitHub
+          <Icon path={ICONS.github} /> GitHub
         </a>
       </div>
     </div>
   );
 };
+
+/* ---------------- PROJECTS SECTION ---------------- */
 
 const Projects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -981,10 +1068,10 @@ const Projects = () => {
           from { opacity:0; transform:translate(-50%,calc(-50% + 16px)); }
           to   { opacity:1; transform:translate(-50%,-50%); }
         }
-        .proj-revealed    { animation: reveal 0.7s ease-out both; }
-        .proj-revealed-d1 { animation: reveal 0.7s ease-out 0.1s both; }
-        .proj-revealed-d2 { animation: reveal 0.7s ease-out 0.2s both; }
-        .proj-revealed-d3 { animation: reveal 0.7s ease-out 0.3s both; }
+        .proj-revealed     { animation: reveal 0.7s ease-out both; }
+        .proj-revealed-d1  { animation: reveal 0.7s ease-out 0.1s both; }
+        .proj-revealed-d2  { animation: reveal 0.7s ease-out 0.2s both; }
+        .proj-revealed-d3  { animation: reveal 0.7s ease-out 0.3s both; }
       `}</style>
 
       {modalProject && (
@@ -1020,7 +1107,7 @@ const Projects = () => {
               style={{
                 fontFamily: T.font.heading,
                 fontWeight: 700,
-                fontSize: "clamp(1.8rem,4vw,2.6rem)",
+                fontSize: "clamp(1.8rem,4vw,2.8rem)",
                 color: T.color.text,
                 margin: "0 0 0.8rem",
               }}
@@ -1031,13 +1118,13 @@ const Projects = () => {
               style={{
                 color: T.color.textSecondary,
                 fontSize: "15px",
-                maxWidth: "440px",
+                maxWidth: "520px",
                 margin: "0 auto 1.2rem",
                 lineHeight: 1.7,
               }}
             >
-              A collection of projects spanning fullstack apps, APIs, and
-              desktop software
+              Projects that demonstrate end‑to‑end delivery: APIs, fullstack
+              apps, and utilities built to solve concrete problems.
             </p>
             <div
               style={{
@@ -1138,7 +1225,7 @@ const Projects = () => {
                 marginBottom: "1.2rem",
               }}
             >
-              More projects are available on GitHub
+              More projects and experiments are available on GitHub
             </p>
             <a
               href="https://github.com/Dr-Pierrot"
@@ -1158,7 +1245,7 @@ const Projects = () => {
                 textDecoration: "none",
               }}
             >
-              View GitHub profile →
+              <Icon path={ICONS.github} /> View GitHub profile
             </a>
           </div>
         </div>

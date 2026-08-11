@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { T } from "@/lib/theme";
 
+/* ---------------- CONFIG ---------------- */
+
 const profile = {
   alias: "Dr-Pierrot",
   name: "Jaycee Capulong",
   role: "Fullstack Developer",
-  location: "Philippines",
+  location: "Philippines (GMT+8)",
   email: "capulongako16@gmail.com",
   github: "https://github.com/Dr-Pierrot",
   linkedin: "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
@@ -59,8 +61,11 @@ const socialLinks = [
   },
 ];
 
+/* ---------------- SCROLL TO TOP ---------------- */
+
 const ScrollTop = () => {
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 300);
     window.addEventListener("scroll", onScroll);
@@ -105,6 +110,8 @@ const ScrollTop = () => {
   );
 };
 
+/* ---------------- FOOTER ---------------- */
+
 const Footer = () => {
   const year = new Date().getFullYear();
 
@@ -119,11 +126,16 @@ const Footer = () => {
           text-decoration: none;
           transition: color 0.15s;
         }
-        .footer-nav-link:hover { color: ${T.color.text}; }
+        .footer-nav-link:hover {
+          color: ${T.color.text};
+        }
 
         .footer-social-btn {
-          width: 36px; height: 36px;
-          display: flex; align-items: center; justify-content: center;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: ${T.color.bg};
           border: 1px solid ${T.color.border};
           border-radius: 8px;
@@ -142,8 +154,9 @@ const Footer = () => {
       <footer
         style={{
           width: "100%",
-          background: T.color.gradientDark,
+          background: T.color.bgAlt,
           fontFamily: T.font.body,
+          borderTop: `1px solid ${T.color.border}`,
         }}
       >
         <div
@@ -156,11 +169,11 @@ const Footer = () => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
+              gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
               gap: "2.5rem",
               marginBottom: "2.5rem",
               paddingBottom: "2.5rem",
-              borderBottom: `1px solid ${T.color.darkBorder}`,
+              borderBottom: `1px solid ${T.color.border}`,
             }}
           >
             {/* Brand */}
@@ -172,7 +185,11 @@ const Footer = () => {
               }}
             >
               <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
               >
                 <div
                   style={{
@@ -180,6 +197,8 @@ const Footer = () => {
                     height: "40px",
                     borderRadius: "50%",
                     flexShrink: 0,
+                    padding: "2px",
+                    background: T.color.gradientButton,
                   }}
                 >
                   <img
@@ -188,7 +207,9 @@ const Footer = () => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "contain",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      border: "2px solid #fff",
                     }}
                   />
                 </div>
@@ -197,8 +218,8 @@ const Footer = () => {
                     style={{
                       fontFamily: T.font.heading,
                       fontSize: "14px",
-                      fontWeight: 600,
-                      color: T.color.darkText,
+                      fontWeight: 700,
+                      color: T.color.text,
                       lineHeight: 1,
                     }}
                   >
@@ -207,8 +228,9 @@ const Footer = () => {
                   <div
                     style={{
                       fontSize: "12px",
-                      color: T.color.darkTextSecondary,
+                      color: T.color.textSecondary,
                       marginTop: "3px",
+                      fontFamily: T.font.mono,
                     }}
                   >
                     {profile.role}
@@ -218,19 +240,28 @@ const Footer = () => {
 
               <p
                 style={{
-                  color: T.color.darkTextSecondary,
+                  color: T.color.textSecondary,
                   fontSize: "13px",
                   lineHeight: 1.7,
-                  maxWidth: "240px",
+                  maxWidth: "260px",
                   margin: 0,
                 }}
               >
-                Fullstack developer building scalable systems from the
-                Philippines.
+                I build end‑to‑end web products for startups and small teams,
+                with a focus on reliability, clarity, and maintainability.
               </p>
 
               <div
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "6px 12px",
+                  background: T.color.bg,
+                  border: `1px solid ${T.color.border}`,
+                  borderRadius: "999px",
+                  width: "fit-content",
+                }}
               >
                 <div
                   style={{
@@ -241,9 +272,13 @@ const Footer = () => {
                   }}
                 />
                 <span
-                  style={{ fontSize: "12px", color: T.color.darkTextSecondary }}
+                  style={{
+                    fontSize: "12px",
+                    color: T.color.text,
+                    fontWeight: 500,
+                  }}
                 >
-                  Available for work
+                  Open to full‑time & freelance
                 </span>
               </div>
             </div>
@@ -254,13 +289,14 @@ const Footer = () => {
                 style={{
                   fontSize: "11px",
                   fontWeight: 600,
-                  color: "#6B7280",
+                  color: T.color.textMuted,
                   marginBottom: "16px",
                   textTransform: "uppercase" as const,
                   letterSpacing: "0.5px",
+                  fontFamily: T.font.mono,
                 }}
               >
-                Navigation
+                // Navigation
               </div>
               <nav
                 style={{
@@ -277,19 +313,20 @@ const Footer = () => {
               </nav>
             </div>
 
-            {/* Contact */}
+            {/* Contact & Social */}
             <div>
               <div
                 style={{
                   fontSize: "11px",
                   fontWeight: 600,
-                  color: "#6B7280",
+                  color: T.color.textMuted,
                   marginBottom: "16px",
                   textTransform: "uppercase" as const,
                   letterSpacing: "0.5px",
+                  fontFamily: T.font.mono,
                 }}
               >
-                Contact
+                // Contact
               </div>
               <div
                 style={{
@@ -299,22 +336,35 @@ const Footer = () => {
                 }}
               >
                 <span
-                  style={{ color: T.color.darkTextSecondary, fontSize: "13px" }}
+                  style={{
+                    color: T.color.textSecondary,
+                    fontSize: "13px",
+                  }}
                 >
                   {profile.location}
                 </span>
-                <span
+                <a
+                  href={`mailto:${profile.email}`}
                   style={{
-                    color: T.color.darkTextSecondary,
+                    color: T.color.text,
                     fontSize: "13px",
-                    wordBreak: "break-word" as const,
+                    textDecoration: "none",
+                    borderBottom: `1px dashed ${T.color.border}`,
+                    paddingBottom: "1px",
+                    width: "fit-content",
                   }}
                 >
                   {profile.email}
-                </span>
+                </a>
               </div>
 
-              <div style={{ display: "flex", gap: "8px", marginTop: "18px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  marginTop: "18px",
+                }}
+              >
                 {socialLinks.map((s) => (
                   <a
                     key={s.label}
@@ -341,10 +391,23 @@ const Footer = () => {
               gap: "12px",
             }}
           >
-            <p style={{ fontSize: "13px", color: "#6B7280", margin: 0 }}>
+            <p
+              style={{
+                fontSize: "13px",
+                color: T.color.textMuted,
+                margin: 0,
+              }}
+            >
               © {year} {profile.name}. All rights reserved.
             </p>
-            <p style={{ fontSize: "12px", color: "#6B7280", margin: 0 }}>
+            <p
+              style={{
+                fontSize: "12px",
+                color: T.color.textMuted,
+                margin: 0,
+                fontFamily: T.font.mono,
+              }}
+            >
               Built with Next.js · Philippines
             </p>
           </div>
