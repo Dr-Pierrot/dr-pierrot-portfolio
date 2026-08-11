@@ -295,7 +295,9 @@ export default function Header() {
       <header className="site-header">
         <div className={`site-header-inner${scrolled ? " scrolled" : ""}`}>
           <a href="#home" className="logo-wrap" aria-label="Jaycee Capulong">
-            <div className="logo-mark">{"{ }"}</div>
+            <div className="logo-mark">
+              <img src="favicon.ico" alt="Icon" />
+            </div>
             <div className="logo-text">
               <span className="logo-name">Jaycee Capulong</span>
               <span className="logo-role">Fullstack Developer</span>
