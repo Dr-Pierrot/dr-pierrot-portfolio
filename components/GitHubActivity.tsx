@@ -83,7 +83,7 @@ const GitHubActivity = () => {
       style={{
         background: T.color.gradientDark,
         border: `1px solid ${T.color.darkBorder}`,
-        borderRadius: "12px",
+        borderRadius: "16px",
         padding: "24px",
         position: "relative",
         overflow: "hidden",
@@ -102,18 +102,18 @@ const GitHubActivity = () => {
         <span
           style={{
             fontFamily: T.font.mono,
-            fontSize: "11px",
+            fontSize: "13px",
             color: T.color.darkTextSecondary,
             letterSpacing: "0.5px",
           }}
         >
-          {"// github.activity"}
+          // github.activity
         </span>
         {totalCount !== null && (
           <span
             style={{
               fontFamily: T.font.mono,
-              fontSize: "11px",
+              fontSize: "13px",
               color: T.color.accentBorder,
             }}
           >
@@ -126,7 +126,7 @@ const GitHubActivity = () => {
         <p
           style={{
             fontFamily: T.font.body,
-            fontSize: "13px",
+            fontSize: "14px",
             color: T.color.darkTextSecondary,
             margin: 0,
           }}

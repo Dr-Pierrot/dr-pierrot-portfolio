@@ -8,8 +8,8 @@ const gradientButton = `linear-gradient(135deg, ${T.color.ink} 0%, ${T.color.acc
 
 const navLinks = [
   { label: "Home", href: "#home" },
+  { label: "Works", href: "#works" },
   { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -132,13 +132,13 @@ export default function Header() {
         .logo-name {
           font-family: ${T.font.heading};
           font-weight: 700;
-          font-size: 14.5px;
+          font-size: 16px;
           color: ${T.color.text};
           letter-spacing: -.01em;
         }
         .logo-role {
-          font-family: ${T.font.mono};
-          font-size: 10.5px;
+          font-family: ${T.font.body};
+          font-size: 12px;
           color: ${T.color.textMuted};
         }
 
@@ -153,7 +153,7 @@ export default function Header() {
         }
         .header-nav a {
           position: relative;
-          font-size: 13px;
+          font-size: 14.5px;
           font-weight: 500;
           color: ${T.color.textSecondary};
           text-decoration: none;
@@ -181,11 +181,12 @@ export default function Header() {
         .header-status {
           display: none;
           align-items: center; gap: 7px;
-          padding: 6px 11px;
+          padding: 7px 12px;
           border-radius: 999px;
           background: ${T.color.accentSoft};
           border: 1px solid ${T.color.accentBorder};
-          font-size: 11px; font-weight: 600;
+          font-family: ${T.font.body};
+          font-size: 13px; font-weight: 600;
           color: ${T.color.accentText};
           white-space: nowrap;
         }
@@ -205,7 +206,7 @@ export default function Header() {
           border: 1px solid transparent;
           border-radius: 10px;
           font-family: ${T.font.body};
-          font-size: 13px;
+          font-size: 14.5px;
           font-weight: 600;
           text-decoration: none;
           box-shadow: 0 2px 10px -2px rgba(14,124,116,.35);
@@ -256,8 +257,8 @@ export default function Header() {
         }
         .mobile-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
         .mobile-menu a {
-          font-family: ${T.font.display};
-          font-size: 24px;
+          font-family: ${T.font.heading};
+          font-size: 26px;
           font-weight: 600;
           color: ${T.color.text};
           text-decoration: none;
@@ -296,7 +297,7 @@ export default function Header() {
         <div className={`site-header-inner${scrolled ? " scrolled" : ""}`}>
           <a href="#home" className="logo-wrap" aria-label="Jaycee Capulong">
             <div className="logo-mark">
-              <img src="favicon.ico" alt="Icon" />
+              <img src="/favicon-512x512.png" alt="Icon" />
             </div>
             <div className="logo-text">
               <span className="logo-name">Jaycee Capulong</span>
@@ -374,7 +375,7 @@ export default function Header() {
             color: "#fff",
             borderRadius: "10px",
             fontFamily: T.font.heading,
-            fontSize: "14px",
+            fontSize: "15px",
             fontWeight: 600,
             textDecoration: "none",
             opacity: 0,
