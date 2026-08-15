@@ -1,11 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import clsx from "clsx";
 import { T } from "@/lib/theme";
-
-/* Local composite gradients — not part of the shared token set, built from
-   theme primitives so they stay in sync if the palette changes. */
-const gradientHero = `linear-gradient(135deg, ${T.color.accentSoft} 0%, ${T.color.paper} 45%, ${T.color.accent2Soft} 100%)`;
-const gradientButton = `linear-gradient(135deg, ${T.color.ink} 0%, ${T.color.accent} 140%)`;
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -89,7 +85,7 @@ const useTypewriter = (words: string[], speed = 70, pause = 1600) => {
 /*  SMALL PIECES                                                       */
 /* ------------------------------------------------------------------ */
 
-const Icon = ({ path }: { path: string }) => (
+const Icon = ({ path, className }: { path: string; className?: string }) => (
   <svg
     width="16"
     height="16"
@@ -100,6 +96,7 @@ const Icon = ({ path }: { path: string }) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden="true"
+    className={className}
   >
     <path d={path} />
   </svg>
@@ -124,22 +121,11 @@ const CodeLine = ({
   n: number;
   children: React.ReactNode;
 }) => (
-  <div style={{ display: "flex", gap: "16px", lineHeight: "1.85" }}>
-    <span
-      style={{
-        width: "18px",
-        textAlign: "right" as const,
-        color: T.color.textMuted,
-        opacity: 0.5,
-        userSelect: "none" as const,
-        fontSize: "12px",
-      }}
-    >
+  <div className="flex gap-4 leading-[1.85]">
+    <span className="w-[18px] select-none text-right text-[12px] text-ed-text-muted/50">
       {n}
     </span>
-    <span style={{ fontSize: "13px", whiteSpace: "pre" as const }}>
-      {children}
-    </span>
+    <span className="whitespace-pre text-[13px]">{children}</span>
   </div>
 );
 
@@ -162,482 +148,294 @@ const Hero = () => {
   const fn = T.color.accentText; // identifier
 
   return (
-    <>
-      <style>{`
-        ${T.fontImport}
+    <section
+      id="home"
+      className="relative flex min-h-screen w-full items-start overflow-hidden bg-ed-gradient-hero px-6 pt-24 font-ed-body heromd:items-center heromd:pt-28"
+    >
+      {/* faint grid, masked to a soft ellipse */}
+      <div
+        className={clsx(
+          "pointer-events-none absolute inset-0 opacity-[0.35] [background-size:64px_64px]",
+          "[mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,#000_30%,transparent_100%)]",
+          "[-webkit-mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,#000_30%,transparent_100%)]",
+          "bg-[linear-gradient(var(--color-ed-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-ed-border)_1px,transparent_1px)]",
+        )}
+      />
+      <div
+        className="pointer-events-none absolute animate-ed-drift rounded-full blur-[6px] motion-reduce:animate-none"
+        style={{
+          top: "-12%",
+          right: "-8%",
+          width: 460,
+          height: 460,
+          background:
+            "radial-gradient(circle, rgba(14,124,116,0.16) 0%, transparent 70%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute animate-ed-drift rounded-full blur-[6px] motion-reduce:animate-none"
+        style={{
+          bottom: "-18%",
+          left: "-10%",
+          width: 420,
+          height: 420,
+          animationDelay: "-6s",
+          background:
+            "radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%)",
+        }}
+      />
 
-        @keyframes hero-up   { from { opacity:0; transform:translateY(24px);} to { opacity:1; transform:none; } }
-        @keyframes hero-in   { from { opacity:0; transform:translateY(12px) scale(.99);} to { opacity:1; transform:none; } }
-        @keyframes hero-ping { 0%{transform:scale(1);opacity:.55} 70%{transform:scale(2.4);opacity:0} 100%{opacity:0} }
-        @keyframes hero-blink{ 0%,49%{opacity:1} 50%,100%{opacity:0} }
-        @keyframes hero-float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        @keyframes hero-marquee { from { transform:translateX(0);} to { transform:translateX(-50%);} }
-        @keyframes hero-drift { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-24px,26px)} }
+      <div className="relative z-10 mx-auto grid w-full max-w-[1180px] grid-cols-1 items-center gap-10 pb-28 heromd:grid-cols-[1.05fr_0.95fr] heromd:gap-16 heromd:pb-24">
+        {/* ---------------- LEFT ---------------- */}
+        <div className="order-1 flex animate-ed-up flex-col gap-[1.4rem] motion-reduce:animate-none">
+          <div className="inline-flex w-fit items-center gap-[9px] rounded-full border border-ed-accent-border bg-ed-accent-soft py-1.5 pr-3.5 pl-3 text-[13.5px] font-semibold tracking-[0.01em] text-ed-accent-text">
+            <span className="relative inline-flex h-[7px] w-[7px]">
+              <span className="absolute inset-0 animate-ping rounded-full bg-ed-accent motion-reduce:animate-none" />
+              <span className="relative inline-block h-[7px] w-[7px] rounded-full bg-ed-accent" />
+            </span>
+            Available for work
+            <span className="h-3 w-px bg-ed-accent-border" />
+            <span className="font-medium opacity-85">
+              {coderData.timezone} · Remote
+            </span>
+          </div>
 
-        .h-root{
-          position:relative; min-height:100vh; width:100%;
-          display:flex; align-items:center;
-          background:${gradientHero};
-          font-family:${T.font.body};
-          padding:7rem 1.5rem 0;
-          overflow:hidden;
-        }
-        .h-grid-bg{
-          position:absolute; inset:0; pointer-events:none;
-          background-image:
-            linear-gradient(${T.color.border} 1px, transparent 1px),
-            linear-gradient(90deg, ${T.color.border} 1px, transparent 1px);
-          background-size:64px 64px;
-          opacity:.35;
-          mask-image:radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 100%);
-          -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 100%);
-        }
-        .h-blob{ position:absolute; border-radius:50%; pointer-events:none; filter:blur(6px); animation:hero-drift 16s ease-in-out infinite; }
-
-        .h-wrap{
-          position:relative; z-index:1; width:100%; max-width:1180px; margin:0 auto;
-          display:grid; grid-template-columns:1.05fr .95fr; gap:4rem; align-items:center;
-          padding-bottom:6rem;
-        }
-        @media (max-width:900px){
-          .h-root{ padding-top:6rem; align-items:flex-start; }
-          .h-wrap{ grid-template-columns:1fr; gap:2.5rem; padding-bottom:7rem; }
-          .h-card-col{ order:2; }
-        }
-
-        .h-col{ display:flex; flex-direction:column; gap:1.4rem; animation:hero-up .8s cubic-bezier(.2,.7,.2,1) both; }
-
-        /* status pill */
-        .h-status{
-          display:inline-flex; align-items:center; gap:9px; width:fit-content;
-          padding:6px 14px 6px 12px; border-radius:999px;
-          background:${T.color.accentSoft}; border:1px solid ${T.color.accentBorder};
-          font-size:13.5px; font-weight:600; color:${T.color.accentText};
-          letter-spacing:.01em;
-        }
-        .h-dot{ position:relative; width:7px; height:7px; border-radius:50%; background:${T.color.accent}; }
-        .h-dot::after{
-          content:''; position:absolute; inset:0; border-radius:50%;
-          background:${T.color.accent}; animation:hero-ping 2s ease-out infinite;
-        }
-        .h-sep{ width:1px; height:12px; background:${T.color.accentBorder}; }
-
-        /* headline */
-        .h-eyebrow{ font-family:${T.font.mono}; font-size:14px; color:${T.color.textMuted}; margin:0 0 10px; letter-spacing:.02em; }
-        .h-name{
-          font-family:${T.font.heading}; font-weight:700; margin:0;
-          font-size:clamp(2.4rem,6vw,4.1rem); line-height:1.08; letter-spacing:-.03em;
-          background:${T.color.gradientText};
-          -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-        }
-        .h-typeline{
-          display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-          margin:14px 0 0; font-family:${T.font.mono};
-          font-size:clamp(16px,2.2vw,19px); color:${T.color.textSecondary};
-        }
-        .h-typed{ color:${T.color.text}; font-weight:600; }
-        .h-caret{ display:inline-block; width:9px; height:1.05em; background:${T.color.accent}; animation:hero-blink 1s step-end infinite; transform:translateY(2px); border-radius:1px; }
-
-        .h-bio{ color:${T.color.textSecondary}; font-size:17px; line-height:1.75; max-width:520px; margin:0; }
-        .h-bio b{ color:${T.color.text}; font-weight:600; }
-
-        /* stats */
-        .h-stats{
-          display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-          border:1px solid ${T.color.border}; border-radius:14px; overflow:hidden;
-          background:${T.color.surface};
-        }
-        .h-stat{ padding:14px 12px; border-right:1px solid ${T.color.border}; }
-        .h-stat:last-child{ border-right:none; }
-        .h-stat-v{ font-family:${T.font.heading}; font-weight:700; font-size:20px; color:${T.color.text}; letter-spacing:-.02em; }
-        .h-stat-l{ font-family:${T.font.body}; font-size:12.5px; color:${T.color.textMuted}; margin-top:3px; letter-spacing:.01em; }
-        @media (max-width:520px){ .h-stats{ grid-template-columns:repeat(2,1fr);} .h-stat:nth-child(2){border-right:none} .h-stat:nth-child(-n+2){border-bottom:1px solid ${T.color.border}} }
-
-        /* buttons */
-        .h-actions{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
-        .h-btn{
-          display:inline-flex; align-items:center; gap:9px;
-          padding:13px 24px; border-radius:10px;
-          font-family:${T.font.body}; font-size:15px; font-weight:600;
-          text-decoration:none; cursor:pointer; transition:all .22s cubic-bezier(.2,.7,.2,1);
-        }
-        .h-btn-primary{
-          background:${gradientButton}; color:#fff; border:1px solid transparent;
-          box-shadow:0 2px 10px rgba(14,124,116,.22);
-        }
-        .h-btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(14,124,116,.32); }
-        .h-btn-primary svg{ transition:transform .22s; }
-        .h-btn-primary:hover svg{ transform:translateX(3px); }
-        .h-btn-ghost{
-          background:${T.color.surface}; color:${T.color.text}; border:1px solid ${T.color.border};
-        }
-        .h-btn-ghost:hover{ border-color:${T.color.borderStrong}; background:${T.color.paperAlt}; transform:translateY(-2px); }
-
-        .h-social{ display:flex; gap:8px; }
-        .h-icon-btn{
-          display:grid; place-items:center; width:42px; height:42px; border-radius:10px;
-          border:1px solid ${T.color.border}; background:${T.color.surface};
-          color:${T.color.textSecondary}; transition:all .2s; text-decoration:none;
-        }
-        .h-icon-btn:hover{ color:${T.color.accentText}; border-color:${T.color.accentBorder}; background:${T.color.accentSoft}; transform:translateY(-2px); }
-
-        /* editor card */
-        .h-card-col{ animation:hero-in .9s cubic-bezier(.2,.7,.2,1) .18s both; position:relative; }
-        .h-card{
-          background:${T.color.surface}; border:1px solid ${T.color.border}; border-radius:16px;
-          overflow:hidden; box-shadow:0 24px 60px -28px rgba(11,19,16,.28), 0 2px 6px rgba(11,19,16,.05);
-        }
-        .h-card-top{
-          display:flex; align-items:center; justify-content:space-between;
-          padding:11px 14px; background:${T.color.paperAlt}; border-bottom:1px solid ${T.color.border};
-        }
-        .h-tabs{ display:flex; gap:4px; padding:8px 10px 0; background:${T.color.paperAlt}; border-bottom:1px solid ${T.color.border}; overflow-x:auto; }
-        .h-tab{
-          appearance:none; border:1px solid transparent; border-bottom:none; background:transparent;
-          padding:7px 13px; border-radius:8px 8px 0 0; cursor:pointer;
-          font-family:${T.font.mono}; font-size:13px; color:${T.color.textMuted}; white-space:nowrap;
-          transition:all .18s;
-        }
-        .h-tab:hover{ color:${T.color.text}; }
-        .h-tab[data-active="true"]{
-          background:${T.color.surface}; color:${T.color.text};
-          border-color:${T.color.border}; margin-bottom:-1px; padding-bottom:8px;
-        }
-        .h-code{ padding:18px 18px 14px; font-family:${T.font.mono}; min-height:236px; }
-        .h-chip{
-          display:inline-block; padding:3px 9px; margin:0 4px 6px 0;
-          border-radius:6px; font-family:${T.font.mono}; font-size:13px;
-          background:${T.color.paperAlt}; border:1px solid ${T.color.border}; color:${T.color.text};
-          transition:all .18s; cursor:default;
-        }
-        .h-chip:hover{ border-color:${T.color.accentBorder}; background:${T.color.accentSoft}; color:${T.color.accentText}; transform:translateY(-1px); }
-        .h-card-bottom{
-          display:flex; align-items:center; justify-content:space-between; gap:10px;
-          padding:10px 16px; border-top:1px solid ${T.color.border}; background:${T.color.paperAlt};
-          font-family:${T.font.mono}; font-size:12px; color:${T.color.textMuted};
-        }
-        .h-badge{
-          position:absolute; right:-14px; bottom:-22px; z-index:2;
-          display:flex; align-items:center; gap:10px;
-          padding:10px 14px; border-radius:12px;
-          background:${T.color.surface}; border:1px solid ${T.color.border};
-          box-shadow:0 12px 30px -12px rgba(11,19,16,.3);
-          animation:hero-float 5.5s ease-in-out infinite;
-        }
-        @media (max-width:900px){ .h-badge{ right:8px; bottom:-18px; } }
-
-        /* marquee */
-        .h-marquee{
-          position:absolute; left:0; right:0; bottom:0; z-index:1;
-          border-top:1px solid ${T.color.border};
-          background:${T.color.surface}; overflow:hidden; padding:11px 0;
-          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
-          -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
-        }
-        .h-marquee-track{ display:flex; width:max-content; animation:hero-marquee 32s linear infinite; }
-        .h-marquee:hover .h-marquee-track{ animation-play-state:paused; }
-        .h-marquee-item{
-          display:inline-flex; align-items:center; gap:10px; padding:0 22px;
-          font-family:${T.font.mono}; font-size:13px; color:${T.color.textMuted}; white-space:nowrap;
-        }
-
-        @media (prefers-reduced-motion: reduce){
-          .h-col,.h-card-col,.h-badge,.h-marquee-track,.h-dot::after{ animation:none !important; }
-        }
-      `}</style>
-
-      <section className="h-root" id="home">
-        <div className="h-grid-bg" />
-        <div
-          className="h-blob"
-          style={{
-            top: "-12%",
-            right: "-8%",
-            width: 460,
-            height: 460,
-            background:
-              "radial-gradient(circle, rgba(14,124,116,0.16) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          className="h-blob"
-          style={{
-            bottom: "-18%",
-            left: "-10%",
-            width: 420,
-            height: 420,
-            animationDelay: "-6s",
-            background:
-              "radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%)",
-          }}
-        />
-
-        <div className="h-wrap">
-          {/* ---------------- LEFT ---------------- */}
-          <div className="h-col">
-            <div className="h-status">
-              <span className="h-dot" />
-              Available for work
-              <span className="h-sep" />
-              <span style={{ opacity: 0.85, fontWeight: 500 }}>
-                {coderData.timezone} · Remote
-              </span>
-            </div>
-
-            <div>
-              <p className="h-eyebrow">{"// hi there, my name is"}</p>
-              <h1 className="h-name">{coderData.name}</h1>
-              <div className="h-typeline">
-                <span style={{ color: T.color.textMuted }}>{"<"}</span>
-                <span className="h-typed">
-                  {mounted ? typed : coderData.roles[0]}
-                </span>
-                <span className="h-caret" />
-                <span style={{ color: T.color.textMuted }}>{"/>"}</span>
-              </div>
-            </div>
-
-            <p className="h-bio">
-              {coderData.tagline} Currently focused on{" "}
-              <b>React, Next.js &amp; Laravel</b> — writing clean, typed,
-              maintainable code and shipping things that actually get used.
+          <div>
+            <p className="mb-2.5 font-ed-mono text-sm tracking-[0.02em] text-ed-text-muted">
+              {"// hi there, my name is"}
             </p>
-
-            <div className="h-stats">
-              {coderData.stats.map((s) => (
-                <div className="h-stat" key={s.label}>
-                  <div className="h-stat-v">{s.value}</div>
-                  <div className="h-stat-l">{s.label}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="h-actions">
-              <a href="#projects" className="h-btn h-btn-primary">
-                View my work <Icon path={ICONS.arrow} />
-              </a>
-              <a href={coderData.resume} className="h-btn h-btn-ghost" download>
-                <Icon path={ICONS.download} /> Résumé
-              </a>
-              <div className="h-social">
-                <a
-                  className="h-icon-btn"
-                  href={coderData.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                >
-                  <Icon path={ICONS.github} />
-                </a>
-                <a
-                  className="h-icon-btn"
-                  href={coderData.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                >
-                  <Icon path={ICONS.linkedin} />
-                </a>
-                <a
-                  className="h-icon-btn"
-                  href={`mailto:${coderData.email}`}
-                  aria-label="Email"
-                >
-                  <Icon path={ICONS.mail} />
-                </a>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "7px",
-                color: T.color.textMuted,
-                fontSize: "14px",
-              }}
-            >
-              <Icon path={ICONS.pin} />
-              {coderData.location}
+            <h1 className="m-0 bg-ed-gradient-text bg-clip-text font-ed-heading text-[clamp(2.4rem,6vw,4.1rem)] font-bold leading-[1.08] tracking-[-0.03em] text-transparent">
+              {coderData.name}
+            </h1>
+            <div className="mt-3.5 flex flex-wrap items-center gap-2.5 font-ed-mono text-[clamp(16px,2.2vw,19px)] text-ed-text-secondary">
+              <span className="text-ed-text-muted">{"<"}</span>
+              <span className="font-semibold text-ed-text">
+                {mounted ? typed : coderData.roles[0]}
+              </span>
+              <span className="h-[1.05em] w-[9px] translate-y-[2px] animate-ed-blink rounded-[1px] bg-ed-accent motion-reduce:animate-none" />
+              <span className="text-ed-text-muted">{"/>"}</span>
             </div>
           </div>
 
-          {/* ---------------- RIGHT ---------------- */}
-          <div className="h-card-col">
-            <div className="h-card">
-              <div className="h-card-top">
-                <div style={{ display: "flex", gap: "6px" }}>
-                  {[T.color.border, T.color.border, T.color.border].map(
-                    (c, i) => (
-                      <span
-                        key={i}
-                        style={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          background: c,
-                          border: `1px solid ${T.color.borderStrong || c}`,
-                        }}
-                      />
-                    ),
-                  )}
-                </div>
-                <span
-                  style={{
-                    fontFamily: T.font.mono,
-                    fontSize: 12,
-                    color: T.color.textMuted,
-                  }}
-                >
-                  ~/{coderData.alias}/skills.ts
-                </span>
-                <span
-                  style={{
-                    fontFamily: T.font.mono,
-                    fontSize: 11,
-                    color: T.color.textMuted,
-                    opacity: 0.7,
-                  }}
-                >
-                  TS
-                </span>
-              </div>
+          <p className="m-0 max-w-[520px] text-[17px] leading-[1.75] text-ed-text-secondary">
+            {coderData.tagline} Currently focused on{" "}
+            <b className="font-semibold text-ed-text">
+              React, Next.js &amp; Laravel
+            </b>{" "}
+            — writing clean, typed, maintainable code and shipping things that
+            actually get used.
+          </p>
 
+          <div className="grid grid-cols-2 overflow-hidden rounded-[14px] border border-ed-border bg-ed-surface herosm:grid-cols-4">
+            {coderData.stats.map((s, i) => (
               <div
-                className="h-tabs"
-                role="tablist"
-                aria-label="Skill categories"
+                key={s.label}
+                className={clsx(
+                  "px-3 py-3.5",
+                  i < 2 && "border-b border-ed-border",
+                  i % 2 === 0 && "border-r border-ed-border",
+                  "herosm:border-b-0",
+                  i === coderData.stats.length - 1
+                    ? "herosm:border-r-0"
+                    : "herosm:border-r herosm:border-ed-border",
+                )}
               >
-                {tabs.map((t) => (
-                  <button
-                    key={t}
-                    role="tab"
-                    aria-selected={tab === t}
-                    data-active={tab === t}
-                    className="h-tab"
-                    onClick={() => setTab(t)}
-                  >
-                    {t}.ts
-                  </button>
-                ))}
-              </div>
-
-              <div className="h-code">
-                <CodeLine n={1}>
-                  <span style={{ color: kw }}>export const </span>
-                  <span style={{ color: fn }}>{tab}</span>
-                  <span style={{ color: T.color.textSecondary }}>
-                    {": string[] = ["}
-                  </span>
-                </CodeLine>
-
-                <div style={{ padding: "8px 0 8px 34px" }}>
-                  {active.map((s) => (
-                    <span className="h-chip" key={s}>
-                      <span style={{ color: str }}>&quot;{s}&quot;</span>
-                      <span style={{ color: T.color.textMuted }}>,</span>
-                    </span>
-                  ))}
+                <div className="font-ed-heading text-xl font-bold tracking-[-0.02em] text-ed-text">
+                  {s.value}
                 </div>
-
-                <CodeLine n={active.length + 2}>
-                  <span style={{ color: T.color.textSecondary }}>{"];"}</span>
-                </CodeLine>
-                <CodeLine n={active.length + 3}> </CodeLine>
-                <CodeLine n={active.length + 4}>
-                  <span style={{ color: T.color.textMuted }}>
-                    {`// ${active.length} in ${tab} · ${totalSkills} total`}
-                  </span>
-                </CodeLine>
-              </div>
-
-              <div className="h-card-bottom">
-                <span
-                  style={{
-                    display: "inline-flex",
-                    gap: 6,
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
-                      background: T.color.accent,
-                      display: "inline-block",
-                    }}
-                  />
-                  main · {coderData.seniority} dev
-                </span>
-                <span>{totalSkills} skills · UTF-8</span>
-              </div>
-            </div>
-
-            <div className="h-badge">
-              <span
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 9,
-                  display: "grid",
-                  placeItems: "center",
-                  background: T.color.accent2Soft,
-                  border: `1px solid ${T.color.accent2Border}`,
-                  color: T.color.accent2Text,
-                  fontFamily: T.font.mono,
-                  fontSize: 13,
-                  fontWeight: 700,
-                }}
-              >
-                {"{}"}
-              </span>
-              <span>
-                <span
-                  style={{
-                    display: "block",
-                    fontSize: 10,
-                    color: T.color.textMuted,
-                    fontFamily: T.font.mono,
-                    letterSpacing: ".04em",
-                  }}
-                >
-                  CURRENTLY LEARNING
-                </span>
-                <span
-                  style={{
-                    display: "block",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: T.color.text,
-                  }}
-                >
-                  {coderData.currentlyLearning.join(" · ")}
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ---------------- TECH MARQUEE ---------------- */}
-        <div className="h-marquee" aria-hidden="true">
-          <div className="h-marquee-track">
-            {[0, 1].map((dup) => (
-              <div key={dup} style={{ display: "flex" }}>
-                {Object.values(coderData.skills)
-                  .flat()
-                  .map((s, i) => (
-                    <span className="h-marquee-item" key={`${dup}-${s}-${i}`}>
-                      <span style={{ color: T.color.accent }}>◆</span>
-                      {s}
-                    </span>
-                  ))}
+                <div className="mt-[3px] font-ed-body text-[12.5px] tracking-[0.01em] text-ed-text-muted">
+                  {s.label}
+                </div>
               </div>
             ))}
           </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="#projects"
+              className="group inline-flex items-center gap-[9px] rounded-[10px] border border-transparent bg-ed-gradient-button px-6 py-[13px] text-[15px] font-semibold text-white no-underline shadow-[0_2px_10px_rgba(14,124,116,0.22)] transition-all duration-[220ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)]"
+            >
+              View my work
+              <Icon
+                path={ICONS.arrow}
+                className="transition-transform duration-[220ms] group-hover:translate-x-[3px]"
+              />
+            </a>
+            <a
+              href={coderData.resume}
+              download
+              className="inline-flex items-center gap-[9px] rounded-[10px] border border-ed-border bg-ed-surface px-6 py-[13px] text-[15px] font-semibold text-ed-text no-underline transition-all duration-[220ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:border-ed-border-strong hover:bg-ed-paper-alt"
+            >
+              <Icon path={ICONS.download} /> Résumé
+            </a>
+            <div className="flex gap-2">
+              <a
+                className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                href={coderData.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <Icon path={ICONS.github} />
+              </a>
+              <a
+                className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                href={coderData.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <Icon path={ICONS.linkedin} />
+              </a>
+              <a
+                className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                href={`mailto:${coderData.email}`}
+                aria-label="Email"
+              >
+                <Icon path={ICONS.mail} />
+              </a>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-[7px] text-sm text-ed-text-muted">
+            <Icon path={ICONS.pin} />
+            {coderData.location}
+          </div>
         </div>
-      </section>
-    </>
+
+        {/* ---------------- RIGHT ---------------- */}
+        <div className="relative order-2 animate-ed-in motion-reduce:animate-none">
+          <div className="overflow-hidden rounded-2xl border border-ed-border bg-ed-surface shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)]">
+            <div className="flex items-center justify-between border-b border-ed-border bg-ed-paper-alt px-3.5 py-[11px]">
+              <div className="flex gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    className="h-2.5 w-2.5 rounded-full border border-ed-border-strong bg-ed-border"
+                  />
+                ))}
+              </div>
+              <span className="font-ed-mono text-xs text-ed-text-muted">
+                ~/{coderData.alias}/skills.ts
+              </span>
+              <span className="font-ed-mono text-[11px] text-ed-text-muted opacity-70">
+                TS
+              </span>
+            </div>
+
+            <div
+              className="flex gap-1 overflow-x-auto border-b border-ed-border bg-ed-paper-alt px-2.5 pt-2"
+              role="tablist"
+              aria-label="Skill categories"
+            >
+              {tabs.map((t) => {
+                const isActive = tab === t;
+                return (
+                  <button
+                    key={t}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setTab(t)}
+                    className={clsx(
+                      "cursor-pointer appearance-none whitespace-nowrap rounded-t-lg border border-b-0 px-[13px] py-[7px] font-ed-mono text-[13px] transition-all duration-[180ms]",
+                      isActive
+                        ? "-mb-px border-ed-border bg-ed-surface pb-2 text-ed-text"
+                        : "border-transparent bg-transparent text-ed-text-muted hover:text-ed-text",
+                    )}
+                  >
+                    {t}.ts
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="min-h-[236px] px-[18px] pt-[18px] pb-3.5 font-ed-mono">
+              <CodeLine n={1}>
+                <span style={{ color: kw }}>export const </span>
+                <span style={{ color: fn }}>{tab}</span>
+                <span className="text-ed-text-secondary">
+                  {": string[] = ["}
+                </span>
+              </CodeLine>
+
+              <div className="py-2 pl-[34px]">
+                {active.map((s) => (
+                  <span
+                    key={s}
+                    className="mr-1 mb-1.5 inline-block cursor-default rounded-md border border-ed-border bg-ed-paper-alt px-[9px] py-[3px] font-ed-mono text-[13px] text-ed-text transition-all duration-[180ms] hover:-translate-y-px hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                  >
+                    <span style={{ color: str }}>&quot;{s}&quot;</span>
+                    <span className="text-ed-text-muted">,</span>
+                  </span>
+                ))}
+              </div>
+
+              <CodeLine n={active.length + 2}>
+                <span className="text-ed-text-secondary">{"];"}</span>
+              </CodeLine>
+              <CodeLine n={active.length + 3}> </CodeLine>
+              <CodeLine n={active.length + 4}>
+                <span className="text-ed-text-muted">
+                  {`// ${active.length} in ${tab} · ${totalSkills} total`}
+                </span>
+              </CodeLine>
+            </div>
+
+            <div className="flex items-center justify-between gap-2.5 border-t border-ed-border bg-ed-paper-alt px-4 py-2.5 font-ed-mono text-xs text-ed-text-muted">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-ed-accent" />
+                main · {coderData.seniority} dev
+              </span>
+              <span>{totalSkills} skills · UTF-8</span>
+            </div>
+          </div>
+
+          <div
+            className={clsx(
+              "absolute z-[2] flex items-center gap-2.5 rounded-xl border border-ed-border bg-ed-surface px-3.5 py-2.5",
+              "animate-ed-float shadow-[0_12px_30px_-12px_rgba(11,19,16,0.3)] motion-reduce:animate-none",
+              "right-2 bottom-[-18px] heromd:right-[-14px] heromd:bottom-[-22px]",
+            )}
+          >
+            <span className="grid h-[34px] w-[34px] place-items-center rounded-[9px] border border-ed-accent2-border bg-ed-accent2-soft font-ed-mono text-[13px] font-bold text-ed-accent2-text">
+              {"{}"}
+            </span>
+            <span>
+              <span className="block font-ed-mono text-[10px] tracking-[0.04em] text-ed-text-muted">
+                CURRENTLY LEARNING
+              </span>
+              <span className="block text-[13px] font-semibold text-ed-text">
+                {coderData.currentlyLearning.join(" · ")}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ---------------- TECH MARQUEE ---------------- */}
+      <div
+        className="group/marquee absolute inset-x-0 bottom-0 z-[1] overflow-hidden border-t border-ed-border bg-ed-surface py-[11px] [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)] [-webkit-mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]"
+        aria-hidden="true"
+      >
+        <div className="flex w-max animate-ed-marquee motion-reduce:animate-none group-hover/marquee:[animation-play-state:paused]">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex">
+              {Object.values(coderData.skills)
+                .flat()
+                .map((s, i) => (
+                  <span
+                    key={`${dup}-${s}-${i}`}
+                    className="inline-flex items-center gap-2.5 whitespace-nowrap px-[22px] font-ed-mono text-[13px] text-ed-text-muted"
+                  >
+                    <span className="text-ed-accent">◆</span>
+                    {s}
+                  </span>
+                ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
