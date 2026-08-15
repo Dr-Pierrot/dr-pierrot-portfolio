@@ -1,10 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { T } from "@/lib/theme";
-
-/* Local composite gradient — mirrors the one in Hero.tsx so the CTA buttons
-   match; built from theme primitives since it isn't a shared token yet. */
-const gradientButton = `linear-gradient(135deg, ${T.color.ink} 0%, ${T.color.accent} 140%)`;
+import clsx from "clsx";
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -64,290 +60,114 @@ export default function Header() {
 
   return (
     <>
-      <style>{`
-        ${T.fontImport}
-
-        @keyframes nav-drop { from { opacity:0; transform:translateY(-10px);} to { opacity:1; transform:none; } }
-        @keyframes nav-ping { 0%{transform:scale(1);opacity:.6} 70%{transform:scale(2.2);opacity:0} 100%{opacity:0} }
-        @keyframes menu-item-in { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:none; } }
-
-        .site-header {
-          position: fixed;
-          top: 0; left: 0; right: 0;
-          z-index: 100;
-          font-family: ${T.font.body};
-          padding: 14px 1.5rem 0;
-          animation: nav-drop .6s cubic-bezier(.2,.7,.2,1) both;
-        }
-        .site-header-inner {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1.5rem;
-          max-width: 1180px;
-          margin: 0 auto;
-          padding: 0 10px 0 14px;
-          height: 64px;
-          border-radius: 16px;
-          background: rgba(245,246,242,0.72);
-          backdrop-filter: blur(14px) saturate(160%);
-          -webkit-backdrop-filter: blur(14px) saturate(160%);
-          border: 1px solid ${T.color.border};
-          box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
-          transition: box-shadow .25s ease, border-color .25s ease, background .25s ease, height .25s ease;
-        }
-        .site-header-inner.scrolled {
-          height: 58px;
-          background: rgba(255,255,255,0.92);
-          border-color: ${T.color.borderStrong};
-          box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 30px -16px rgba(11,19,16,.18);
-        }
-
-        .logo-wrap {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-          flex-shrink: 0;
-        }
-        .logo-mark {
-          width: 36px; height: 36px;
-          border-radius: 10px;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-          background: ${gradientButton};
-          font-family: ${T.font.mono};
-          font-weight: 700;
-          font-size: 13px;
-          color: #fff;
-          box-shadow: 0 4px 14px -4px rgba(14,124,116,.45);
-          transition: transform .25s cubic-bezier(.2,.7,.2,1);
-        }
-        .logo-wrap:hover .logo-mark { transform: rotate(-8deg) scale(1.05); }
-        .logo-text {
-          display: flex;
-          flex-direction: column;
-          line-height: 1.15;
-        }
-        .logo-name {
-          font-family: ${T.font.heading};
-          font-weight: 700;
-          font-size: 16px;
-          color: ${T.color.text};
-          letter-spacing: -.01em;
-        }
-        .logo-role {
-          font-family: ${T.font.body};
-          font-size: 12px;
-          color: ${T.color.textMuted};
-        }
-
-        .header-nav {
-          display: flex;
-          align-items: center;
-          gap: 2px;
-          padding: 4px;
-          border-radius: 12px;
-          background: ${T.color.paperAlt};
-          border: 1px solid ${T.color.border};
-        }
-        .header-nav a {
-          position: relative;
-          font-size: 14.5px;
-          font-weight: 500;
-          color: ${T.color.textSecondary};
-          text-decoration: none;
-          padding: 8px 15px;
-          border-radius: 8px;
-          transition: color .2s ease, background .2s ease;
-        }
-        .header-nav a:hover { color: ${T.color.text}; }
-        .header-nav a[data-active="true"] {
-          color: ${T.color.text};
-          background: ${T.color.surface};
-          box-shadow: 0 1px 0 ${T.color.border}, 0 4px 10px -6px rgba(11,19,16,.15);
-        }
-        .header-nav a[data-active="true"]::before {
-          content: '';
-          position: absolute;
-          left: 9px; bottom: 6px;
-          width: 4px; height: 4px;
-          border-radius: 50%;
-          background: ${T.color.accent};
-        }
-
-        .header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-        .header-status {
-          display: none;
-          align-items: center; gap: 7px;
-          padding: 7px 12px;
-          border-radius: 999px;
-          background: ${T.color.accentSoft};
-          border: 1px solid ${T.color.accentBorder};
-          font-family: ${T.font.body};
-          font-size: 13px; font-weight: 600;
-          color: ${T.color.accentText};
-          white-space: nowrap;
-        }
-        .header-dot { position: relative; width: 6px; height: 6px; border-radius: 50%; background: ${T.color.accent}; }
-        .header-dot::after {
-          content: ''; position: absolute; inset: 0; border-radius: 50%;
-          background: ${T.color.accent}; animation: nav-ping 2s ease-out infinite;
-        }
-
-        .header-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          padding: 9px 18px;
-          background: ${gradientButton};
-          color: #fff;
-          border: 1px solid transparent;
-          border-radius: 10px;
-          font-family: ${T.font.body};
-          font-size: 14.5px;
-          font-weight: 600;
-          text-decoration: none;
-          box-shadow: 0 2px 10px -2px rgba(14,124,116,.35);
-          transition: transform .2s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease;
-          white-space: nowrap;
-        }
-        .header-cta:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 22px -8px rgba(14,124,116,.5);
-        }
-
-        .burger {
-          display: none;
-          flex-direction: column;
-          gap: 5px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 8px;
-          margin: -8px -6px -8px 0;
-        }
-        .burger span {
-          display: block;
-          width: 20px; height: 2px;
-          border-radius: 2px;
-          background: ${T.color.text};
-          transition: all 0.25s;
-        }
-        .burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-        .burger.open span:nth-child(2) { opacity: 0; }
-        .burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-        .mobile-menu {
-          position: fixed;
-          inset: 0;
-          background: rgba(245,246,242,0.98);
-          backdrop-filter: blur(10px);
-          z-index: 110;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 1.6rem;
-          opacity: 0;
-          transform: translateY(-8px);
-          pointer-events: none;
-          transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .mobile-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .mobile-menu a {
-          font-family: ${T.font.heading};
-          font-size: 26px;
-          font-weight: 600;
-          color: ${T.color.text};
-          text-decoration: none;
-          opacity: 0;
-        }
-        .mobile-menu.open a { animation: menu-item-in .5s cubic-bezier(.2,.7,.2,1) both; }
-        .mobile-menu a:hover { color: ${T.color.accent}; }
-
-        .menu-close {
-          position: absolute;
-          top: 1.5rem; right: 1.5rem;
-          width: 40px; height: 40px;
-          display: flex; align-items: center; justify-content: center;
-          background: ${T.color.paperAlt};
-          border: 1px solid ${T.color.border};
-          border-radius: 10px;
-          color: ${T.color.text};
-          font-size: 16px;
-          cursor: pointer;
-        }
-
-        @media (min-width: 860px) { .header-status { display: inline-flex; } }
-
-        @media (max-width: 768px) {
-          .header-nav { display: none; }
-          .header-cta-desktop { display: none; }
-          .header-status { display: none; }
-          .burger { display: flex; }
-          .site-header { padding: 10px 1rem 0; }
-          .site-header-inner { padding: 0 8px 0 12px; height: 60px; }
-          .logo-role { display: none; }
-        }
-      `}</style>
-
-      <header className="site-header">
-        <div className={`site-header-inner${scrolled ? " scrolled" : ""}`}>
-          <a href="#home" className="logo-wrap" aria-label="Jaycee Capulong">
-            <div className="logo-mark">
+      <header className="fixed inset-x-0 top-0 z-[100] animate-ed-nav-drop px-4 pt-2.5 pb-0 font-ed-body motion-reduce:animate-none md:px-6 md:pt-3.5">
+        <div
+          className={clsx(
+            "mx-auto flex max-w-[1180px] items-center justify-between gap-6 rounded-2xl border pr-2.5 pl-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] transition-[box-shadow,border-color,background-color,height] duration-250 backdrop-blur-[14px] backdrop-saturate-[1.6] md:pl-3.5",
+            scrolled
+              ? "h-[58px] border-ed-border-strong bg-ed-surface/92 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_12px_30px_-16px_rgba(11,19,16,0.18)] md:h-[58px]"
+              : "h-[60px] border-ed-border bg-ed-paper/72 md:h-16",
+          )}
+        >
+          <a
+            href="#home"
+            className="group flex shrink-0 items-center gap-2.5 no-underline"
+            aria-label="Jaycee Capulong"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-ed-gradient-button font-ed-mono text-[13px] font-bold text-white shadow-[0_4px_14px_-4px_rgba(14,124,116,0.45)] transition-transform duration-[250ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:-rotate-[8deg] group-hover:scale-105">
               <img src="/favicon-512x512.png" alt="Icon" />
             </div>
-            <div className="logo-text">
-              <span className="logo-name">Jaycee Capulong</span>
-              <span className="logo-role">Fullstack Developer</span>
+            <div className="flex flex-col leading-[1.15]">
+              <span className="font-ed-heading text-base font-bold tracking-[-0.01em] text-ed-text">
+                Jaycee Capulong
+              </span>
+              <span className="hidden font-ed-body text-xs text-ed-text-muted md:block">
+                Fullstack Developer
+              </span>
             </div>
           </a>
 
-          <nav className="header-nav" aria-label="Primary">
-            {navLinks.map((l) => (
-              <a
-                key={l.label}
-                href={l.href}
-                data-active={activeHref === l.href}
-                onClick={() => setActiveHref(l.href)}
-              >
-                {l.label}
-              </a>
-            ))}
+          <nav
+            className="hidden items-center gap-0.5 rounded-xl border border-ed-border bg-ed-paper-alt p-1 md:flex"
+            aria-label="Primary"
+          >
+            {navLinks.map((l) => {
+              const isActive = activeHref === l.href;
+              return (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  onClick={() => setActiveHref(l.href)}
+                  className={clsx(
+                    "relative rounded-lg px-[15px] py-2 text-[14.5px] font-medium no-underline transition-colors duration-200",
+                    isActive
+                      ? "bg-ed-surface text-ed-text shadow-[0_1px_0_var(--color-ed-border),0_4px_10px_-6px_rgba(11,19,16,0.15)]"
+                      : "text-ed-text-secondary hover:text-ed-text",
+                  )}
+                >
+                  {isActive && (
+                    <span className="absolute bottom-1.5 left-[9px] h-1 w-1 rounded-full bg-ed-accent" />
+                  )}
+                  {l.label}
+                </a>
+              );
+            })}
           </nav>
 
-          <div className="header-right">
-            <span className="header-status">
-              <span className="header-dot" />
+          <div className="flex shrink-0 items-center gap-2.5">
+            <span className="hidden items-center gap-[7px] whitespace-nowrap rounded-full border border-ed-accent-border bg-ed-accent-soft px-3 py-[7px] font-ed-body text-[13px] font-semibold text-ed-accent-text navstatus:inline-flex">
+              <span className="relative inline-flex h-1.5 w-1.5">
+                <span className="absolute inset-0 animate-ping rounded-full bg-ed-accent motion-reduce:animate-none" />
+                <span className="relative inline-block h-1.5 w-1.5 rounded-full bg-ed-accent" />
+              </span>
               Available for work
             </span>
-            <a href="#contact" className="header-cta header-cta-desktop">
+            <a
+              href="#contact"
+              className="hidden items-center gap-[7px] whitespace-nowrap rounded-[10px] border border-transparent bg-ed-gradient-button px-[18px] py-[9px] font-ed-body text-[14.5px] font-semibold text-white no-underline shadow-[0_2px_10px_-2px_rgba(14,124,116,0.35)] transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_22px_-8px_rgba(14,124,116,0.5)] md:inline-flex"
+            >
               Let&apos;s talk
             </a>
             <button
-              className={`burger${isMenuOpen ? " open" : ""}`}
+              className="mt-[-8px] mr-[-6px] mb-[-8px] flex flex-col gap-[5px] border-none bg-transparent p-2 md:hidden"
               onClick={() => setIsMenuOpen((o) => !o)}
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
             >
-              <span />
-              <span />
-              <span />
+              <span
+                className={clsx(
+                  "block h-0.5 w-5 rounded-sm bg-ed-text transition-all duration-[250ms]",
+                  isMenuOpen && "translate-y-[6.5px] rotate-45",
+                )}
+              />
+              <span
+                className={clsx(
+                  "block h-0.5 w-5 rounded-sm bg-ed-text transition-all duration-[250ms]",
+                  isMenuOpen && "opacity-0",
+                )}
+              />
+              <span
+                className={clsx(
+                  "block h-0.5 w-5 rounded-sm bg-ed-text transition-all duration-[250ms]",
+                  isMenuOpen && "-translate-y-[6.5px] -rotate-45",
+                )}
+              />
             </button>
           </div>
         </div>
       </header>
 
       <div
-        className={`mobile-menu${isMenuOpen ? " open" : ""}`}
+        className={clsx(
+          "fixed inset-0 z-[110] flex -translate-y-2 flex-col items-center justify-center gap-[1.6rem] bg-ed-paper/98 opacity-0 backdrop-blur-[10px] transition-[opacity,transform] duration-300 pointer-events-none",
+          isMenuOpen && "translate-y-0 opacity-100 pointer-events-auto",
+        )}
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
       >
         <button
-          className="menu-close"
+          className="absolute top-6 right-6 flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-ed-border bg-ed-paper-alt text-base text-ed-text"
           onClick={() => setIsMenuOpen(false)}
           aria-label="Close menu"
         >
@@ -358,6 +178,10 @@ export default function Header() {
             key={l.label}
             href={l.href}
             style={{ animationDelay: `${i * 0.06}s` }}
+            className={clsx(
+              "font-ed-heading text-[26px] font-semibold text-ed-text no-underline opacity-0 hover:text-ed-accent",
+              isMenuOpen && "animate-ed-menu-in",
+            )}
             onClick={() => {
               setActiveHref(l.href);
               setIsMenuOpen(false);
@@ -370,19 +194,14 @@ export default function Header() {
           href="#contact"
           onClick={() => setIsMenuOpen(false)}
           style={{
-            padding: "12px 32px",
-            background: gradientButton,
-            color: "#fff",
-            borderRadius: "10px",
-            fontFamily: T.font.heading,
-            fontSize: "15px",
-            fontWeight: 600,
-            textDecoration: "none",
-            opacity: 0,
-            animation: isMenuOpen
-              ? `menu-item-in .5s cubic-bezier(.2,.7,.2,1) ${navLinks.length * 0.06}s both`
-              : "none",
+            animationDelay: isMenuOpen
+              ? `${navLinks.length * 0.06}s`
+              : undefined,
           }}
+          className={clsx(
+            "rounded-[10px] bg-ed-gradient-button px-8 py-3 font-ed-heading text-[15px] font-semibold text-white no-underline opacity-0",
+            isMenuOpen && "animate-ed-menu-in",
+          )}
         >
           Let&apos;s talk
         </a>

@@ -1,8 +1,141 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+
+/* ── Editorial design tokens ──
+   Mirrors lib/theme.ts so the same palette/type/animation values are
+   reachable as Tailwind utilities (bg-ed-ink, font-ed-heading,
+   animate-ed-marquee, etc.) instead of ad-hoc <style> blocks. */
+@theme {
+  --font-ed-display: "Fraunces", serif;
+  --font-ed-heading: "Space Grotesk", sans-serif;
+  --font-ed-body: "Inter", sans-serif;
+  --font-ed-mono: "JetBrains Mono", monospace;
+
+  --color-ed-ink: #0b1310;
+  --color-ed-ink-soft: #1c2521;
+  --color-ed-paper: #f5f6f2;
+  --color-ed-paper-alt: #eceee8;
+  --color-ed-surface: #ffffff;
+  --color-ed-border: #dedfd8;
+  --color-ed-border-strong: #c6c8be;
+  --color-ed-text: #121815;
+  --color-ed-text-secondary: #4b534d;
+  --color-ed-text-muted: #8b9189;
+
+  --color-ed-accent: #0e7c74;
+  --color-ed-accent-bright: #14b8a6;
+  --color-ed-accent-soft: #e7f4f1;
+  --color-ed-accent-border: #b9dfd8;
+  --color-ed-accent-text: #0b6259;
+
+  --color-ed-accent2: #f59e0b;
+  --color-ed-accent2-soft: #fdf5e4;
+  --color-ed-accent2-border: #f0d89a;
+  --color-ed-accent2-text: #92600a;
+
+  --color-ed-accent3: #6366f1;
+  --color-ed-accent3-soft: #eeeefb;
+  --color-ed-accent3-border: #c9caf3;
+  --color-ed-accent3-text: #4143b0;
+
+  /* Composite gradients — static combinations of the tokens above, exposed
+     as bg-* utilities (bg-ed-gradient-hero, bg-ed-gradient-text, ...). */
+  --background-image-ed-gradient-hero: linear-gradient(
+    135deg,
+    #e7f4f1 0%,
+    #f5f6f2 45%,
+    #fdf5e4 100%
+  );
+  --background-image-ed-gradient-button: linear-gradient(
+    135deg,
+    #0b1310 0%,
+    #0e7c74 140%
+  );
+  --background-image-ed-gradient-text: linear-gradient(
+    135deg,
+    #0e7c74 0%,
+    #14b8a6 45%,
+    #6366f1 100%
+  );
+  --background-image-ed-gradient-dark: linear-gradient(
+    160deg,
+    #0b1310 0%,
+    #121915 55%,
+    #0b1310 100%
+  );
+
+  /* Custom breakpoints matching the hero's original layout collapse points */
+  --breakpoint-heromd: 56.25rem; /* 900px */
+  --breakpoint-herosm: 32.5rem; /* 520px */
+
+  --animate-ed-up: ed-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-ed-in: ed-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.18s both;
+  --animate-ed-blink: ed-blink 1s step-end infinite;
+  --animate-ed-float: ed-float 5.5s ease-in-out infinite;
+  --animate-ed-marquee: ed-marquee 32s linear infinite;
+  --animate-ed-drift: ed-drift 16s ease-in-out infinite;
+}
+
+@keyframes ed-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ed-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ed-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes ed-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes ed-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes ed-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-24px, 26px);
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -49,7 +182,7 @@
 }
 
 :root {
-  --background: #F5F6F2;
+  --background: #f5f6f2;
   --foreground: #121815;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.3);
@@ -129,7 +262,8 @@
   }
 }
 
-::view-transition-old(root), ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
