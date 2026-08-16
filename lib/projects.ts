@@ -24,6 +24,48 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 1,
+    slug: "alaga-pinas",
+    name: "Alaga Pinas",
+    dek: "A full employee lifecycle, from onboarding to payroll, run on one internal system.",
+    desc: "A fullstack HRMS built with Laravel 13 & React/TypeScript via Inertia.js for real-world organizational use.",
+    longDesc:
+      "A comprehensive fullstack Human Resource Management System designed to streamline HR operations. Built with Laravel 13 as the backend and React/TypeScript via Inertia.js for a seamless SPA experience. Handles the full employee lifecycle — from onboarding to offboarding — alongside payroll computation, attendance tracking, and leave management.",
+    challenge:
+      "HR teams were juggling spreadsheets and disconnected tools for records, attendance, and payroll — slow, error-prone, and impossible to audit. The brief was a single system of record that non-technical staff could actually run day to day.",
+    approach: [
+      "Modeled the employee lifecycle end-to-end in Laravel — onboarding, records, attendance, leave, offboarding — as one relational schema instead of bolted-on modules.",
+      "Used Inertia.js to ship a React/TypeScript SPA without standing up a separate API layer, keeping the monolith simple to reason about and deploy.",
+      "Built a payroll computation engine that handles attendance-derived pay, deductions, and leave balances as first-class data, not spreadsheet formulas.",
+      "Layered role-based access control so HR, managers, and employees each see only what their role needs.",
+    ],
+    outcome:
+      "A working internal tool that replaces manual HR tracking with one auditable system — still under active development as features harden for real organizational use.",
+    stack: [
+      "Laravel",
+      "TypeScript",
+      "React",
+      "Inertia.js",
+      "MySQL",
+      "TailwindCSS",
+      "Vite",
+    ],
+    link: "https://github.com/Dr-Pierrot/human-resource-management-system",
+    status: "In Progress",
+    type: "Fullstack App",
+    role: "Solo full-stack developer",
+    highlight: true,
+    year: 2026,
+    features: [
+      "Employee records & lifecycle management",
+      "Payroll computation engine",
+      "Attendance & leave tracking",
+      "Role-based access control",
+      "Inertia.js SPA architecture",
+      "MySQL relational database design",
+    ],
+  },
+  {
+    id: 2,
     slug: "hrms",
     name: "Human Resource Management System",
     dek: "A full employee lifecycle, from onboarding to payroll, run on one internal system.",
@@ -54,7 +96,7 @@ export const projects: Project[] = [
     type: "Fullstack App",
     role: "Solo full-stack developer",
     highlight: true,
-    year: 2025,
+    year: 2026,
     features: [
       "Employee records & lifecycle management",
       "Payroll computation engine",
@@ -65,7 +107,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     slug: "psgc-api",
     name: "PSGC API",
     dek: "43,768 Philippine geographic records, served as a documented, authenticated REST API.",
@@ -99,7 +141,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     slug: "dct-hub",
     name: "DCT Hub",
     dek: "A custom web-based system for Dominican College of Tarlac, Inc.",
@@ -137,7 +179,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     slug: "id-management-system",
     name: "ID Management System",
     dek: "A custom web-based system for Dominican College of Tarlac, Inc.",
@@ -175,7 +217,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     slug: "ido-android-app-wedding-planner",
     name: "I DO: An Android App for Wedding Planning",
     dek: "An android app prototype with a fully finished user interface built with Java.",
