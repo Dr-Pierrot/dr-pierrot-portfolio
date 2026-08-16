@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { T } from "@/lib/theme";
-import { Kicker } from "@/components/editorial";
+import React, { useState } from "react";
+import clsx from "clsx";
 
 const CONTACT_INFO = {
   email: "capulongako16@gmail.com",
@@ -32,20 +31,29 @@ const validate = (form: FormState): FieldError => {
   return errors;
 };
 
-const useInView = (ref: React.RefObject<HTMLElement | null>) => {
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    if (!ref.current) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setInView(true);
-      },
-      { threshold: 0.1 },
-    );
-    obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [ref]);
-  return inView;
+const Icon = ({ path }: { path: string }) => (
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d={path} />
+  </svg>
+);
+
+const ICONS = {
+  mail: "M3 6h18v12H3zM3 7l9 6 9-6",
+  pin: "M12 21s-7-6-7-11a7 7 0 1 1 14 0c0 5-7 11-7 11zM12 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z",
+  github:
+    "M9 19c-4 1.5-4-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.8 2.8 5.8 3.1 5.8 3.1a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 4.4 9.5c0 4.6 2.7 5.7 5.5 6-.4.4-.5.9-.5 1.5V21",
+  linkedin:
+    "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-13h4v1.5A6 6 0 0 1 16 8zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z",
 };
 
 const Field = ({
@@ -72,31 +80,25 @@ const Field = ({
   rows?: number;
 }) => {
   const [focused, setFocused] = useState(false);
-  const shared: React.CSSProperties = {
-    width: "100%",
-    padding: "12px 0",
-    background: "transparent",
-    border: "none",
-    borderBottom: `1px solid ${error ? T.color.danger : focused ? T.color.ink : T.color.border}`,
-    color: T.color.text,
-    fontFamily: T.font.body,
-    fontSize: "0.98rem",
-    outline: "none",
-    transition: "border-color 0.2s ease",
-    resize: "none",
-    boxSizing: "border-box",
-  };
+
+  const inputClass = clsx(
+    "w-full resize-none bg-transparent py-3 font-ed-body text-[0.98rem] text-ed-text outline-none transition-colors duration-200 border-b",
+    "placeholder:text-ed-text-muted",
+    error
+      ? "border-ed-danger"
+      : focused
+        ? "border-ed-accent"
+        : "border-ed-border",
+  );
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+    <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        style={{
-          fontFamily: T.font.mono,
-          fontSize: "0.68rem",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: error ? T.color.danger : T.color.textMuted,
-        }}
+        className={clsx(
+          "font-ed-mono text-[11px] tracking-[0.08em] uppercase",
+          error ? "text-ed-danger" : "text-ed-text-muted",
+        )}
       >
         {label}
       </label>
@@ -106,7 +108,7 @@ const Field = ({
           value={value}
           rows={rows || 4}
           placeholder={placeholder}
-          style={shared}
+          className={inputClass}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => {
@@ -120,7 +122,7 @@ const Field = ({
           type={type}
           value={value}
           placeholder={placeholder}
-          style={shared}
+          className={inputClass}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => {
@@ -130,13 +132,7 @@ const Field = ({
         />
       )}
       {error && (
-        <span
-          style={{
-            fontFamily: T.font.body,
-            fontSize: "0.8rem",
-            color: T.color.danger,
-          }}
-        >
+        <span className="font-ed-body text-[0.8rem] text-ed-danger">
           {error}
         </span>
       )}
@@ -145,8 +141,6 @@ const Field = ({
 };
 
 export default function ContactMe() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(sectionRef);
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -203,118 +197,57 @@ export default function ContactMe() {
     "General Question",
   ];
 
+  const infoRows = [
+    {
+      label: "Email",
+      value: CONTACT_INFO.email,
+      href: `mailto:${CONTACT_INFO.email}`,
+      icon: ICONS.mail,
+    },
+    { label: "Location", value: CONTACT_INFO.location, icon: ICONS.pin },
+    {
+      label: "GitHub",
+      value: "github.com/Dr-Pierrot",
+      href: CONTACT_INFO.github,
+      icon: ICONS.github,
+    },
+    {
+      label: "LinkedIn",
+      value: "Jaycee Capulong",
+      href: CONTACT_INFO.linkedin,
+      icon: ICONS.linkedin,
+    },
+  ];
+
   return (
-    <>
-      <style>{`
-        @keyframes contact-in { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
-        .contact-in { animation: contact-in 0.8s cubic-bezier(0.16,1,0.3,1) both; }
-        .subject-chip { font-family: ${T.font.mono}; font-size: 0.74rem; padding: 6px 13px; border: 1px solid ${T.color.border}; background: transparent; color: ${T.color.textMuted}; cursor: pointer; transition: all 0.2s ease; }
-        .subject-chip.active, .subject-chip:hover { border-color: ${T.color.ink}; color: ${T.color.ink}; }
-        .submit-btn { width: 100%; padding: 15px; background: ${T.color.ink}; color: ${T.color.paper}; border: none; font-family: ${T.font.heading}; font-weight: 600; font-size: 0.94rem; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.2s ease; }
-        .submit-btn:hover:not(:disabled) { opacity: 0.85; }
-        .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-        ::placeholder { color: ${T.color.textMuted}; }
-        .contact-grid { display: grid; grid-template-columns: minmax(0,0.9fr) minmax(0,1.1fr); gap: clamp(2.5rem,6vw,5rem); }
-        .contact-fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        @media (max-width: 820px) {
-          .contact-grid { grid-template-columns: 1fr; }
-          .contact-fields-grid { grid-template-columns: 1fr; }
-        }
-      `}</style>
+    <section
+      id="contact"
+      className="w-full bg-ed-surface px-6 py-[clamp(4rem,8vw,6.5rem)]"
+    >
+      <div className="mx-auto max-w-[1180px]">
+        <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+          {/* ---------------- LEFT ---------------- */}
+          <div>
+            <p className="mb-2.5 font-ed-mono text-sm tracking-[0.02em] text-ed-text-muted">
+              {"// get in touch"}
+            </p>
+            <h2 className="m-0 font-ed-heading text-[clamp(1.9rem,4vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ed-text">
+              Let&apos;s build something{" "}
+              <span className="text-ed-accent-text">real</span>.
+            </h2>
+            <p className="mt-4 max-w-[420px] text-[1.02rem] leading-[1.75] text-ed-text-secondary">
+              Open to fullstack roles, freelance projects, and collaboration. I
+              typically reply within 24–48 hours.
+            </p>
 
-      <section
-        id="contact"
-        ref={sectionRef}
-        style={{
-          width: "100%",
-          background: T.color.paper,
-          padding: "clamp(4rem,8vw,6.5rem) 0",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1240,
-            margin: "0 auto",
-            padding: "0 clamp(1.25rem,4vw,2.75rem)",
-          }}
-        >
-          <div className={`contact-grid${inView ? " contact-in" : ""}`}>
-            {/* LEFT */}
-            <div>
-              <Kicker>05 — Get in touch</Kicker>
-              <h2
-                style={{
-                  fontFamily: T.font.display,
-                  fontWeight: 500,
-                  fontSize: T.type.h2,
-                  lineHeight: 1.05,
-                  color: T.color.ink,
-                  margin: "0.6rem 0 0",
-                }}
-              >
-                Let&apos;s build something{" "}
-                <span style={{ color: T.color.accent }}>real</span>.
-              </h2>
-              <p
-                style={{
-                  fontFamily: T.font.body,
-                  fontSize: "1.02rem",
-                  lineHeight: 1.75,
-                  color: T.color.textSecondary,
-                  margin: "1.4rem 0 0",
-                  maxWidth: 420,
-                }}
-              >
-                Open to fullstack roles, freelance projects, and collaboration.
-                I typically reply within 24–48 hours.
-              </p>
-
-              <div
-                style={{
-                  marginTop: "2.5rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
-                {[
-                  {
-                    label: "Email",
-                    value: CONTACT_INFO.email,
-                    href: `mailto:${CONTACT_INFO.email}`,
-                  },
-                  { label: "Location", value: CONTACT_INFO.location },
-                  {
-                    label: "GitHub",
-                    value: "github.com/Dr-Pierrot",
-                    href: CONTACT_INFO.github,
-                  },
-                  {
-                    label: "LinkedIn",
-                    value: "Jaycee Capulong",
-                    href: CONTACT_INFO.linkedin,
-                  },
-                ].map((row) => (
-                  <div
-                    key={row.label}
-                    style={{
-                      display: "flex",
-                      gap: "1.25rem",
-                      borderTop: `1px solid ${T.color.border}`,
-                      paddingTop: "1rem",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: T.font.mono,
-                        fontSize: "0.68rem",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        color: T.color.textMuted,
-                        width: 90,
-                        flexShrink: 0,
-                      }}
-                    >
+            <div className="mt-10 flex flex-col divide-y divide-ed-border border-t border-ed-border">
+              {infoRows.map((row) => (
+                <div key={row.label} className="flex items-center gap-4 py-4">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-ed-border bg-ed-paper-alt text-ed-text-secondary">
+                    <Icon path={row.icon} />
+                  </span>
+                  <div className="flex min-w-0 flex-col gap-0.5">
+                    <span className="font-ed-mono text-[10px] tracking-[0.08em] text-ed-text-muted uppercase">
                       {row.label}
                     </span>
                     {row.href ? (
@@ -324,198 +257,145 @@ export default function ContactMe() {
                           row.href.startsWith("mailto") ? undefined : "_blank"
                         }
                         rel="noopener noreferrer"
-                        style={{
-                          fontFamily: T.font.body,
-                          fontSize: "0.94rem",
-                          color: T.color.text,
-                          textDecoration: "none",
-                        }}
+                        className="truncate text-[0.94rem] text-ed-text no-underline transition-colors hover:text-ed-accent-text"
                       >
                         {row.value}
                       </a>
                     ) : (
-                      <span
-                        style={{
-                          fontFamily: T.font.body,
-                          fontSize: "0.94rem",
-                          color: T.color.text,
-                        }}
-                      >
+                      <span className="truncate text-[0.94rem] text-ed-text">
                         {row.value}
                       </span>
                     )}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RIGHT — form */}
-            <div>
-              {status === "success" ? (
-                <div style={{ padding: "3rem 0", textAlign: "center" }}>
-                  <div
-                    style={{
-                      fontFamily: T.font.display,
-                      fontSize: "1.8rem",
-                      color: T.color.accent,
-                      fontStyle: "italic",
-                    }}
-                  >
-                    Message sent.
-                  </div>
-                  <p
-                    style={{
-                      fontFamily: T.font.body,
-                      fontSize: "0.98rem",
-                      color: T.color.textSecondary,
-                      marginTop: "0.75rem",
-                    }}
-                  >
-                    Thanks for reaching out — I&apos;ll get back to you within
-                    24–48 hours.
-                  </p>
                 </div>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.5rem",
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: T.font.mono,
-                        fontSize: "0.68rem",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        color: T.color.textMuted,
-                        marginBottom: "0.6rem",
-                      }}
-                    >
-                      Quick subject
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      {subjects.map((s) => (
+              ))}
+            </div>
+          </div>
+
+          {/* ---------------- RIGHT — form ---------------- */}
+          <div className="rounded-2xl border border-ed-border bg-ed-surface p-6 shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)] md:p-8">
+            {status === "success" ? (
+              <div className="py-12 text-center">
+                <div className="font-ed-heading text-2xl font-bold text-ed-accent-text">
+                  Message sent.
+                </div>
+                <p className="mt-3 text-[0.98rem] text-ed-text-secondary">
+                  Thanks for reaching out — I&apos;ll get back to you within
+                  24–48 hours.
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-6">
+                <div>
+                  <div className="mb-2.5 font-ed-mono text-[11px] tracking-[0.08em] text-ed-text-muted uppercase">
+                    Quick subject
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {subjects.map((s) => {
+                      const active = form.subject === s;
+                      return (
                         <button
                           key={s}
-                          className={`subject-chip${form.subject === s ? " active" : ""}`}
                           onClick={() => {
                             setField("subject")(s);
                             setTouched((t) => ({ ...t, subject: true }));
                           }}
+                          className={clsx(
+                            "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] transition-all duration-200",
+                            active
+                              ? "border-ed-accent-border bg-ed-accent-soft text-ed-accent-text"
+                              : "border-ed-border text-ed-text-muted hover:border-ed-border-strong hover:text-ed-text",
+                          )}
                         >
                           {s}
                         </button>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
-
-                  <div className="contact-fields-grid">
-                    <Field
-                      label="Name"
-                      id="name"
-                      value={form.name}
-                      onChange={setField("name")}
-                      onBlur={touchField("name")}
-                      error={visibleErrors.name}
-                      placeholder="Your name"
-                    />
-                    <Field
-                      label="Email"
-                      id="email"
-                      type="email"
-                      value={form.email}
-                      onChange={setField("email")}
-                      onBlur={touchField("email")}
-                      error={visibleErrors.email}
-                      placeholder="you@email.com"
-                    />
-                  </div>
-
-                  <Field
-                    label="Subject"
-                    id="subject"
-                    value={form.subject}
-                    onChange={setField("subject")}
-                    onBlur={touchField("subject")}
-                    error={visibleErrors.subject}
-                    placeholder="What brings you here?"
-                  />
-                  <Field
-                    label="Message"
-                    id="message"
-                    value={form.message}
-                    onChange={setField("message")}
-                    onBlur={touchField("message")}
-                    error={visibleErrors.message}
-                    placeholder="Tell me about your project or role..."
-                    multiline
-                    rows={5}
-                  />
-
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      marginTop: -8,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: T.font.mono,
-                        fontSize: "0.72rem",
-                        color:
-                          form.message.length < 20 && touched.message
-                            ? T.color.danger
-                            : T.color.textMuted,
-                      }}
-                    >
-                      {form.message.length} / 20 min
-                    </span>
-                  </div>
-
-                  <button
-                    className="submit-btn"
-                    onClick={handleSubmit}
-                    disabled={status === "sending"}
-                  >
-                    {status === "sending" ? "Sending…" : "Send message"}
-                  </button>
-
-                  {status === "error" && (
-                    <p
-                      style={{
-                        fontFamily: T.font.body,
-                        fontSize: "0.85rem",
-                        color: T.color.danger,
-                        margin: 0,
-                      }}
-                    >
-                      {errorMsg || "Something went wrong."} Try emailing
-                      directly at{" "}
-                      <a
-                        href={`mailto:${CONTACT_INFO.email}`}
-                        style={{ color: T.color.danger }}
-                      >
-                        {CONTACT_INFO.email}
-                      </a>
-                      .
-                    </p>
-                  )}
                 </div>
-              )}
-            </div>
+
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <Field
+                    label="Name"
+                    id="name"
+                    value={form.name}
+                    onChange={setField("name")}
+                    onBlur={touchField("name")}
+                    error={visibleErrors.name}
+                    placeholder="Your name"
+                  />
+                  <Field
+                    label="Email"
+                    id="email"
+                    type="email"
+                    value={form.email}
+                    onChange={setField("email")}
+                    onBlur={touchField("email")}
+                    error={visibleErrors.email}
+                    placeholder="you@email.com"
+                  />
+                </div>
+
+                <Field
+                  label="Subject"
+                  id="subject"
+                  value={form.subject}
+                  onChange={setField("subject")}
+                  onBlur={touchField("subject")}
+                  error={visibleErrors.subject}
+                  placeholder="What brings you here?"
+                />
+                <Field
+                  label="Message"
+                  id="message"
+                  value={form.message}
+                  onChange={setField("message")}
+                  onBlur={touchField("message")}
+                  error={visibleErrors.message}
+                  placeholder="Tell me about your project or role..."
+                  multiline
+                  rows={5}
+                />
+
+                <div className="-mt-2 flex justify-end">
+                  <span
+                    className={clsx(
+                      "font-ed-mono text-[12px]",
+                      form.message.length < 20 && touched.message
+                        ? "text-ed-danger"
+                        : "text-ed-text-muted",
+                    )}
+                  >
+                    {form.message.length} / 20 min
+                  </span>
+                </div>
+
+                <button
+                  onClick={handleSubmit}
+                  disabled={status === "sending"}
+                  className="w-full cursor-pointer rounded-[10px] bg-ed-gradient-button px-6 py-[15px] font-ed-heading text-[0.94rem] font-semibold tracking-[0.02em] text-white transition-all duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)] disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                >
+                  {status === "sending" ? "Sending…" : "Send message"}
+                </button>
+
+                {status === "error" && (
+                  <p className="m-0 text-[0.85rem] text-ed-danger">
+                    {errorMsg || "Something went wrong."} Try emailing directly
+                    at{" "}
+                    <a
+                      href={`mailto:${CONTACT_INFO.email}`}
+                      className="text-ed-danger underline"
+                    >
+                      {CONTACT_INFO.email}
+                    </a>
+                    .
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
