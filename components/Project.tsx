@@ -50,7 +50,7 @@ export default function Projects() {
         .project-feature:hover .project-feature-arrow { transform: translate(5px,-5px); background: ${T.color.accent}; }
         .project-feature:hover .project-number { transform: scale(1.04); color: rgba(245,246,242,.16); }
         .project-feature-visual { position: relative; display: flex; align-items: flex-end; padding: clamp(1.5rem, 4vw, 2.75rem); overflow: hidden; background: linear-gradient(145deg, ${T.color.inkSoft}, ${T.color.dark}); border-right: 1px solid ${T.color.darkBorder}; }
-        .project-number { position: absolute; top: -1.1rem; right: -.3rem; font: 500 clamp(10rem,25vw,20rem)/.8 ${T.font.display}; color: rgba(245,246,242,.09); transition: .45s cubic-bezier(.16,1,.3,1); }
+        .project-number { position: absolute; top: 2rem; right: -.3rem; font: 500 clamp(10rem,25vw,20rem)/.8 ${T.font.display}; color: rgba(245,246,242,.09); transition: .45s cubic-bezier(.16,1,.3,1); }
         .project-feature-copy { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1.75rem,5vw,4rem); }
         .project-feature-title { max-width: 650px; margin: .9rem 0 1rem; font: 500 clamp(2rem,4.2vw,4rem)/1 ${T.font.display}; letter-spacing: -.035em; }
         .project-feature-arrow { display: grid; width: 48px; height: 48px; place-items: center; margin-top: 2rem; border: 1px solid ${T.color.darkBorder}; border-radius: 50%; font: 400 1.25rem ${T.font.heading}; transition: .25s ease; }
@@ -76,7 +76,7 @@ export default function Projects() {
           }}
         >
           <div>
-            <div className="project-kicker">04 — Selected work</div>
+            <div className="project-kicker">{"// this is what I do"}</div>
             <h2
               style={{
                 fontFamily: T.font.display,

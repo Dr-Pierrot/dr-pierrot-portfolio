@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { T } from "@/lib/theme";
+import Link from "next/link";
 
 const profile = {
   alias: "Dr-Pierrot",
@@ -34,40 +34,15 @@ const columns = [
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer
-      style={{
-        width: "100%",
-        background: T.color.ink,
-        color: T.color.darkText,
-      }}
-    >
-      <style>{`
-        .footer-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr); gap: 2.5rem; }
-        @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
-      `}</style>
-      <div
-        style={{
-          maxWidth: 1240,
-          margin: "0 auto",
-          padding: "clamp(3rem,7vw,5rem) clamp(1.25rem,4vw,2.75rem) 2rem",
-        }}
-      >
-        <div
-          className="footer-grid"
-          style={{
-            paddingBottom: "2.5rem",
-            borderBottom: `1px solid ${T.color.darkBorder}`,
-          }}
-        >
-          <div>
-            <a
+    <footer className="w-full border-t border-ed-border bg-ed-paper-alt">
+      <div className="mx-auto max-w-[1240px] px-[clamp(1.25rem,4vw,2.75rem)] pt-[clamp(3rem,7vw,5rem)] pb-8">
+        <div className="grid grid-cols-2 gap-10 border-b border-ed-border pb-10 sm:grid-cols-[1.4fr_1fr_1fr]">
+          {/* Brand */}
+          <div className="col-span-2 sm:col-span-1">
+            <Link
               href="/"
               aria-label={`${profile.alias} home`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                textDecoration: "none",
-              }}
+              className="inline-flex items-center no-underline"
             >
               <Image
                 src="/favicon-512x512.png"
@@ -75,71 +50,26 @@ export default function Footer() {
                 width={46}
                 height={46}
               />
-            </a>
-            <p
-              style={{
-                fontFamily: T.font.body,
-                fontSize: "0.92rem",
-                lineHeight: 1.7,
-                color: T.color.darkTextSecondary,
-                marginTop: "0.9rem",
-                maxWidth: 280,
-              }}
-            >
+            </Link>
+            <p className="mt-3.5 max-w-[280px] font-ed-body text-[0.92rem] leading-[1.7] text-ed-text-secondary">
               Fullstack developer building practical, real-world web systems
               from the Philippines.
             </p>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginTop: "1.25rem",
-              }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: T.color.accentBright,
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: T.font.mono,
-                  fontSize: "0.72rem",
-                  letterSpacing: "0.06em",
-                  color: T.color.darkTextSecondary,
-                  textTransform: "uppercase",
-                }}
-              >
-                Available for work
+            <div className="mt-5 inline-flex w-fit items-center gap-[9px] rounded-full border border-ed-accent-border bg-ed-accent-soft py-1.5 pr-3.5 pl-3 text-[13px] font-semibold tracking-[0.01em] text-ed-accent-text">
+              <span className="relative inline-flex h-[7px] w-[7px]">
+                <span className="absolute inset-0 animate-ping rounded-full bg-ed-accent motion-reduce:animate-none" />
+                <span className="relative inline-block h-[7px] w-[7px] rounded-full bg-ed-accent" />
               </span>
+              Available for work
             </div>
           </div>
 
           {columns.map((col) => (
             <div key={col.title}>
-              <div
-                style={{
-                  fontFamily: T.font.mono,
-                  fontSize: "0.68rem",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: T.color.darkTextSecondary,
-                  marginBottom: "1rem",
-                }}
-              >
+              <div className="mb-4 font-ed-mono text-[11px] tracking-[0.08em] text-ed-text-muted uppercase">
                 {col.title}
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.7rem",
-                }}
-              >
+              <div className="flex flex-col gap-3">
                 {col.links.map((l) => (
                   <a
                     key={l.label}
@@ -150,12 +80,7 @@ export default function Footer() {
                         ? "noopener noreferrer"
                         : undefined
                     }
-                    style={{
-                      fontFamily: T.font.body,
-                      fontSize: "0.92rem",
-                      color: T.color.darkText,
-                      textDecoration: "none",
-                    }}
+                    className="font-ed-body text-[0.92rem] text-ed-text no-underline transition-colors duration-200 hover:text-ed-accent-text"
                   >
                     {l.label}
                   </a>
@@ -165,32 +90,11 @@ export default function Footer() {
           ))}
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-            paddingTop: "1.5rem",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: T.font.mono,
-              fontSize: "0.74rem",
-              color: T.color.darkTextSecondary,
-            }}
-          >
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
+          <span className="font-ed-mono text-[0.74rem] text-ed-text-muted">
             © {year} {profile.name}. All rights reserved.
           </span>
-          <span
-            style={{
-              fontFamily: T.font.mono,
-              fontSize: "0.74rem",
-              color: T.color.darkTextSecondary,
-            }}
-          >
+          <span className="font-ed-mono text-[0.74rem] text-ed-text-muted">
             Built with Next.js, from the Philippines.
           </span>
         </div>
