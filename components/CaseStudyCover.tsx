@@ -1,37 +1,34 @@
 "use client";
 import React, { useState } from "react";
-import { T } from "@/lib/theme";
 
-export default function CaseStudyCover({ src, alt, index }: { src?: string; alt: string; index: number }) {
+export default function CaseStudyCover({
+  src,
+  alt,
+  index,
+}: {
+  src?: string;
+  alt: string;
+  index: number;
+}) {
   const [failed, setFailed] = useState(!src);
 
   return (
-    <div style={{ width: "100%", aspectRatio: "16/9", background: T.color.ink, position: "relative", overflow: "hidden" }}>
+    <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-ed-border bg-ed-paper-alt">
       {!failed && src && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt={alt}
           onError={() => setFailed(true)}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          className="h-full w-full object-cover"
         />
       )}
       {failed && (
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontFamily: T.font.display, fontSize: "7rem", color: "rgba(245,246,242,0.12)" }}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="font-ed-heading text-[7rem] text-ed-border">
             {String(index).padStart(2, "0")}
           </span>
-          <span
-            style={{
-              position: "absolute",
-              bottom: 18,
-              right: 20,
-              fontFamily: T.font.mono,
-              fontSize: "0.7rem",
-              color: "rgba(245,246,242,0.45)",
-              letterSpacing: "0.06em",
-            }}
-          >
+          <span className="absolute right-5 bottom-[18px] font-ed-mono text-[0.7rem] tracking-[0.06em] text-ed-text-muted">
             Screenshot coming soon
           </span>
         </div>

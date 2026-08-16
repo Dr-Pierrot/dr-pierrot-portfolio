@@ -222,7 +222,7 @@ export default function ContactMe() {
   return (
     <section
       id="contact"
-      className="w-full bg-ed-surface px-6 py-[clamp(4rem,8vw,6.5rem)]"
+      className="w-full bg-ed-paper-alt px-6 py-[clamp(4rem,8vw,6.5rem)]"
     >
       <div className="mx-auto max-w-[1180px]">
         <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">

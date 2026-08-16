@@ -1,30 +1,37 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { T } from "@/lib/theme";
-import { Tag } from "@/components/editorial";
+import clsx from "clsx";
 import { ALL_TYPES, projects } from "@/lib/projects";
 
-const useInView = (ref: React.RefObject<HTMLElement | null>) => {
-  const [inView, setInView] = useState(false);
+type TagVariant = "neutral" | "accent" | "accent2" | "accent3";
 
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => entry.isIntersecting && setInView(true),
-      { threshold: 0.08 },
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [ref]);
-  return inView;
+const TAG_VARIANTS: Record<TagVariant, string> = {
+  neutral: "border-ed-border bg-ed-paper-alt text-ed-text-secondary",
+  accent: "border-ed-accent-border bg-ed-accent-soft text-ed-accent-text",
+  accent2: "border-ed-accent2-border bg-ed-accent2-soft text-ed-accent2-text",
+  accent3: "border-ed-accent3-border bg-ed-accent3-soft text-ed-accent3-text",
 };
 
+const Tag = ({
+  children,
+  variant = "neutral",
+}: {
+  children: React.ReactNode;
+  variant?: TagVariant;
+}) => (
+  <span
+    className={clsx(
+      "inline-block rounded-[3px] border px-2.5 py-[3px] font-ed-mono text-[0.72rem] tracking-[0.02em]",
+      TAG_VARIANTS[variant],
+    )}
+  >
+    {children}
+  </span>
+);
+
 export default function Projects() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef);
   const [filter, setFilter] = useState("All");
   const featured = projects.find((project) => project.highlight);
   const visibleProjects = projects.filter(
@@ -36,143 +43,91 @@ export default function Projects() {
     featured && (filter === "All" || featured.type === filter);
 
   return (
-    <section id="works" ref={sectionRef} className="projects-section">
-      <style>{`
-        @keyframes project-reveal { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-        .project-reveal { animation: project-reveal .8s cubic-bezier(.16,1,.3,1) both; }
-        .projects-section { background: ${T.color.paper}; padding: clamp(4.75rem, 9vw, 8rem) 0; }
-        .projects-shell { max-width: 1240px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.75rem); }
-        .project-kicker { font: 500 ${T.type.kicker} ${T.font.mono}; letter-spacing: .12em; text-transform: uppercase; color: ${T.color.accent}; }
-        .project-filter { font: 500 .72rem ${T.font.mono}; letter-spacing: .04em; color: ${T.color.textMuted}; background: transparent; border: 1px solid ${T.color.border}; padding: .55rem .8rem; cursor: pointer; transition: .2s ease; }
-        .project-filter:hover, .project-filter[aria-pressed="true"] { color: ${T.color.paper}; background: ${T.color.ink}; border-color: ${T.color.ink}; }
-        .project-feature { position: relative; display: grid; grid-template-columns: minmax(260px, .9fr) minmax(0, 1.1fr); min-height: 410px; margin-top: 3rem; overflow: hidden; color: ${T.color.paper}; text-decoration: none; background: ${T.color.ink}; }
-        .project-feature::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(125deg, transparent 48%, rgba(20,184,166,.13) 100%); }
-        .project-feature:hover .project-feature-arrow { transform: translate(5px,-5px); background: ${T.color.accent}; }
-        .project-feature:hover .project-number { transform: scale(1.04); color: rgba(245,246,242,.16); }
-        .project-feature-visual { position: relative; display: flex; align-items: flex-end; padding: clamp(1.5rem, 4vw, 2.75rem); overflow: hidden; background: linear-gradient(145deg, ${T.color.inkSoft}, ${T.color.dark}); border-right: 1px solid ${T.color.darkBorder}; }
-        .project-number { position: absolute; top: 2rem; right: -.3rem; font: 500 clamp(10rem,25vw,20rem)/.8 ${T.font.display}; color: rgba(245,246,242,.09); transition: .45s cubic-bezier(.16,1,.3,1); }
-        .project-feature-copy { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1.75rem,5vw,4rem); }
-        .project-feature-title { max-width: 650px; margin: .9rem 0 1rem; font: 500 clamp(2rem,4.2vw,4rem)/1 ${T.font.display}; letter-spacing: -.035em; }
-        .project-feature-arrow { display: grid; width: 48px; height: 48px; place-items: center; margin-top: 2rem; border: 1px solid ${T.color.darkBorder}; border-radius: 50%; font: 400 1.25rem ${T.font.heading}; transition: .25s ease; }
-        .project-list { margin-top: 1.25rem; border-top: 1px solid ${T.color.border}; }
-        .project-row { display: grid; grid-template-columns: 70px minmax(0,1fr) auto; gap: 1.25rem; align-items: center; padding: 1.6rem 0; border-bottom: 1px solid ${T.color.border}; color: inherit; text-decoration: none; transition: padding .25s ease, background .25s ease; }
-        .project-row:hover { padding-right: .75rem; padding-left: .75rem; background: ${T.color.accentSoft}; }
-        .project-row:hover .project-row-title { color: ${T.color.accent}; }
-        .project-row-index { font: 500 .74rem ${T.font.mono}; color: ${T.color.textMuted}; }
-        .project-row-title { font: 500 clamp(1.35rem,2.6vw,2rem)/1.1 ${T.font.display}; color: ${T.color.ink}; transition: color .2s ease; }
-        .project-row-arrow { color: ${T.color.accent}; font: 400 1.3rem ${T.font.heading}; }
-        @media (max-width: 720px) { .project-feature { grid-template-columns: 1fr; min-height: 0; } .project-feature-visual { min-height: 180px; border-right: 0; border-bottom: 1px solid ${T.color.darkBorder}; } .project-row { grid-template-columns: 38px minmax(0,1fr); } .project-row-arrow { display: none; } }
-      `}</style>
-
-      <div className="projects-shell">
-        <div
-          className={inView ? "project-reveal" : ""}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            flexWrap: "wrap",
-            gap: "1.5rem",
-          }}
-        >
+    <section
+      id="works"
+      className="w-full bg-ed-paper-alt py-[clamp(4.75rem,9vw,8rem)]"
+    >
+      <div className="mx-auto max-w-[1240px] px-[clamp(1.25rem,4vw,2.75rem)]">
+        {/* ---------------- HEADER ---------------- */}
+        <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <div className="project-kicker">{"// this is what I do"}</div>
-            <h2
-              style={{
-                fontFamily: T.font.display,
-                fontWeight: 500,
-                fontSize: T.type.h2,
-                letterSpacing: "-.035em",
-                lineHeight: 1,
-                color: T.color.ink,
-                margin: ".7rem 0 0",
-              }}
-            >
+            <p className="mb-2.5 font-ed-mono text-sm tracking-[0.02em] text-ed-text-muted">
+              {"// this is what i do"}
+            </p>
+            <h2 className="m-0 font-ed-heading text-[clamp(2rem,4.5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-ed-text">
               Built with intent.
               <br />
-              <em style={{ color: T.color.accent }}>Made to be used.</em>
+              <em className="text-ed-accent-text not-italic">
+                Made to be used.
+              </em>
             </h2>
           </div>
+
           <div
-            style={{ display: "flex", flexWrap: "wrap", gap: ".45rem" }}
+            className="flex flex-wrap gap-[7px]"
             aria-label="Filter projects"
           >
-            {ALL_TYPES.map((type) => (
-              <button
-                key={type}
-                className="project-filter"
-                aria-pressed={filter === type}
-                onClick={() => setFilter(type)}
-              >
-                {type}
-              </button>
-            ))}
+            {ALL_TYPES.map((type) => {
+              const active = filter === type;
+              return (
+                <button
+                  key={type}
+                  aria-pressed={active}
+                  onClick={() => setFilter(type)}
+                  className={clsx(
+                    "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] tracking-[0.02em] transition-all duration-200",
+                    active
+                      ? "border-ed-text bg-ed-text text-ed-paper"
+                      : "border-ed-border text-ed-text-muted hover:border-ed-border-strong hover:text-ed-text",
+                  )}
+                >
+                  {type}
+                </button>
+              );
+            })}
           </div>
         </div>
 
+        {/* ---------------- FEATURED PROJECT ---------------- */}
         {showFeatured && (
           <Link
             href={`/projects/${featured.slug}`}
-            className={`project-feature${inView ? " project-reveal" : ""}`}
+            className="group relative mt-12 grid grid-cols-1 overflow-hidden rounded-2xl border border-ed-border bg-ed-surface no-underline shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)] transition-shadow duration-300 hover:shadow-[0_28px_70px_-24px_rgba(11,19,16,0.32)] md:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.1fr)]"
           >
-            <div className="project-feature-visual">
-              <span className="project-number">
+            <div className="relative flex min-h-[180px] items-end overflow-hidden border-b border-ed-border bg-ed-paper-alt p-6 md:min-h-0 md:border-r md:border-b-0 md:p-11">
+              <span className="pointer-events-none absolute top-8 -right-1 font-ed-heading text-[clamp(6rem,20vw,14rem)] leading-[0.8] font-semibold text-ed-border transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
                 {String(featured.id).padStart(2, "0")}
               </span>
-              <div style={{ position: "relative", zIndex: 1 }}>
+              <div className="relative z-10">
                 <Tag variant="accent2">{featured.status}</Tag>
-                <p
-                  style={{
-                    maxWidth: 235,
-                    margin: "1rem 0 0",
-                    fontFamily: T.font.body,
-                    fontSize: ".9rem",
-                    lineHeight: 1.6,
-                    color: T.color.darkTextSecondary,
-                  }}
-                >
+                <p className="mt-4 max-w-[235px] font-ed-body text-[0.9rem] leading-[1.6] text-ed-text-secondary">
                   {featured.type} · {featured.year}
                 </p>
               </div>
             </div>
-            <div className="project-feature-copy">
+
+            <div className="relative z-10 flex flex-col justify-between gap-8 p-6 md:p-12">
               <div>
-                <span
-                  className="project-kicker"
-                  style={{ color: T.color.accentBright }}
-                >
+                <span className="font-ed-mono text-[13px] tracking-[0.12em] text-ed-accent-text uppercase">
                   Featured case study
                 </span>
-                <h3 className="project-feature-title">{featured.name}</h3>
-                <p
-                  style={{
-                    maxWidth: 560,
-                    margin: 0,
-                    fontFamily: T.font.body,
-                    fontSize: "1rem",
-                    lineHeight: 1.7,
-                    color: T.color.darkTextSecondary,
-                  }}
-                >
+                <h3 className="mt-3 mb-4 max-w-[650px] font-ed-heading text-[clamp(1.75rem,4vw,3rem)] leading-[1.05] font-semibold tracking-[-0.02em] text-ed-text">
+                  {featured.name}
+                </h3>
+                <p className="m-0 max-w-[560px] font-ed-body text-base leading-[1.7] text-ed-text-secondary">
                   {featured.dek}
                 </p>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-end",
-                  gap: "1rem",
-                }}
-              >
-                <div
-                  style={{ display: "flex", flexWrap: "wrap", gap: ".45rem" }}
-                >
+              <div className="flex items-end justify-between gap-4">
+                <div className="flex flex-wrap gap-[7px]">
                   {featured.stack.slice(0, 4).map((item) => (
                     <Tag key={item}>{item}</Tag>
                   ))}
                 </div>
-                <span className="project-feature-arrow" aria-hidden>
+                <span
+                  aria-hidden
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-ed-border font-ed-heading text-xl text-ed-text transition-all duration-250 ease-out group-hover:-translate-y-[5px] group-hover:translate-x-[5px] group-hover:border-ed-accent group-hover:bg-ed-accent group-hover:text-white"
+                >
                   ↗
                 </span>
               </div>
@@ -180,81 +135,63 @@ export default function Projects() {
           </Link>
         )}
 
+        {/* ---------------- PROJECT LIST ---------------- */}
         <div
-          className={inView ? "project-reveal" : ""}
-          style={{ marginTop: showFeatured ? "1.25rem" : "3rem" }}
+          className={clsx(
+            "border-t border-ed-border",
+            showFeatured ? "mt-5" : "mt-12",
+          )}
         >
-          <div className="project-list">
-            {visibleProjects.map((project) => (
-              <Link
-                href={`/projects/${project.slug}`}
-                className="project-row"
-                key={project.id}
-              >
-                <span className="project-row-index">
-                  {String(project.id).padStart(2, "0")}
-                </span>
-                <div>
-                  <div className="project-row-title">{project.name}</div>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: ".65rem",
-                      flexWrap: "wrap",
-                      marginTop: ".55rem",
-                      fontFamily: T.font.mono,
-                      fontSize: ".7rem",
-                      letterSpacing: ".04em",
-                      color: T.color.textMuted,
-                    }}
-                  >
-                    <span>{project.type}</span>
-                    <span>·</span>
-                    <span>{project.year}</span>
-                    <span>·</span>
-                    <span
-                      style={{
-                        color:
-                          project.status === "Complete"
-                            ? T.color.accentText
-                            : T.color.accent2Text,
-                      }}
-                    >
-                      {project.status}
-                    </span>
-                  </div>
+          {visibleProjects.map((project) => (
+            <Link
+              href={`/projects/${project.slug}`}
+              key={project.id}
+              className="group grid grid-cols-[38px_1fr] items-center gap-5 border-b border-ed-border px-0 py-6 text-inherit no-underline transition-[padding,background-color] duration-200 hover:bg-ed-accent-soft hover:px-3 md:grid-cols-[70px_1fr_auto]"
+            >
+              <span className="font-ed-mono text-[0.74rem] text-ed-text-muted">
+                {String(project.id).padStart(2, "0")}
+              </span>
+              <div>
+                <div className="font-ed-heading text-[clamp(1.35rem,2.6vw,2rem)] leading-[1.1] font-semibold text-ed-text transition-colors duration-200 group-hover:text-ed-accent-text">
+                  {project.name}
                 </div>
-                <span className="project-row-arrow" aria-hidden>
-                  ↗
-                </span>
-              </Link>
-            ))}
-            {!visibleProjects.length && (
-              <p
-                style={{
-                  padding: "2rem 0",
-                  margin: 0,
-                  color: T.color.textMuted,
-                  fontFamily: T.font.body,
-                }}
+                <div className="mt-2 flex flex-wrap gap-[10px] font-ed-mono text-[0.7rem] tracking-[0.04em] text-ed-text-muted">
+                  <span>{project.type}</span>
+                  <span>·</span>
+                  <span>{project.year}</span>
+                  <span>·</span>
+                  <span
+                    className={clsx(
+                      project.status === "Complete"
+                        ? "text-ed-accent-text"
+                        : "text-ed-accent2-text",
+                    )}
+                  >
+                    {project.status}
+                  </span>
+                </div>
+              </div>
+              <span
+                aria-hidden
+                className="hidden font-ed-heading text-[1.3rem] text-ed-accent-text md:block"
               >
-                No projects in this category.
-              </p>
-            )}
-          </div>
+                ↗
+              </span>
+            </Link>
+          ))}
+          {!visibleProjects.length && (
+            <p className="m-0 py-8 font-ed-body text-ed-text-muted">
+              No projects in this category.
+            </p>
+          )}
         </div>
-        <p style={{ margin: "2.25rem 0 0", textAlign: "center" }}>
+
+        <p className="mt-9 text-center">
           <a
             href="https://github.com/Dr-Pierrot"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              font: "500 .78rem " + T.font.mono,
-              color: T.color.textSecondary,
-              textDecoration: "none",
-              borderBottom: `1px solid ${T.color.borderStrong}`,
-              paddingBottom: 3,
-            }}
+            className="border-b border-ed-border-strong pb-[3px] font-ed-mono text-[0.78rem] font-medium text-ed-text-secondary no-underline transition-colors duration-200 hover:border-ed-accent hover:text-ed-accent-text"
           >
             Explore the full GitHub archive ↗
           </a>
