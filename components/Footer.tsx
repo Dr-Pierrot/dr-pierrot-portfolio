@@ -15,9 +15,9 @@ const columns = [
   {
     title: "Site",
     links: [
-      { label: "Work", href: "/#work" },
+      { label: "Home", href: "/#home" },
+      { label: "Works", href: "/#works" },
       { label: "About", href: "/#about" },
-      { label: "Journey", href: "/#journey" },
       { label: "Contact", href: "/#contact" },
     ],
   },
@@ -34,7 +34,7 @@ const columns = [
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="w-full border-t border-ed-border bg-ed-paper-alt">
+    <footer className="w-full border-t border-ed-border bg-ed-paper">
       <div className="mx-auto max-w-[1240px] px-[clamp(1.25rem,4vw,2.75rem)] pt-[clamp(3rem,7vw,5rem)] pb-8">
         <div className="grid grid-cols-2 gap-10 border-b border-ed-border pb-10 sm:grid-cols-[1.4fr_1fr_1fr]">
           {/* Brand */}

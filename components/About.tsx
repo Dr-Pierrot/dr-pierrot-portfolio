@@ -74,7 +74,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="w-full bg-ed-paper-alt px-6 py-[clamp(4.5rem,10vw,7rem)]"
+      className="w-full bg-ed-paper px-6 py-[clamp(4.5rem,10vw,7rem)]"
     >
       <div
         ref={sectionRef}
