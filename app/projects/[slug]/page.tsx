@@ -61,6 +61,9 @@ export default async function ProjectPage({
   const previous = projects[(index - 1 + projects.length) % projects.length];
   const next = projects[(index + 1) % projects.length];
 
+  // Type guard: projects array is non-empty (checked by notFound above)
+  if (!previous || !next) notFound();
+
   const facts = [
     { label: "Role", value: project.role },
     { label: "Scope", value: project.type },

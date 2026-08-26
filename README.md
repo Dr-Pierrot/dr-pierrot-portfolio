@@ -1,36 +1,195 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dr-Pierrot Portfolio
 
-## Getting Started
+A modern, production-grade portfolio website showcasing fullstack development projects, built with Next.js 15, React 19, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+🔗 **Live Site:** [Your Portfolio URL]  
+👤 **Developer:** Jaycee Capulong  
+📧 **Contact:** capulongako16@gmail.com
+
+## Features
+
+✨ **Project Showcase**
+- Interactive filtering by technology, type, and status
+- Case study format with challenge/approach/outcome structure
+- Project gallery with optimized images
+- Featured project highlighting
+
+🎨 **Modern Design**
+- Dark/light theme with system preference detection
+- Responsive mobile-first design
+- Smooth animations with Framer Motion
+- Clean, accessible UI components
+
+📧 **Contact Integration**
+- Working contact form with Resend email delivery
+- Form validation and error handling
+- Success/error state management
+
+🚀 **Performance & SEO**
+- Server-side rendering and static generation
+- Optimized images and lazy loading
+- Meta tags and Open Graph support
+- Sitemap and robots.txt
+- Fast page loads and Core Web Vitals optimized
+
+## Tech Stack
+
+- **Framework:** Next.js 15.0.3 (App Router)
+- **React:** 19.0.0-rc
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Animation:** Framer Motion
+- **Email:** Resend
+- **Deployment:** Vercel
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 20.x or higher
+- npm 10.x or higher
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Dr-Pierrot/dr-pierrot-portfolio.git
+   cd dr-pierrot-portfolio
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Add your environment variables to `.env.local`:
+   ```env
+   RESEND_API_KEY=your_resend_api_key_here
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   NEXT_PUBLIC_GA_MEASUREMENT_ID=your_ga_id_here
+   ```
+
+4. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Available Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript type checking
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+dr-pierrot-portfolio/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── projects/          # Project pages
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Homepage
+├── components/            # React components
+│   ├── Header.tsx
+│   ├── Hero.tsx
+│   ├── Project.tsx
+│   └── ...
+├── lib/                   # Utilities and helpers
+│   ├── projects.ts        # Project data
+│   ├── theme.ts          # Theme utilities
+│   └── utils.ts          # Helper functions
+├── public/               # Static assets
+│   └── projects/         # Project images
+├── docs/                 # Documentation
+│   ├── CONTRIBUTING.md
+│   ├── DEPLOYMENT.md
+│   └── CONTENT.md
+└── ...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Documentation
 
-## Learn More
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute to this project
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - How to deploy to production
+- **[Content Management](docs/CONTENT.md)** - How to manage projects and content
+- **[Changelog](CHANGELOG.md)** - Version history and changes
 
-To learn more about Next.js, take a look at the following resources:
+## Adding Content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Adding a Project
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Add project data to `lib/projects.ts`
+2. Add project images to `public/projects/[slug]/`
+3. See [Content Management Guide](docs/CONTENT.md) for details
 
-## Deploy on Vercel
+### Managing Content
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+All content management instructions are available in the [Content Guide](docs/CONTENT.md).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment Variables
+
+Required environment variables:
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `RESEND_API_KEY` | Resend API key for contact form | Yes |
+| `NEXT_PUBLIC_SITE_URL` | Full site URL | Yes |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics ID | No |
+
+See `.env.example` for full list.
+
+## Deployment
+
+The easiest way to deploy is using [Vercel](https://vercel.com):
+
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Configure environment variables
+4. Deploy
+
+See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
+
+## Performance
+
+- **Lighthouse Score:** 90+
+- **Core Web Vitals:** Optimized
+- **Image Optimization:** Automatic with Next.js Image
+- **Code Splitting:** Automatic with App Router
+
+## Browser Support
+
+- Chrome (last 2 versions)
+- Firefox (last 2 versions)
+- Safari (last 2 versions)
+- Edge (last 2 versions)
+
+## Contributing
+
+Contributions are welcome! Please read the [Contributing Guide](docs/CONTRIBUTING.md) first.
+
+## License
+
+This project is private and proprietary.
+
+## Contact
+
+**Jaycee Capulong**
+- Email: capulongako16@gmail.com
+- GitHub: [@Dr-Pierrot](https://github.com/Dr-Pierrot)
+- LinkedIn: [Jaycee Capulong](https://ph.linkedin.com/in/jaycee-capulong-9a37922b9)
+
+---
+
+Built with ❤️ using Next.js and TypeScript

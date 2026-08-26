@@ -40,8 +40,8 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   useEffect(() => {
     if (!ref.current) return;
     const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setInView(true);
+      ([entry]) => {
+        if (entry?.isIntersecting) setInView(true);
       },
       { threshold: 0 },
     );
@@ -50,22 +50,6 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   }, [ref]);
   return inView;
 };
-
-const Icon = ({ path }: { path: string }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d={path} />
-  </svg>
-);
 
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
