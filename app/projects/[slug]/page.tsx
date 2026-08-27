@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import clsx from "clsx";
 import { getProject, projects } from "@/lib/projects";
+import { generatePageMetadata, getProjectSchema, getBreadcrumbSchema } from "@/lib/seo";
 import Footer from "@/components/Footer";
 import ContactMe from "@/components/ContactMe";
 import CaseStudyCover from "@/components/CaseStudyCover";
@@ -45,9 +46,25 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const project = getProject((await params).slug);
-  return project
-    ? { title: `${project.name} — Dr-Pierrot`, description: project.desc }
-    : {};
+  
+  if (!project) {
+    return {};
+  }
+
+  return generatePageMetadata({
+    title: project.name,
+    description: project.desc,
+    path: `/projects/${project.slug}`,
+    image: project.cover,
+    type: "article",
+    keywords: [
+      ...project.stack,
+      project.type,
+      project.role,
+      "portfolio",
+      "case study",
+    ],
+  });
 }
 
 export default async function ProjectPage({
@@ -70,8 +87,26 @@ export default async function ProjectPage({
     { label: "Year", value: String(project.year) },
   ];
 
+  // Generate structured data
+  const projectSchema = getProjectSchema(project);
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Projects", url: "/#projects" },
+    { name: project.name, url: `/projects/${project.slug}` },
+  ]);
+
   return (
     <div className="bg-ed-paper">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      
       <main>
         {/* ---------------- HERO ---------------- */}
         <section className="relative overflow-hidden bg-ed-paper-alt pt-[clamp(7rem,14vw,10.5rem)] pb-[clamp(3.5rem,7vw,5.5rem)]">
