@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import OptimizedImage from "./OptimizedImage";
 
 const profile = {
   name: "Jaycee Capulong",
@@ -72,10 +73,15 @@ export default function About() {
               inView ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
             )}
           >
-            <img
+            <OptimizedImage
               src="/profile.jpg"
               alt={profile.name}
-              className="h-full w-full object-cover"
+              width={300}
+              height={375}
+              className="h-full w-full"
+              objectFit="cover"
+              priority={false}
+              quality={85}
             />
           </div>
         </div>
@@ -138,3 +144,4 @@ export default function About() {
     </section>
   );
 }
+
