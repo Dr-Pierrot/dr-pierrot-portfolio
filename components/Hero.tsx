@@ -2,8 +2,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import { T } from "@/lib/theme";
-import ResumeDownload from "./ResumeDownload";
-import ResumeLink from "./ResumeLink";
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -19,7 +17,7 @@ const coderData = {
   email: "capulongako16@gmail.com",
   github: "https://github.com/Dr-Pierrot",
   linkedin: "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
-  resume: "/resume.pdf",
+  resume: "/resume.txt",
   tagline:
     "I build scalable web applications end to end — from REST APIs and database design to polished, accessible, responsive interfaces.",
   stats: [
@@ -272,8 +270,6 @@ const Hero = () => {
             >
               <Icon path={ICONS.download} /> Résumé
             </a>
-            <ResumeDownload variant="button" showStats />
-            <ResumeLink format="json" showIcon={false} className="ml-auto" />
             <div className="flex gap-2">
               <a
                 className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
