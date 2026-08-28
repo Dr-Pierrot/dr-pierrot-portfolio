@@ -72,7 +72,7 @@ export const analyticsDebug = {
     if (originalGtag) {
       window.gtag = function (...args: any[]) {
         console.log("📊 GA Event:", args);
-        return originalGtag.apply(window, args);
+        return originalGtag.apply(window, args as any);
       };
     }
   },
