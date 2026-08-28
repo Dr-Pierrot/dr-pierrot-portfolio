@@ -8,7 +8,7 @@
  * controls and development mode handling.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, Suspense } from 'react';
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { analyticsConfig } from '@/lib/env';
@@ -30,16 +30,12 @@ interface GoogleAnalyticsProps {
 }
 
 /**
- * Google Analytics component that should be placed in the root layout
+ * Internal component that handles search params tracking
+ * This needs to be separate to handle the Suspense boundary requirement
  */
-export default function GoogleAnalytics({ 
-  trackPageViews = true,
-  trackScrollDepth: enableScrollTracking = true,
-  trackErrors = true 
-}: GoogleAnalyticsProps) {
+function SearchParamsTracker({ trackPageViews }: { trackPageViews: boolean }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const measurementId = getMeasurementId();
 
   // Track page views on route changes
   useEffect(() => {
@@ -53,6 +49,19 @@ export default function GoogleAnalytics({
       }, 100);
     }
   }, [pathname, searchParams, trackPageViews]);
+
+  return null;
+}
+
+/**
+ * Google Analytics component that should be placed in the root layout
+ */
+export default function GoogleAnalytics({ 
+  trackPageViews = true,
+  trackScrollDepth: enableScrollTracking = true,
+  trackErrors = true 
+}: GoogleAnalyticsProps) {
+  const measurementId = getMeasurementId();
 
   // Scroll depth tracking
   useEffect(() => {
@@ -134,6 +143,13 @@ export default function GoogleAnalytics({
 
   return (
     <>
+      {/* Page view tracking with Suspense boundary */}
+      {trackPageViews && (
+        <Suspense fallback={null}>
+          <SearchParamsTracker trackPageViews={trackPageViews} />
+        </Suspense>
+      )}
+      
       {/* Google Analytics Script */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
