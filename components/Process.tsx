@@ -68,8 +68,8 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   useEffect(() => {
     if (!ref.current) return;
     const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setInView(true);
+      ([entry]) => {
+        if (entry?.isIntersecting) setInView(true);
       },
       { threshold: 0 },
     );

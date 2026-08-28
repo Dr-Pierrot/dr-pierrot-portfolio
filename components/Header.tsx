@@ -1,6 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import OptimizedImage from "./OptimizedImage";
+import { trackNavigation } from "@/lib/analytics";
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -73,9 +75,18 @@ export default function Header() {
             href="#home"
             className="group flex shrink-0 items-center gap-2.5 no-underline"
             aria-label="Jaycee Capulong"
+            onClick={() => trackNavigation('#home', window.location.hash)}
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-ed-gradient-button font-ed-mono text-[13px] font-bold text-white shadow-[0_4px_14px_-4px_rgba(14,124,116,0.45)] transition-transform duration-[250ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:-rotate-[8deg] group-hover:scale-105">
-              <img src="/favicon-512x512.png" alt="Icon" />
+              <OptimizedImage 
+                src="/favicon-512x512.png" 
+                alt="Dr-Pierrot logo" 
+                width={36}
+                height={36}
+                className="h-full w-full"
+                priority
+                unoptimized
+              />
             </div>
             <div className="flex flex-col leading-[1.15]">
               <span className="font-ed-heading text-base font-bold tracking-[-0.01em] text-ed-text">

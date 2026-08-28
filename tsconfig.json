@@ -1,34 +1,72 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    /* Language and Environment */
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "jsx": "react-jsx",
+
+    /* Modules */
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
+    "allowJs": true,
+    
+    /* Emit */
+    "noEmit": true,
     "incremental": true,
+    "outDir": ".next",
+    
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    
+    /* Type Checking - Strict Mode */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": false,
+    
+    /* Completeness */
+    "skipLibCheck": true,
+    
+    /* Path Mapping */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/app/*": ["./app/*"],
+      "@/public/*": ["./public/*"]
+    },
+    
+    /* Next.js */
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.mts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "dist",
+    "build"
+  ]
 }

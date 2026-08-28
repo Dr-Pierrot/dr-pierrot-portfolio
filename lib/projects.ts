@@ -16,10 +16,12 @@ export type Project = {
   year: number;
   highlight: boolean;
   features: string[];
-  // Path to a cover screenshot the user will add later, e.g. /projects/hrms/cover.png
+  // Image paths - updated to follow new structure
   cover?: string;
   gallery?: string[];
+  thumbnail?: string;
 };
+
 
 export const projects: Project[] = [
   {

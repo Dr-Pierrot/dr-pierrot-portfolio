@@ -57,6 +57,8 @@ const useTypewriter = (words: string[], speed = 70, pause = 1600) => {
 
   useEffect(() => {
     const word = words[index % words.length];
+    if (!word) return; // Safety check for empty array
+    
     if (!deleting && text === word) {
       const t = setTimeout(() => setDeleting(true), pause);
       return () => clearTimeout(t);
@@ -359,7 +361,7 @@ const Hero = () => {
               </CodeLine>
 
               <div className="py-2 pl-[34px]">
-                {active.map((s) => (
+                {active?.map((s) => (
                   <span
                     key={s}
                     className="mr-1 mb-1.5 inline-block cursor-default rounded-md border border-ed-border bg-ed-paper-alt px-[9px] py-[3px] font-ed-mono text-[13px] text-ed-text transition-all duration-[180ms] hover:-translate-y-px hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
@@ -370,13 +372,13 @@ const Hero = () => {
                 ))}
               </div>
 
-              <CodeLine n={active.length + 2}>
+              <CodeLine n={(active?.length ?? 0) + 2}>
                 <span className="text-ed-text-secondary">{"];"}</span>
               </CodeLine>
-              <CodeLine n={active.length + 3}> </CodeLine>
-              <CodeLine n={active.length + 4}>
+              <CodeLine n={(active?.length ?? 0) + 3}> </CodeLine>
+              <CodeLine n={(active?.length ?? 0) + 4}>
                 <span className="text-ed-text-muted">
-                  {`// ${active.length} in ${tab} · ${totalSkills} total`}
+                  {`// ${active?.length ?? 0} in ${tab} · ${totalSkills} total`}
                 </span>
               </CodeLine>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import OptimizedImage from "./OptimizedImage";
 
 const profile = {
   name: "Jaycee Capulong",
@@ -40,8 +41,8 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   useEffect(() => {
     if (!ref.current) return;
     const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setInView(true);
+      ([entry]) => {
+        if (entry?.isIntersecting) setInView(true);
       },
       { threshold: 0 },
     );
@@ -50,22 +51,6 @@ const useInView = (ref: React.RefObject<HTMLElement | null>) => {
   }, [ref]);
   return inView;
 };
-
-const Icon = ({ path }: { path: string }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d={path} />
-  </svg>
-);
 
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -88,10 +73,15 @@ export default function About() {
               inView ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
             )}
           >
-            <img
+            <OptimizedImage
               src="/profile.jpg"
               alt={profile.name}
-              className="h-full w-full object-cover"
+              width={300}
+              height={375}
+              className="h-full w-full"
+              objectFit="cover"
+              priority={false}
+              quality={85}
             />
           </div>
         </div>
@@ -154,3 +144,4 @@ export default function About() {
     </section>
   );
 }
+

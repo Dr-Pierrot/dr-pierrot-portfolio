@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-
-const TO_EMAIL = "capulongako16@gmail.com";
+import { emailConfig } from "@/lib/env";
 
 export async function POST(req: Request) {
   try {
@@ -19,17 +18,17 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    if (!process.env.RESEND_API_KEY) {
+    if (!emailConfig.resendApiKey) {
       return NextResponse.json(
         { error: "Email service is not configured yet." },
         { status: 500 },
       );
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const resend = new Resend(emailConfig.resendApiKey);
     const { error } = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>",
-      to: TO_EMAIL,
+      from: `Portfolio Contact <${emailConfig.fromEmail}>`,
+      to: emailConfig.toEmail,
       replyTo: email,
       subject: `[Portfolio] ${subject}`,
       html: `

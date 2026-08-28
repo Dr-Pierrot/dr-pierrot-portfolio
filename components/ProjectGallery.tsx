@@ -1,6 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useState } from "react";
 import clsx from "clsx";
+import OptimizedImage from "./OptimizedImage";
 
 const GalleryImage = ({ src, alt }: { src: string; alt: string }) => {
   const [failed, setFailed] = useState(false);
@@ -16,12 +17,15 @@ const GalleryImage = ({ src, alt }: { src: string; alt: string }) => {
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <OptimizedImage
       src={src}
       alt={alt}
+      fill
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+      className="h-full w-full"
+      objectFit="cover"
       onError={() => setFailed(true)}
-      className="h-full w-full object-cover"
+      priority={false}
     />
   );
 };
@@ -140,3 +144,4 @@ export default function ProjectGallery({
     </section>
   );
 }
+
