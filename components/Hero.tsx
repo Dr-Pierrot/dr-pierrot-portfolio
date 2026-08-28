@@ -17,7 +17,7 @@ const coderData = {
   email: "capulongako16@gmail.com",
   github: "https://github.com/Dr-Pierrot",
   linkedin: "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
-  resume: "/resume.pdf",
+  resume: "/resume.txt",
   tagline:
     "I build scalable web applications end to end — from REST APIs and database design to polished, accessible, responsive interfaces.",
   stats: [
@@ -58,7 +58,7 @@ const useTypewriter = (words: string[], speed = 70, pause = 1600) => {
   useEffect(() => {
     const word = words[index % words.length];
     if (!word) return; // Safety check for empty array
-    
+
     if (!deleting && text === word) {
       const t = setTimeout(() => setDeleting(true), pause);
       return () => clearTimeout(t);
