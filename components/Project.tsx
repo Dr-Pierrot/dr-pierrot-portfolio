@@ -204,7 +204,7 @@ export default function Projects() {
             href="https://github.com/Dr-Pierrot"
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackProjectLink("github", "github", "archive")}
+            onClick={() => trackProjectLink("github", "github")}
             className="border-b border-ed-border-strong pb-[3px] font-ed-mono text-[0.78rem] font-medium text-ed-text-secondary no-underline transition-colors duration-200 hover:border-ed-accent hover:text-ed-accent-text"
           >
             Explore the full GitHub archive ↗
