@@ -1,0 +1,79 @@
+{
+  "personal": {
+    "name": "Jaycee Capulong",
+    "title": "Full-Stack Developer & Creative Technologist",
+    "email": "capulongako16@gmail.com",
+    "phone": "+63 XXX XXX XXXX",
+    "location": "Philippines",
+    "website": "https://dr-pierrot-portfolio.vercel.app",
+    "github": "https://github.com/Dr-Pierrot",
+    "linkedin": "https://ph.linkedin.com/in/jaycee-capulong-9a37922b9",
+    "summary": "Passionate full-stack developer with expertise in modern web technologies. Focused on building practical, scalable applications that solve real-world problems."
+  },
+  "experience": [
+    {
+      "id": "exp-1",
+      "company": "Freelance Developer",
+      "position": "Full-Stack Developer",
+      "location": "Remote, Philippines",
+      "startDate": "2022-01",
+      "endDate": null,
+      "current": true,
+      "description": "Developing custom web applications and digital solutions for various clients.",
+      "achievements": [
+        "Built 15+ responsive web applications using React, Next.js, and Laravel",
+        "Implemented secure authentication systems and payment integrations",
+        "Optimized application performance achieving 90+ Lighthouse scores"
+      ],
+      "technologies": [
+        "React",
+        "Next.js",
+        "Laravel",
+        "PHP",
+        "JavaScript",
+        "TypeScript"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "institution": "Self-Taught Developer",
+      "degree": "Web Development & Programming",
+      "field": "Computer Science & Software Engineering",
+      "location": "Philippines",
+      "startDate": "2020-01",
+      "endDate": "2022-12",
+      "description": "Intensive self-directed learning program focusing on modern web development technologies."
+    }
+  ],
+  "skills": {
+    "frontend": [
+      { "name": "React", "level": "Advanced", "years": 3 },
+      { "name": "Next.js", "level": "Advanced", "years": 2 },
+      { "name": "TypeScript", "level": "Intermediate", "years": 2 },
+      { "name": "JavaScript", "level": "Advanced", "years": 4 }
+    ],
+    "backend": [
+      { "name": "Laravel", "level": "Advanced", "years": 3 },
+      { "name": "PHP", "level": "Advanced", "years": 4 },
+      { "name": "Node.js", "level": "Intermediate", "years": 2 }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj-1",
+      "name": "Portfolio Website",
+      "description": "Modern, responsive portfolio website built with Next.js.",
+      "technologies": ["Next.js", "TypeScript", "Tailwind CSS"],
+      "url": "https://dr-pierrot-portfolio.vercel.app",
+      "featured": true,
+      "status": "Completed"
+    }
+  ],
+  "meta": {
+    "version": "2.0",
+    "lastUpdated": "2024-08-28",
+    "format": "JSON Resume Schema"
+  }
+}

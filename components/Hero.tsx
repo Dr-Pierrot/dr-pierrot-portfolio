@@ -2,6 +2,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import { T } from "@/lib/theme";
+import ResumeDownload from "./ResumeDownload";
+import ResumeLink from "./ResumeLink";
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -58,7 +60,7 @@ const useTypewriter = (words: string[], speed = 70, pause = 1600) => {
   useEffect(() => {
     const word = words[index % words.length];
     if (!word) return; // Safety check for empty array
-    
+
     if (!deleting && text === word) {
       const t = setTimeout(() => setDeleting(true), pause);
       return () => clearTimeout(t);
@@ -270,6 +272,8 @@ const Hero = () => {
             >
               <Icon path={ICONS.download} /> Résumé
             </a>
+            <ResumeDownload variant="button" showStats />
+            <ResumeLink format="json" showIcon={false} className="ml-auto" />
             <div className="flex gap-2">
               <a
                 className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
