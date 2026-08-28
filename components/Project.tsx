@@ -4,6 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { ALL_TYPES, projects } from "@/lib/projects";
+import {
+  trackProjectView,
+  trackProjectLink,
+  trackNavigation,
+} from "@/lib/analytics";
 
 type TagVariant = "neutral" | "accent" | "accent2" | "accent3";
 
@@ -92,6 +97,10 @@ export default function Projects() {
         {showFeatured && (
           <Link
             href={`/projects/${featured.slug}`}
+            onClick={() => {
+              trackProjectView(featured.id.toString(), featured.name);
+              trackNavigation(`/projects/${featured.slug}`, "/projects");
+            }}
             className="group relative mt-12 grid grid-cols-1 overflow-hidden rounded-2xl border border-ed-border bg-ed-surface no-underline shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)] transition-shadow duration-300 hover:shadow-[0_28px_70px_-24px_rgba(11,19,16,0.32)] md:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.1fr)]"
           >
             <div className="relative flex min-h-[180px] items-end overflow-hidden border-b border-ed-border bg-ed-paper-alt p-6 md:min-h-0 md:border-r md:border-b-0 md:p-11">
@@ -146,6 +155,10 @@ export default function Projects() {
             <Link
               href={`/projects/${project.slug}`}
               key={project.id}
+              onClick={() => {
+                trackProjectView(project.id.toString(), project.name);
+                trackNavigation(`/projects/${project.slug}`, "/projects");
+              }}
               className="group grid grid-cols-[38px_1fr] items-center gap-5 border-b border-ed-border px-0 py-6 text-inherit no-underline transition-[padding,background-color] duration-200 hover:bg-ed-accent-soft hover:px-3 md:grid-cols-[70px_1fr_auto]"
             >
               <span className="font-ed-mono text-[0.74rem] text-ed-text-muted">
@@ -191,6 +204,7 @@ export default function Projects() {
             href="https://github.com/Dr-Pierrot"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackProjectLink("github", "github", "archive")}
             className="border-b border-ed-border-strong pb-[3px] font-ed-mono text-[0.78rem] font-medium text-ed-text-secondary no-underline transition-colors duration-200 hover:border-ed-accent hover:text-ed-accent-text"
           >
             Explore the full GitHub archive ↗

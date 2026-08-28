@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import clsx from "clsx";
 import { getProject, projects } from "@/lib/projects";
-import { generatePageMetadata, getProjectSchema, getBreadcrumbSchema } from "@/lib/seo";
+import {
+  generatePageMetadata,
+  getProjectSchema,
+  getBreadcrumbSchema,
+} from "@/lib/seo";
 import Footer from "@/components/Footer";
 import ContactMe from "@/components/ContactMe";
 import CaseStudyCover from "@/components/CaseStudyCover";
@@ -46,7 +50,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const project = getProject((await params).slug);
-  
+
   if (!project) {
     return {};
   }
@@ -106,7 +110,7 @@ export default async function ProjectPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      
+
       <main>
         {/* ---------------- HERO ---------------- */}
         <section className="relative overflow-hidden bg-ed-paper-alt pt-[clamp(7rem,14vw,10.5rem)] pb-[clamp(3.5rem,7vw,5.5rem)]">

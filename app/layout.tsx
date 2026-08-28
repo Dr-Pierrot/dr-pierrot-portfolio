@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { getOrganizationSchema, getWebsiteSchema } from "@/lib/seo";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -116,6 +117,13 @@ export default function RootLayout({
       )}
     >
       <body>
+        {/* Google Analytics */}
+        <GoogleAnalytics 
+          trackPageViews={true}
+          trackScrollDepth={true}
+          trackErrors={true}
+        />
+        
         {/* Organization/Person Schema */}
         <script
           type="application/ld+json"

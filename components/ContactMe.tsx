@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import clsx from "clsx";
+import { trackContactForm } from "@/lib/analytics";
 
 const CONTACT_INFO = {
   email: "capulongako16@gmail.com",
@@ -152,6 +153,7 @@ export default function ContactMe() {
   >({});
   const [status, setStatus] = useState<SendStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [hasStartedForm, setHasStartedForm] = useState(false);
 
   const errors = validate(form);
   const visibleErrors: FieldError = Object.fromEntries(
@@ -159,14 +161,24 @@ export default function ContactMe() {
   );
   const isValid = Object.keys(errors).length === 0;
 
-  const setField = (key: keyof FormState) => (v: string) =>
+  const setField = (key: keyof FormState) => (v: string) => {
+    // Track when user first starts filling out the form
+    if (!hasStartedForm && v.trim() !== "") {
+      setHasStartedForm(true);
+      trackContactForm('start');
+    }
     setForm((f) => ({ ...f, [key]: v }));
+  };
   const touchField = (key: keyof FormState) => () =>
     setTouched((t) => ({ ...t, [key]: true }));
 
   const handleSubmit = async () => {
     setTouched({ name: true, email: true, subject: true, message: true });
     if (!isValid) return;
+    
+    // Track form submission attempt
+    trackContactForm('submit');
+    
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -176,6 +188,10 @@ export default function ContactMe() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to send");
+      
+      // Track successful form submission
+      trackContactForm('success');
+      
       setStatus("success");
       setTimeout(() => {
         setStatus("idle");
@@ -183,6 +199,9 @@ export default function ContactMe() {
         setTouched({});
       }, 4500);
     } catch (err) {
+      // Track form submission error
+      trackContactForm('error');
+      
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
       setStatus("error");
       setTimeout(() => setStatus("idle"), 4000);
