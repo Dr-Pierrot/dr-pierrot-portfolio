@@ -1,0 +1,182 @@
+---
+title: "TypeScript Best Practices for React Development"
+description: "Essential TypeScript patterns and practices for building robust React applications with better type safety and developer experience."
+date: "2024-08-25"
+author: "Jaycee Capulong"
+slug: "typescript-best-practices-react"
+tags: ["TypeScript", "React", "Best Practices", "Development"]
+category: "Development"
+featured: false
+published: true
+readingTime: 6
+---
+
+# TypeScript Best Practices for React Development
+
+TypeScript has become an essential tool for React developers, providing type safety and improved developer experience. Here are the key practices I've learned from building production React applications with TypeScript.
+
+## Essential Type Definitions
+
+### Component Props with Interfaces
+
+Always define your component props using interfaces for better extensibility:
+
+```typescript
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  children: React.ReactNode;
+}
+
+export function Button({ variant, size = 'md', disabled, onClick, children }: ButtonProps) {
+  return (
+    <button
+      className={`btn btn-${variant} btn-${size}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+### Generic Components
+
+Use generics for reusable components:
+
+```typescript
+interface SelectProps<T> {
+  options: T[];
+  value: T;
+  onChange: (value: T) => void;
+  getLabel: (option: T) => string;
+  getValue: (option: T) => string;
+}
+
+function Select<T>({ options, value, onChange, getLabel, getValue }: SelectProps<T>) {
+  return (
+    <select
+      value={getValue(value)}
+      onChange={(e) => {
+        const selected = options.find(opt => getValue(opt) === e.target.value);
+        if (selected) onChange(selected);
+      }}
+    >
+      {options.map((option) => (
+        <option key={getValue(option)} value={getValue(option)}>
+          {getLabel(option)}
+        </option>
+      ))}
+    </select>
+  );
+}
+```
+
+## State Management Patterns
+
+### Typed useState Hook
+
+Always provide explicit types for complex state:
+
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+function UserProfile() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Rest of component logic...
+}
+```
+
+### Custom Hooks with Types
+
+Create strongly typed custom hooks:
+
+```typescript
+interface UseApiResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+function useApi<T>(url: string): UseApiResult<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("API request failed");
+      const result = await response.json();
+      setData(result);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [url]);
+
+  return { data, loading, error, refetch: fetchData };
+}
+```
+
+## Advanced Patterns
+
+### Discriminated Unions for State
+
+Use discriminated unions to model complex state:
+
+```typescript
+type RequestState<T> =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success'; data: T }
+  | { status: 'error'; error: string };
+
+function DataComponent() {
+  const [state, setState] = useState<RequestState<User[]>>({ status: 'idle' });
+
+  // Type-safe state handling
+  switch (state.status) {
+    case 'loading':
+      return <div>Loading...</div>;
+    case 'success':
+      return <div>{state.data.map(user => user.name).join(', ')}</div>;
+    case 'error':
+      return <div>Error: {state.error}</div>;
+    default:
+      return <div>Click to load data</div>;
+  }
+}
+```
+
+## Key Takeaways
+
+1. **Always define interfaces** for component props
+2. **Use generics** for reusable components
+3. **Provide explicit types** for complex state
+4. **Leverage discriminated unions** for complex state management
+5. **Create typed custom hooks** for better reusability
+
+TypeScript's type system helps catch errors early and provides excellent IDE support. These patterns have significantly improved my development workflow and code quality.
+
+---
+
+_Want to discuss TypeScript patterns? Connect with me on [LinkedIn](https://ph.linkedin.com/in/jaycee-capulong-9a37922b9)!_

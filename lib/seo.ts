@@ -1,6 +1,6 @@
 /**
  * SEO Utilities
- * 
+ *
  * Helper functions and schemas for SEO optimization including
  * structured data (JSON-LD) for better search engine understanding.
  */
@@ -29,10 +29,7 @@ export function getOrganizationSchema() {
       "@type": "PostalAddress",
       addressCountry: "PH",
     },
-    sameAs: [
-      SITE_METADATA.author.github,
-      SITE_METADATA.author.linkedin,
-    ],
+    sameAs: [SITE_METADATA.author.github, SITE_METADATA.author.linkedin],
     knowsAbout: [
       "React",
       "Next.js",
@@ -90,10 +87,12 @@ export function getProjectSchema(project: Project) {
     },
     keywords: project.stack.join(", "),
     about: project.type,
-    workExample: project.link ? {
-      "@type": "WebSite",
-      url: project.link,
-    } : undefined,
+    workExample: project.link
+      ? {
+          "@type": "WebSite",
+          url: project.link,
+        }
+      : undefined,
     image: project.cover ? `${siteConfig.url}${project.cover}` : undefined,
   };
 }
@@ -102,7 +101,9 @@ export function getProjectSchema(project: Project) {
  * Breadcrumb Schema (JSON-LD)
  * Provides breadcrumb navigation for better search results
  */
-export function getBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
+export function getBreadcrumbSchema(
+  items: Array<{ name: string; url: string }>,
+) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -160,7 +161,8 @@ export function generatePageMetadata({
 }) {
   const url = `${siteConfig.url}${path}`;
   const ogImage = image || "/profile.jpg";
-  const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
+  const fullTitle =
+    title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
 
   return {
     title,
@@ -197,7 +199,7 @@ export function generatePageMetadata({
 /**
  * Generate JSON-LD script string for embedding
  * Use this helper to create script tags in your components
- * 
+ *
  * @example
  * <script
  *   type="application/ld+json"

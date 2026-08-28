@@ -1,0 +1,112 @@
+---
+title: "Building a Modern Portfolio with Next.js 13"
+description: "A deep dive into creating a high-performance portfolio website using Next.js 13, TypeScript, and modern web development practices."
+date: "2024-08-28"
+author: "Jaycee Capulong"
+slug: "building-modern-portfolio-nextjs-13"
+tags: ["Next.js", "TypeScript", "Portfolio", "Web Development"]
+category: "Development"
+featured: true
+published: true
+readingTime: 8
+---
+
+# Building a Modern Portfolio with Next.js 13
+
+In this article, I'll walk you through the process of building a modern, high-performance portfolio website using Next.js 13, TypeScript, and cutting-edge web development practices.
+
+## The Tech Stack
+
+For this portfolio, I chose a modern and performant tech stack:
+
+- **Next.js 13** - The React framework for production
+- **TypeScript** - Type safety and better developer experience
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vercel** - Deployment and hosting
+
+## Key Features Implemented
+
+### 1. Performance Optimization
+
+Performance was a top priority from day one. Here are the key optimizations I implemented:
+
+```typescript
+// Example: Image optimization with Next.js
+import { OptimizedImage } from '@/components/OptimizedImage';
+
+export function ProjectCard({ project }) {
+  return (
+    <div className="project-card">
+      <OptimizedImage
+        src={project.image}
+        alt={project.title}
+        width={800}
+        height={400}
+        quality={85}
+        priority={project.featured}
+      />
+    </div>
+  );
+}
+```
+
+### 2. SEO and Analytics
+
+I implemented comprehensive SEO optimization and privacy-compliant analytics:
+
+- Dynamic meta tags and Open Graph data
+- JSON-LD structured data for better search visibility
+- Google Analytics 4 with privacy controls
+- Automated sitemap generation
+
+### 3. TypeScript Integration
+
+Type safety was crucial for maintaining code quality:
+
+```typescript
+// Example: Type-safe project data structure
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  technologies: string[];
+  status: "In Progress" | "Completed" | "On Hold";
+  featured: boolean;
+}
+```
+
+## Development Process
+
+The development process followed a structured approach with clear phases:
+
+1. **Foundation Setup** - Environment configuration and TypeScript setup
+2. **Asset Management** - Image optimization and organization
+3. **SEO & Analytics** - Search optimization and user tracking
+4. **Content Systems** - Resume and blog functionality
+
+## Lessons Learned
+
+Building this portfolio taught me several valuable lessons:
+
+- **Performance First**: Optimizing for Core Web Vitals from the start pays dividends
+- **Type Safety**: TypeScript catches errors early and improves developer confidence
+- **Progressive Enhancement**: Building features that work without JavaScript first
+- **Analytics Privacy**: Balancing user insights with privacy compliance
+
+## Next Steps
+
+Future improvements planned for the portfolio:
+
+- [ ] Dark mode toggle
+- [ ] Advanced search functionality
+- [ ] Comment system for blog posts
+- [ ] Newsletter subscription
+- [ ] PWA capabilities
+
+## Conclusion
+
+Building a modern portfolio is more than just showcasing work—it's about demonstrating technical skills, attention to detail, and commitment to best practices. The combination of Next.js 13, TypeScript, and modern tooling creates a solid foundation for both current needs and future growth.
+
+---
+
+_What do you think about this approach? Feel free to reach out if you have questions about the implementation details!_
