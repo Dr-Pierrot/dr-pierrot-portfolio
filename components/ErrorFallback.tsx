@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getTransitionClasses, MAIN_CONTENT_ID } from "@/lib/accessibility";
 import { cn } from "@/lib/utils";
 
 interface ErrorFallbackProps {
@@ -26,6 +27,8 @@ export default function ErrorFallback({
 
   return (
     <main
+      id={MAIN_CONTENT_ID}
+      tabIndex={-1}
       className={cn(
         "min-h-screen bg-ed-paper px-6 py-24 text-ed-text",
         "flex items-center justify-center",
@@ -74,7 +77,8 @@ export default function ErrorFallback({
 
           {errorReference && (
             <p className="mt-4 font-ed-mono text-xs text-ed-text-muted">
-              Error reference: <span className="text-ed-text">{errorReference}</span>
+              Error reference:{" "}
+              <span className="text-ed-text">{errorReference}</span>
             </p>
           )}
 
@@ -94,7 +98,12 @@ export default function ErrorFallback({
               <button
                 type="button"
                 onClick={retry}
-                className="inline-flex items-center justify-center rounded-lg bg-ed-gradient-button px-5 py-3 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ed-accent motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                className={cn(
+                  "inline-flex items-center justify-center rounded-lg bg-ed-gradient-button px-5 py-3 font-ed-heading text-sm font-semibold text-white shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ed-accent",
+                  getTransitionClasses(
+                    "transition-all hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
+                  ),
+                )}
               >
                 Try again
               </button>
@@ -103,14 +112,22 @@ export default function ErrorFallback({
             <button
               type="button"
               onClick={() => router.refresh()}
-              className="inline-flex items-center justify-center rounded-lg border border-ed-border bg-ed-paper px-5 py-3 font-ed-heading text-sm font-semibold text-ed-text transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ed-accent motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+              className={cn(
+                "inline-flex items-center justify-center rounded-lg border border-ed-border bg-ed-paper px-5 py-3 font-ed-heading text-sm font-semibold text-ed-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ed-accent",
+                getTransitionClasses(
+                  "transition-all hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
+                ),
+              )}
             >
               Refresh page
             </button>
 
             <Link
               href="/"
-              className="inline-flex items-center justify-center rounded-lg border border-ed-border bg-ed-surface px-5 py-3 font-ed-heading text-sm font-semibold text-ed-text-muted transition-colors hover:text-ed-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ed-accent"
+              className={cn(
+                "inline-flex items-center justify-center rounded-lg border border-ed-border bg-ed-surface px-5 py-3 font-ed-heading text-sm font-semibold text-ed-text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ed-accent",
+                getTransitionClasses("transition-colors hover:text-ed-accent"),
+              )}
             >
               Back to home
             </Link>

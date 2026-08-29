@@ -9,6 +9,7 @@ import {
   trackProjectLink,
   trackNavigation,
 } from "@/lib/analytics";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
 
 type TagVariant = "neutral" | "accent" | "accent2" | "accent3";
 
@@ -77,10 +78,12 @@ export default function Projects() {
               return (
                 <button
                   key={type}
+                  type="button"
                   aria-pressed={active}
                   onClick={() => setFilter(type)}
                   className={clsx(
-                    "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] tracking-[0.02em] transition-all duration-200",
+                    "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] tracking-[0.02em] transition-all duration-200 focus:outline-none",
+                    FOCUS_VISIBLE_CLASSES,
                     active
                       ? "border-ed-text bg-ed-text text-ed-paper"
                       : "border-ed-border text-ed-text-muted hover:border-ed-border-strong hover:text-ed-text",

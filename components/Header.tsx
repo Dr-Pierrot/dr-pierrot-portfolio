@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import OptimizedImage from "./OptimizedImage";
 import { trackNavigation } from "@/lib/analytics";
+import { FOCUS_VISIBLE_CLASSES, getSectionAriaCurrent } from "@/lib/accessibility";
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -109,8 +110,10 @@ export default function Header() {
                   key={l.label}
                   href={l.href}
                   onClick={() => setActiveHref(l.href)}
+                  aria-current={getSectionAriaCurrent(isActive)}
                   className={clsx(
-                    "relative rounded-lg px-[15px] py-2 text-[14.5px] font-medium no-underline transition-colors duration-200",
+                    "relative rounded-lg px-[15px] py-2 text-[14.5px] font-medium no-underline transition-colors duration-200 focus:outline-none",
+                    FOCUS_VISIBLE_CLASSES,
                     isActive
                       ? "bg-ed-surface text-ed-text shadow-[0_1px_0_var(--color-ed-border),0_4px_10px_-6px_rgba(11,19,16,0.15)]"
                       : "text-ed-text-secondary hover:text-ed-text",
@@ -135,12 +138,18 @@ export default function Header() {
             </span>
             <a
               href="#contact"
-              className="hidden items-center gap-[7px] whitespace-nowrap rounded-[10px] border border-transparent bg-ed-gradient-button px-[18px] py-[9px] font-ed-body text-[14.5px] font-semibold text-white no-underline shadow-[0_2px_10px_-2px_rgba(14,124,116,0.35)] transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_22px_-8px_rgba(14,124,116,0.5)] md:inline-flex"
+              className={clsx(
+                "hidden items-center gap-[7px] whitespace-nowrap rounded-[10px] border border-transparent bg-ed-gradient-button px-[18px] py-[9px] font-ed-body text-[14.5px] font-semibold text-white no-underline shadow-[0_2px_10px_-2px_rgba(14,124,116,0.35)] transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_22px_-8px_rgba(14,124,116,0.5)] focus:outline-none md:inline-flex",
+                FOCUS_VISIBLE_CLASSES,
+              )}
             >
               Let&apos;s talk
             </a>
             <button
-              className="mt-[-8px] mr-[-6px] mb-[-8px] flex flex-col gap-[5px] border-none bg-transparent p-2 md:hidden"
+              className={clsx(
+                "mt-[-8px] mr-[-6px] mb-[-8px] flex flex-col gap-[5px] rounded-lg border-none bg-transparent p-2 focus:outline-none md:hidden",
+                FOCUS_VISIBLE_CLASSES,
+              )}
               onClick={() => setIsMenuOpen((o) => !o)}
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
@@ -178,7 +187,10 @@ export default function Header() {
         aria-label="Navigation menu"
       >
         <button
-          className="absolute top-6 right-6 flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-ed-border bg-ed-paper-alt text-base text-ed-text"
+          className={clsx(
+            "absolute top-6 right-6 flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-ed-border bg-ed-paper-alt text-base text-ed-text focus:outline-none",
+            FOCUS_VISIBLE_CLASSES,
+          )}
           onClick={() => setIsMenuOpen(false)}
           aria-label="Close menu"
         >
@@ -189,8 +201,10 @@ export default function Header() {
             key={l.label}
             href={l.href}
             style={{ animationDelay: `${i * 0.06}s` }}
+            aria-current={getSectionAriaCurrent(activeHref === l.href)}
             className={clsx(
-              "font-ed-heading text-[26px] font-semibold text-ed-text no-underline opacity-0 hover:text-ed-accent",
+              "font-ed-heading text-[26px] font-semibold text-ed-text no-underline opacity-0 hover:text-ed-accent focus:outline-none",
+              FOCUS_VISIBLE_CLASSES,
               isMenuOpen && "animate-ed-menu-in",
             )}
             onClick={() => {
@@ -210,7 +224,8 @@ export default function Header() {
               : undefined,
           }}
           className={clsx(
-            "rounded-[10px] bg-ed-gradient-button px-8 py-3 font-ed-heading text-[15px] font-semibold text-white no-underline opacity-0",
+            "rounded-[10px] bg-ed-gradient-button px-8 py-3 font-ed-heading text-[15px] font-semibold text-white no-underline opacity-0 focus:outline-none",
+            FOCUS_VISIBLE_CLASSES,
             isMenuOpen && "animate-ed-menu-in",
           )}
         >

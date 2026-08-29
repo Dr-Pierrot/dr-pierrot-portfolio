@@ -1,9 +1,14 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { MAIN_CONTENT_ID } from "@/lib/accessibility";
 
 export function BlogListingLoading() {
   return (
     <div className="min-h-screen bg-ed-paper">
-      <main className="container mx-auto px-6 pt-32 pb-20">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="container mx-auto px-6 pt-32 pb-20"
+      >
         <div className="mb-16 text-center">
           <LoadingSpinner
             label="Loading articles..."
@@ -57,7 +62,11 @@ export function BlogListingLoading() {
 export function BlogPostLoading() {
   return (
     <div className="min-h-screen bg-ed-paper">
-      <main className="container mx-auto px-6 pt-32 pb-20">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="container mx-auto px-6 pt-32 pb-20"
+      >
         <div className="grid gap-12 lg:grid-cols-[1fr_300px]">
           <div className="max-w-4xl">
             <LoadingSpinner

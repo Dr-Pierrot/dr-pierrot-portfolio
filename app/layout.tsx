@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { getOrganizationSchema, getWebsiteSchema } from "@/lib/seo";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import SkipToContent from "@/components/SkipToContent";
 import RootLoading from "./loading";
 
 const inter = Inter({
@@ -136,6 +137,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
+        <SkipToContent />
         <Suspense fallback={<RootLoading />}>{children}</Suspense>
       </body>
     </html>

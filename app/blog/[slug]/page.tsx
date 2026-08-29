@@ -12,6 +12,9 @@ import { generatePageMetadata } from "@/lib/seo";
 import ArticleContent from "@/components/ArticleContent";
 import ArticleCard from "@/components/ArticleCard";
 import BlogPostLoading from "./loading";
+import { MAIN_CONTENT_ID } from "@/lib/accessibility";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
+import { cn } from "@/lib/utils";
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -64,7 +67,11 @@ async function BlogPostPageContent({
 
   return (
     <div className="min-h-screen bg-ed-background">
-      <main className="container mx-auto px-6 pt-32 pb-20">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="container mx-auto px-6 pt-32 pb-20"
+      >
         <div className="grid gap-12 lg:grid-cols-[1fr_300px]">
           {/* Main Content */}
           <div className="max-w-4xl">
@@ -113,10 +120,22 @@ async function BlogPostPageContent({
                 Share Article
               </h3>
               <div className="flex gap-3">
-                <button className="flex-1 rounded-lg bg-[#1DA1F2] px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-80">
+                <button
+                  type="button"
+                  className={cn(
+                    "flex-1 rounded-lg bg-[#1DA1F2] px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-80 focus:outline-none",
+                    FOCUS_VISIBLE_CLASSES,
+                  )}
+                >
                   Twitter
                 </button>
-                <button className="flex-1 rounded-lg bg-[#0077B5] px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-80">
+                <button
+                  type="button"
+                  className={cn(
+                    "flex-1 rounded-lg bg-[#0077B5] px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-80 focus:outline-none",
+                    FOCUS_VISIBLE_CLASSES,
+                  )}
+                >
                   LinkedIn
                 </button>
               </div>

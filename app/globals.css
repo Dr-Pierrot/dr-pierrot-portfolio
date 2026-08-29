@@ -137,6 +137,33 @@
   }
 }
 
+/* Reduced motion support for all animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable specific custom animations */
+  .animate-ed-up,
+  .animate-ed-in,
+  .animate-ed-blink,
+  .animate-ed-float,
+  .animate-ed-marquee,
+  .animate-ed-drift {
+    animation: none !important;
+  }
+  
+  /* Disable ping animation specifically used in availability indicator */
+  .animate-ping {
+    animation: none !important;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

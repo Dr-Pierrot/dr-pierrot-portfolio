@@ -1,8 +1,13 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { MAIN_CONTENT_ID } from "@/lib/accessibility";
 
 export default function Loading() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ed-paper px-6 py-24">
+    <main
+      id={MAIN_CONTENT_ID}
+      tabIndex={-1}
+      className="flex min-h-screen items-center justify-center bg-ed-paper px-6 py-24"
+    >
       <div className="rounded-2xl border border-ed-border bg-ed-surface px-8 py-7 text-center shadow-sm">
         <LoadingSpinner
           label="Loading portfolio..."

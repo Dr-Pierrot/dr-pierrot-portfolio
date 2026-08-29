@@ -2,6 +2,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { trackContactForm } from "@/lib/analytics";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
 
 const CONTACT_INFO = {
   email: "capulongako16@gmail.com",
@@ -315,12 +316,15 @@ export default function ContactMe() {
                       return (
                         <button
                           key={s}
+                          type="button"
+                          aria-pressed={active}
                           onClick={() => {
                             setField("subject")(s);
                             setTouched((t) => ({ ...t, subject: true }));
                           }}
                           className={clsx(
-                            "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] transition-all duration-200",
+                            "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] transition-all duration-200 focus:outline-none",
+                            FOCUS_VISIBLE_CLASSES,
                             active
                               ? "border-ed-accent-border bg-ed-accent-soft text-ed-accent-text"
                               : "border-ed-border text-ed-text-muted hover:border-ed-border-strong hover:text-ed-text",
@@ -389,13 +393,17 @@ export default function ContactMe() {
                   </span>
                 </div>
 
-                <button
-                  onClick={handleSubmit}
-                  disabled={status === "sending"}
-                  className="w-full cursor-pointer rounded-[10px] bg-ed-gradient-button px-6 py-[15px] font-ed-heading text-[0.94rem] font-semibold tracking-[0.02em] text-white transition-all duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)] disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:translate-y-0 disabled:hover:shadow-none"
-                >
-                  {status === "sending" ? "Sending…" : "Send message"}
-                </button>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={status === "sending"}
+                    type="button"
+                    className={clsx(
+                      "w-full cursor-pointer rounded-[10px] bg-ed-gradient-button px-6 py-[15px] font-ed-heading text-[0.94rem] font-semibold tracking-[0.02em] text-white transition-all duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)] disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:translate-y-0 disabled:hover:shadow-none focus:outline-none",
+                      FOCUS_VISIBLE_CLASSES,
+                    )}
+                  >
+                    {status === "sending" ? "Sending…" : "Send message"}
+                  </button>
 
                 {status === "error" && (
                   <p className="m-0 text-[0.85rem] text-ed-danger">

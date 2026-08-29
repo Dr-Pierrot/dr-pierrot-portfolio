@@ -10,6 +10,8 @@
 import { useState } from "react";
 import { trackError, trackResumeDownload } from "@/lib/analytics";
 import { getResumeStats } from "@/lib/resume";
+import { cn } from "@/lib/utils";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface ResumeDownloadProps {
@@ -73,7 +75,11 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("json")}
           disabled={downloading === "json"}
-          className="text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors"
+          type="button"
+          className={cn(
+            "text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
           {downloading === "json" ? (
             <LoadingSpinner label="Downloading JSON resume..." size="sm" />
@@ -85,7 +91,11 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("pdf")}
           disabled={downloading === "pdf"}
-          className="text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors"
+          type="button"
+          className={cn(
+            "text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
           {downloading === "pdf" ? (
             <LoadingSpinner label="Downloading PDF resume..." size="sm" />
@@ -103,7 +113,11 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("json")}
           disabled={downloading === "json"}
-          className="text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors disabled:opacity-50"
+          type="button"
+          className={cn(
+            "text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
           {downloading === "json" ? (
             <LoadingSpinner
@@ -118,7 +132,11 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("pdf")}
           disabled={downloading === "pdf"}
-          className="text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors disabled:opacity-50"
+          type="button"
+          className={cn(
+            "text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
           {downloading === "pdf" ? (
             <LoadingSpinner
@@ -143,7 +161,11 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("json")}
           disabled={downloading === "json"}
-          className="flex-1 rounded-lg bg-ed-gradient-button px-4 py-2.5 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-50 disabled:hover:translate-y-0"
+          type="button"
+          className={cn(
+            "flex-1 rounded-lg bg-ed-gradient-button px-4 py-2.5 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none disabled:opacity-50 disabled:hover:translate-y-0",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
           {downloading === "json" ? (
             <LoadingSpinner
@@ -160,7 +182,11 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("pdf")}
           disabled={downloading === "pdf"}
-          className="flex-1 rounded-lg border border-ed-border bg-ed-paper px-4 py-2.5 font-ed-heading text-sm font-semibold text-ed-text transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-50 disabled:hover:translate-y-0"
+          type="button"
+          className={cn(
+            "flex-1 rounded-lg border border-ed-border bg-ed-paper px-4 py-2.5 font-ed-heading text-sm font-semibold text-ed-text transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none disabled:opacity-50 disabled:hover:translate-y-0",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
           {downloading === "pdf" ? (
             <LoadingSpinner
