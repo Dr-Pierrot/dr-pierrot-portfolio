@@ -5,10 +5,12 @@
  */
 
 import { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { getAllPosts, getFeaturedPosts, getBlogStats } from "@/lib/blog";
 import ArticleCard from "@/components/ArticleCard";
 import { generatePageMetadata } from "@/lib/seo";
+import BlogLoading from "./loading";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Blog - Jaycee Capulong | Web Development Insights",
@@ -18,7 +20,7 @@ export const metadata: Metadata = generatePageMetadata({
   type: "website",
 });
 
-export default function BlogPage() {
+function BlogPageContent() {
   const featuredPosts = getFeaturedPosts(2);
   const recentPosts = getAllPosts({ limit: 20 });
   const stats = getBlogStats();
@@ -28,17 +30,22 @@ export default function BlogPage() {
       <main className="container mx-auto px-6 pt-32 pb-20">
         {/* Back Button */}
         <div className="mb-8">
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center text-ed-text-muted hover:text-ed-accent transition-colors group"
           >
-            <svg 
-              className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-0.5" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Home
           </Link>
@@ -134,5 +141,13 @@ export default function BlogPage() {
         </section>
       </main>
     </div>
+  );
+}
+
+export default function BlogPage() {
+  return (
+    <Suspense fallback={<BlogLoading />}>
+      <BlogPageContent />
+    </Suspense>
   );
 }

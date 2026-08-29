@@ -5,11 +5,13 @@
  */
 
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts } from "@/lib/blog";
 import { generatePageMetadata } from "@/lib/seo";
 import ArticleContent from "@/components/ArticleContent";
 import ArticleCard from "@/components/ArticleCard";
+import BlogPostLoading from "./loading";
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -39,14 +41,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function BlogPostPage({
+async function BlogPostPageContent({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
-  console.log(resolvedParams.slug);
-
   const post = getPostBySlug(resolvedParams.slug);
 
   if (!post || !post.frontmatter.published) {
@@ -145,5 +145,17 @@ export default async function BlogPostPage({
         </div>
       </main>
     </div>
+  );
+}
+
+export default function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  return (
+    <Suspense fallback={<BlogPostLoading />}>
+      <BlogPostPageContent params={params} />
+    </Suspense>
   );
 }

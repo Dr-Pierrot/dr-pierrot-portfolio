@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { getOrganizationSchema, getWebsiteSchema } from "@/lib/seo";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import RootLoading from "./loading";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -134,7 +136,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {children}
+        <Suspense fallback={<RootLoading />}>{children}</Suspense>
       </body>
     </html>
   );
