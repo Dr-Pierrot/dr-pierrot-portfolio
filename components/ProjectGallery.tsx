@@ -1,6 +1,8 @@
 "use client";
 import React, { useCallback, useRef, useState } from "react";
 import clsx from "clsx";
+import { cn } from "@/lib/utils";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
 import OptimizedImage from "./OptimizedImage";
 
 const GalleryImage = ({ src, alt }: { src: string; alt: string }) => {
@@ -82,7 +84,10 @@ export default function ProjectGallery({
               aria-label="Previous image"
               onClick={() => scrollToIndex(active - 1)}
               disabled={active === 0}
-              className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-ed-border text-ed-text transition-all duration-200 hover:border-ed-accent hover:bg-ed-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ed-border disabled:hover:bg-transparent disabled:hover:text-ed-text"
+              className={cn(
+                "grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-ed-border text-ed-text transition-all duration-200 hover:border-ed-accent hover:bg-ed-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ed-border disabled:hover:bg-transparent disabled:hover:text-ed-text focus:outline-none",
+                FOCUS_VISIBLE_CLASSES,
+              )}
             >
               ←
             </button>
@@ -91,7 +96,10 @@ export default function ProjectGallery({
               aria-label="Next image"
               onClick={() => scrollToIndex(active + 1)}
               disabled={active === images.length - 1}
-              className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-ed-border text-ed-text transition-all duration-200 hover:border-ed-accent hover:bg-ed-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ed-border disabled:hover:bg-transparent disabled:hover:text-ed-text"
+              className={cn(
+                "grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-ed-border text-ed-text transition-all duration-200 hover:border-ed-accent hover:bg-ed-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ed-border disabled:hover:bg-transparent disabled:hover:text-ed-text focus:outline-none",
+                FOCUS_VISIBLE_CLASSES,
+              )}
             >
               →
             </button>
@@ -107,7 +115,10 @@ export default function ProjectGallery({
         role="region"
         aria-label={`${alt} gallery`}
         aria-roledescription="carousel"
-        className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 outline-none [-ms-overflow-style:none] [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-ed-accent [&::-webkit-scrollbar]:hidden"
+        className={cn(
+          "mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 outline-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus:outline-none",
+          FOCUS_VISIBLE_CLASSES,
+        )}
       >
         {images.map((src, i) => (
           <div
@@ -132,7 +143,8 @@ export default function ProjectGallery({
               aria-current={i === active}
               onClick={() => scrollToIndex(i)}
               className={clsx(
-                "h-2 cursor-pointer rounded-full transition-all duration-200",
+                "h-2 cursor-pointer rounded-full transition-all duration-200 focus:outline-none",
+                FOCUS_VISIBLE_CLASSES,
                 i === active
                   ? "w-6 bg-ed-accent"
                   : "w-2 bg-ed-border hover:bg-ed-border-strong",

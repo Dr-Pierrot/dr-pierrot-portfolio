@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { getAnimationClasses } from "@/lib/accessibility";
+import { cn } from "@/lib/utils";
 
 const profile = {
   alias: "Dr-Pierrot",
@@ -55,8 +57,8 @@ export default function Footer() {
               from the Philippines.
             </p>
             <div className="mt-5 inline-flex w-fit items-center gap-[9px] rounded-full border border-ed-accent-border bg-ed-accent-soft py-1.5 pr-3.5 pl-3 text-[13px] font-semibold tracking-[0.01em] text-ed-accent-text">
-              <span className="relative inline-flex h-[7px] w-[7px]">
-                <span className="absolute inset-0 animate-ping rounded-full bg-ed-accent motion-reduce:animate-none" />
+              <span className={cn("relative inline-flex h-[7px] w-[7px]", getAnimationClasses(""))}>
+                <span className={cn("absolute inset-0 rounded-full bg-ed-accent", getAnimationClasses("animate-ping"))} />
                 <span className="relative inline-block h-[7px] w-[7px] rounded-full bg-ed-accent" />
               </span>
               Available for work

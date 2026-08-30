@@ -1,8 +1,21 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { MAIN_CONTENT_ID } from "@/lib/accessibility";
+
 export function BlogListingLoading() {
   return (
-    <div className="min-h-screen bg-ed-background">
-      <main className="container mx-auto px-6 pt-32 pb-20">
+    <div className="min-h-screen bg-ed-paper">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="container mx-auto px-6 pt-32 pb-20"
+      >
         <div className="mb-16 text-center">
+          <LoadingSpinner
+            label="Loading articles..."
+            size="lg"
+            showLabel
+            className="mb-8 justify-center"
+          />
           <div className="mb-4 h-4 w-32 bg-ed-surface rounded mx-auto animate-pulse" />
           <div className="mb-6 h-16 w-80 bg-ed-surface rounded mx-auto animate-pulse" />
           <div className="mx-auto max-w-2xl space-y-2">
@@ -48,10 +61,19 @@ export function BlogListingLoading() {
 
 export function BlogPostLoading() {
   return (
-    <div className="min-h-screen bg-ed-background">
-      <main className="container mx-auto px-6 pt-32 pb-20">
+    <div className="min-h-screen bg-ed-paper">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="container mx-auto px-6 pt-32 pb-20"
+      >
         <div className="grid gap-12 lg:grid-cols-[1fr_300px]">
           <div className="max-w-4xl">
+            <LoadingSpinner
+              label="Loading article..."
+              showLabel
+              className="mb-8"
+            />
             <div className="space-y-3 mb-4">
               <div className="h-10 bg-ed-surface rounded animate-pulse" />
               <div className="h-10 bg-ed-surface rounded w-3/4 animate-pulse" />

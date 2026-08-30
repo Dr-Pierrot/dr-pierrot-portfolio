@@ -213,6 +213,10 @@ export function trackScrollDepth(percentage: number): void {
 
 // Error tracking
 export function trackError(error: Error, context?: string): void {
+  if (process.env.NODE_ENV === "development") {
+    console.error(`[analytics:error] ${context || "unknown"}`, error);
+  }
+
   trackEvent({
     action: "error",
     category: "technical",
@@ -221,6 +225,28 @@ export function trackError(error: Error, context?: string): void {
       error_name: error.name,
       error_message: error.message,
       error_stack: error.stack?.substring(0, 500), // Limit stack trace length
+      error_context: context,
+      page_url: window.location.pathname,
+    },
+  });
+}
+
+export function trackAppError(
+  error: Error & { digest?: string },
+  context = "app_error_boundary",
+): void {
+  if (process.env.NODE_ENV === "development") {
+    console.error(`[analytics:app_error] ${context}`, error);
+  }
+
+  trackEvent({
+    action: "app_error",
+    category: "technical",
+    label: error.digest || error.name || "application_error",
+    custom_parameters: {
+      error_name: error.name,
+      error_message: error.message,
+      error_digest: error.digest,
       error_context: context,
       page_url: window.location.pathname,
     },
@@ -251,7 +277,7 @@ export function optOutOfAnalytics(): void {
   if (analyticsConfig.gaMeasurementId) {
     // Set the GA opt-out flag using proper typing
     const optOutProperty = `ga-disable-${analyticsConfig.gaMeasurementId}`;
-    (window as any)[optOutProperty] = true;
+    (window as unknown as Window & Record<string, boolean>)[optOutProperty] = true;
 
     // Clear existing GA cookies
     document.cookie = "_ga=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

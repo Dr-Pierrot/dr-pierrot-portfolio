@@ -2,6 +2,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import { T } from "@/lib/theme";
+import { getAnimationClasses, getTransitionClasses } from "@/lib/accessibility";
+import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -255,24 +257,42 @@ const Hero = () => {
           <div className="flex flex-wrap items-center gap-3">
             <a
               href="#projects"
-              className="group inline-flex items-center gap-[9px] rounded-[10px] border border-transparent bg-ed-gradient-button px-6 py-[13px] text-[15px] font-semibold text-white no-underline shadow-[0_2px_10px_rgba(14,124,116,0.22)] transition-all duration-[220ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)]"
+              className={cn(
+                "group inline-flex items-center gap-[9px] rounded-[10px] border border-transparent bg-ed-gradient-button px-6 py-[13px] text-[15px] font-semibold text-white no-underline shadow-[0_2px_10px_rgba(14,124,116,0.22)] ease-[cubic-bezier(0.2,0.7,0.2,1)]",
+                getTransitionClasses(
+                  "transition-all duration-[220ms] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)]",
+                ),
+              )}
             >
               View my work
               <Icon
                 path={ICONS.arrow}
-                className="transition-transform duration-[220ms] group-hover:translate-x-[3px]"
+                className={cn(
+                  "duration-[220ms] group-hover:translate-x-[3px]",
+                  getTransitionClasses("transition-transform"),
+                )}
               />
             </a>
             <a
               href={coderData.resume}
               download
-              className="inline-flex items-center gap-[9px] rounded-[10px] border border-ed-border bg-ed-surface px-6 py-[13px] text-[15px] font-semibold text-ed-text no-underline transition-all duration-[220ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:border-ed-border-strong hover:bg-ed-paper-alt"
+              className={cn(
+                "inline-flex items-center gap-[9px] rounded-[10px] border border-ed-border bg-ed-surface px-6 py-[13px] text-[15px] font-semibold text-ed-text no-underline ease-[cubic-bezier(0.2,0.7,0.2,1)]",
+                getTransitionClasses(
+                  "transition-all duration-[220ms] hover:-translate-y-0.5 hover:border-ed-border-strong hover:bg-ed-paper-alt",
+                ),
+              )}
             >
               <Icon path={ICONS.download} /> Résumé
             </a>
             <div className="flex gap-2">
               <a
-                className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                className={cn(
+                  "grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline",
+                  getTransitionClasses(
+                    "transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text",
+                  ),
+                )}
                 href={coderData.github}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -281,7 +301,12 @@ const Hero = () => {
                 <Icon path={ICONS.github} />
               </a>
               <a
-                className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                className={cn(
+                  "grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline",
+                  getTransitionClasses(
+                    "transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text",
+                  ),
+                )}
                 href={coderData.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -290,7 +315,12 @@ const Hero = () => {
                 <Icon path={ICONS.linkedin} />
               </a>
               <a
-                className="grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text"
+                className={cn(
+                  "grid h-[42px] w-[42px] place-items-center rounded-[10px] border border-ed-border bg-ed-surface text-ed-text-secondary no-underline",
+                  getTransitionClasses(
+                    "transition-all duration-200 hover:-translate-y-0.5 hover:border-ed-accent-border hover:bg-ed-accent-soft hover:text-ed-accent-text",
+                  ),
+                )}
                 href={`mailto:${coderData.email}`}
                 aria-label="Email"
               >
@@ -306,7 +336,12 @@ const Hero = () => {
         </div>
 
         {/* ---------------- RIGHT ---------------- */}
-        <div className="relative order-2 animate-ed-in motion-reduce:animate-none">
+        <div
+          className={cn(
+            "relative order-2",
+            getAnimationClasses("animate-ed-in"),
+          )}
+        >
           <div className="overflow-hidden rounded-2xl border border-ed-border bg-ed-surface shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)]">
             <div className="flex items-center justify-between border-b border-ed-border bg-ed-paper-alt px-3.5 py-[11px]">
               <div className="flex gap-1.5">

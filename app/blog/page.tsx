@@ -5,10 +5,15 @@
  */
 
 import { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { getAllPosts, getFeaturedPosts, getBlogStats } from "@/lib/blog";
 import ArticleCard from "@/components/ArticleCard";
 import { generatePageMetadata } from "@/lib/seo";
+import BlogLoading from "./loading";
+import { MAIN_CONTENT_ID } from "@/lib/accessibility";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Blog - Jaycee Capulong | Web Development Insights",
@@ -18,27 +23,36 @@ export const metadata: Metadata = generatePageMetadata({
   type: "website",
 });
 
-export default function BlogPage() {
+function BlogPageContent() {
   const featuredPosts = getFeaturedPosts(2);
   const recentPosts = getAllPosts({ limit: 20 });
   const stats = getBlogStats();
 
   return (
     <div className="min-h-screen bg-ed-background">
-      <main className="container mx-auto px-6 pt-32 pb-20">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="container mx-auto px-6 pt-32 pb-20"
+      >
         {/* Back Button */}
         <div className="mb-8">
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center text-ed-text-muted hover:text-ed-accent transition-colors group"
           >
-            <svg 
-              className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-0.5" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Home
           </Link>
@@ -128,11 +142,25 @@ export default function BlogPage() {
             Get notified when I publish new articles about web development and
             technology.
           </p>
-          <button className="rounded-lg bg-ed-gradient-button px-6 py-3 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+          <button
+            type="button"
+            className={cn(
+              "rounded-lg bg-ed-gradient-button px-6 py-3 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none",
+              FOCUS_VISIBLE_CLASSES,
+            )}
+          >
             Subscribe to Newsletter
           </button>
         </section>
       </main>
     </div>
+  );
+}
+
+export default function BlogPage() {
+  return (
+    <Suspense fallback={<BlogLoading />}>
+      <BlogPageContent />
+    </Suspense>
   );
 }

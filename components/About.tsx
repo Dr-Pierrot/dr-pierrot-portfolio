@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import OptimizedImage from "./OptimizedImage";
+import { getTransitionClasses } from "@/lib/accessibility";
 
 const profile = {
   name: "Jaycee Capulong",
@@ -69,7 +70,10 @@ export default function About() {
         <div className="mx-auto w-fit md:mx-0">
           <div
             className={clsx(
-              "relative aspect-[4/5] w-[240px] overflow-hidden rounded-2xl border border-ed-border bg-ed-surface shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[300px]",
+              "relative aspect-[4/5] w-[240px] overflow-hidden rounded-2xl border border-ed-border bg-ed-surface shadow-[0_24px_60px_-28px_rgba(11,19,16,0.28),0_2px_6px_rgba(11,19,16,0.05)] md:w-[300px]",
+              getTransitionClasses(
+                "transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+              ),
               inView ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
             )}
           >
@@ -144,4 +148,3 @@ export default function About() {
     </section>
   );
 }
-

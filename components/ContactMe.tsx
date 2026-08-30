@@ -2,6 +2,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { trackContactForm } from "@/lib/analytics";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
 
 const CONTACT_INFO = {
   email: "capulongako16@gmail.com",
@@ -154,6 +155,8 @@ export default function ContactMe() {
   const [status, setStatus] = useState<SendStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [hasStartedForm, setHasStartedForm] = useState(false);
+  const [honeypot, setHoneypot] = useState(""); // Honeypot field
+  const [formStartTime] = useState(() => Date.now()); // Track form start time
 
   const errors = validate(form);
   const visibleErrors: FieldError = Object.fromEntries(
@@ -165,7 +168,7 @@ export default function ContactMe() {
     // Track when user first starts filling out the form
     if (!hasStartedForm && v.trim() !== "") {
       setHasStartedForm(true);
-      trackContactForm('start');
+      trackContactForm("start");
     }
     setForm((f) => ({ ...f, [key]: v }));
   };
@@ -175,33 +178,47 @@ export default function ContactMe() {
   const handleSubmit = async () => {
     setTouched({ name: true, email: true, subject: true, message: true });
     if (!isValid) return;
-    
+
     // Track form submission attempt
-    trackContactForm('submit');
-    
+    trackContactForm("submit");
+
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          honeypot, // Include honeypot field
+          timestamp: formStartTime, // Include form start timestamp
+        }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to send");
-      
+
+      if (!res.ok) {
+        // Handle rate limiting specifically
+        if (res.status === 429) {
+          throw new Error(
+            "Too many requests. Please wait before trying again.",
+          );
+        }
+        throw new Error(data?.error || "Failed to send");
+      }
+
       // Track successful form submission
-      trackContactForm('success');
-      
+      trackContactForm("success");
+
       setStatus("success");
       setTimeout(() => {
         setStatus("idle");
         setForm({ name: "", email: "", subject: "", message: "" });
         setTouched({});
+        setHoneypot(""); // Reset honeypot
       }, 4500);
     } catch (err) {
       // Track form submission error
-      trackContactForm('error');
-      
+      trackContactForm("error");
+
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
       setStatus("error");
       setTimeout(() => setStatus("idle"), 4000);
@@ -315,12 +332,15 @@ export default function ContactMe() {
                       return (
                         <button
                           key={s}
+                          type="button"
+                          aria-pressed={active}
                           onClick={() => {
                             setField("subject")(s);
                             setTouched((t) => ({ ...t, subject: true }));
                           }}
                           className={clsx(
-                            "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] transition-all duration-200",
+                            "cursor-pointer rounded-full border px-3.5 py-1.5 font-ed-mono text-[12px] transition-all duration-200 focus:outline-none",
+                            FOCUS_VISIBLE_CLASSES,
                             active
                               ? "border-ed-accent-border bg-ed-accent-soft text-ed-accent-text"
                               : "border-ed-border text-ed-text-muted hover:border-ed-border-strong hover:text-ed-text",
@@ -376,6 +396,27 @@ export default function ContactMe() {
                   rows={5}
                 />
 
+                {/* Honeypot field - hidden from users, visible to bots */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    visibility: "hidden",
+                  }}
+                  aria-hidden="true"
+                >
+                  <label htmlFor="website">Website (leave blank)</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
                 <div className="-mt-2 flex justify-end">
                   <span
                     className={clsx(
@@ -392,7 +433,11 @@ export default function ContactMe() {
                 <button
                   onClick={handleSubmit}
                   disabled={status === "sending"}
-                  className="w-full cursor-pointer rounded-[10px] bg-ed-gradient-button px-6 py-[15px] font-ed-heading text-[0.94rem] font-semibold tracking-[0.02em] text-white transition-all duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)] disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                  type="button"
+                  className={clsx(
+                    "w-full cursor-pointer rounded-[10px] bg-ed-gradient-button px-6 py-[15px] font-ed-heading text-[0.94rem] font-semibold tracking-[0.02em] text-white transition-all duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_26px_rgba(14,124,116,0.32)] disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:translate-y-0 disabled:hover:shadow-none focus:outline-none",
+                    FOCUS_VISIBLE_CLASSES,
+                  )}
                 >
                   {status === "sending" ? "Sending…" : "Send message"}
                 </button>

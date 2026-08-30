@@ -10,6 +10,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { trackError } from '@/lib/analytics';
 import { getImagePath, getBlurDataURL, getImageQuality } from '@/lib/images';
 
 interface OptimizedImageProps {
@@ -70,6 +71,7 @@ export default function OptimizedImage({
     setHasError(true);
     setIsLoading(false);
     setImgSrc(fallbackSrc);
+    trackError(new Error(`Image failed to load: ${src}`), 'optimized_image');
     onError?.();
   };
 

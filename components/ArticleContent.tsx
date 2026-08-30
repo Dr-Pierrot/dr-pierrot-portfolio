@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
 /**
  * Article Content Component
- * 
+ *
  * Renders blog content with proper styling and metadata.
  * Simplified version without external MDX dependencies.
  */
 
-import { BlogPost } from '@/lib/blog';
-import Link from 'next/link';
+import { BlogPost } from "@/lib/blog";
+import Link from "next/link";
 
 interface ArticleContentProps {
   post: BlogPost;
@@ -17,47 +17,67 @@ interface ArticleContentProps {
   className?: string;
 }
 
-export default function ArticleContent({ 
-  post, 
+export default function ArticleContent({
+  post,
   showHeader = true,
   showMeta = true,
-  className = ''
+  className = "",
 }: ArticleContentProps) {
   const { frontmatter, content, readingTime } = post;
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
   // Simple markdown-to-HTML conversion
   const renderContent = (mdxContent: string) => {
     let html = mdxContent
-      .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold mb-4 text-ed-text">$1</h1>')
-      .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold mb-3 mt-6 text-ed-text">$1</h2>')
-      .replace(/^### (.+)$/gm, '<h3 class="text-xl font-medium mb-2 mt-4 text-ed-text">$1</h3>')
+      .replace(
+        /^# (.+)$/gm,
+        '<h1 class="text-3xl font-bold mb-4 text-ed-text">$1</h1>',
+      )
+      .replace(
+        /^## (.+)$/gm,
+        '<h2 class="text-2xl font-semibold mb-3 mt-6 text-ed-text">$1</h2>',
+      )
+      .replace(
+        /^### (.+)$/gm,
+        '<h3 class="text-xl font-medium mb-2 mt-4 text-ed-text">$1</h3>',
+      )
       .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code class="bg-ed-surface px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
+      .replace(/\*(.+?)\*/g, "<em>$1</em>")
+      .replace(
+        /`(.+?)`/g,
+        '<code class="bg-ed-surface px-1.5 py-0.5 rounded text-sm font-mono">$1</code>',
+      )
       .replace(/^\- (.+)$/gm, '<li class="mb-1">$1</li>')
-      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-ed-accent hover:underline" target="_blank" rel="noopener noreferrer">$1</a>')
-      .split('\n\n')
-      .map(paragraph => {
-        if (paragraph.includes('<h1>') || paragraph.includes('<h2>') || paragraph.includes('<h3>') || paragraph.includes('<li>')) {
+      .replace(
+        /\[(.+?)\]\((.+?)\)/g,
+        '<a href="$2" class="text-ed-accent hover:underline" target="_blank" rel="noopener noreferrer">$1</a>',
+      )
+      .split("\n\n")
+      .map((paragraph) => {
+        if (
+          paragraph.includes("<h1>") ||
+          paragraph.includes("<h2>") ||
+          paragraph.includes("<h3>") ||
+          paragraph.includes("<li>")
+        ) {
           return paragraph;
         }
-        if (paragraph.includes('<li>')) {
+        if (paragraph.includes("<li>")) {
           return `<ul class="list-disc ml-6 mb-4">${paragraph}</ul>`;
         }
-        if (paragraph.trim() && !paragraph.includes('<')) {
+        if (paragraph.trim() && !paragraph.includes("<")) {
           return `<p class="mb-4 leading-7 text-ed-text">${paragraph}</p>`;
         }
         return paragraph;
       })
-      .join('\n');
+      .join("\n");
 
     return html;
   };

@@ -8,8 +8,11 @@
  */
 
 import { useState } from "react";
-import { trackResumeDownload } from "@/lib/analytics";
+import { trackError, trackResumeDownload } from "@/lib/analytics";
 import { getResumeStats } from "@/lib/resume";
+import { cn } from "@/lib/utils";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface ResumeDownloadProps {
   variant?: "button" | "link" | "inline";
@@ -59,8 +62,8 @@ export default function ResumeDownload({
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Download failed:", error);
-      // Could add toast notification here
+      const downloadError = error instanceof Error ? error : new Error(String(error));
+      trackError(downloadError, `resume_download_${format}`);
     } finally {
       setDownloading(null);
     }
@@ -72,17 +75,33 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("json")}
           disabled={downloading === "json"}
-          className="text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors"
+          type="button"
+          className={cn(
+            "text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
-          {downloading === "json" ? "Downloading..." : "JSON"}
+          {downloading === "json" ? (
+            <LoadingSpinner label="Downloading JSON resume..." size="sm" />
+          ) : (
+            "JSON"
+          )}
         </button>
         <span className="text-ed-text-muted">•</span>
         <button
           onClick={() => handleDownload("pdf")}
           disabled={downloading === "pdf"}
-          className="text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors"
+          type="button"
+          className={cn(
+            "text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
-          {downloading === "pdf" ? "Downloading..." : "PDF"}
+          {downloading === "pdf" ? (
+            <LoadingSpinner label="Downloading PDF resume..." size="sm" />
+          ) : (
+            "PDF"
+          )}
         </button>
       </span>
     );
@@ -94,20 +113,40 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("json")}
           disabled={downloading === "json"}
-          className="text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors disabled:opacity-50"
+          type="button"
+          className={cn(
+            "text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
-          {downloading === "json"
-            ? "Downloading JSON..."
-            : "Download Resume (JSON)"}
+          {downloading === "json" ? (
+            <LoadingSpinner
+              label="Downloading JSON resume..."
+              size="sm"
+              showLabel
+            />
+          ) : (
+            "Download Resume (JSON)"
+          )}
         </button>
         <button
           onClick={() => handleDownload("pdf")}
           disabled={downloading === "pdf"}
-          className="text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors disabled:opacity-50"
+          type="button"
+          className={cn(
+            "text-left text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none disabled:opacity-50",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
-          {downloading === "pdf"
-            ? "Downloading PDF..."
-            : "Download Resume (PDF)"}
+          {downloading === "pdf" ? (
+            <LoadingSpinner
+              label="Downloading PDF resume..."
+              size="sm"
+              showLabel
+            />
+          ) : (
+            "Download Resume (PDF)"
+          )}
         </button>
 
         {showStats && <ResumeStats />}
@@ -122,17 +161,42 @@ export default function ResumeDownload({
         <button
           onClick={() => handleDownload("json")}
           disabled={downloading === "json"}
-          className="flex-1 rounded-lg bg-ed-gradient-button px-4 py-2.5 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-50 disabled:hover:translate-y-0"
+          type="button"
+          className={cn(
+            "flex-1 rounded-lg bg-ed-gradient-button px-4 py-2.5 font-ed-heading text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none disabled:opacity-50 disabled:hover:translate-y-0",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
-          {downloading === "json" ? "Downloading..." : "Download JSON"}
+          {downloading === "json" ? (
+            <LoadingSpinner
+              label="Downloading JSON resume..."
+              size="sm"
+              tone="light"
+              showLabel
+            />
+          ) : (
+            "Download JSON"
+          )}
         </button>
 
         <button
           onClick={() => handleDownload("pdf")}
           disabled={downloading === "pdf"}
-          className="flex-1 rounded-lg border border-ed-border bg-ed-paper px-4 py-2.5 font-ed-heading text-sm font-semibold text-ed-text transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-50 disabled:hover:translate-y-0"
+          type="button"
+          className={cn(
+            "flex-1 rounded-lg border border-ed-border bg-ed-paper px-4 py-2.5 font-ed-heading text-sm font-semibold text-ed-text transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none disabled:opacity-50 disabled:hover:translate-y-0",
+            FOCUS_VISIBLE_CLASSES,
+          )}
         >
-          {downloading === "pdf" ? "Downloading..." : "Download PDF"}
+          {downloading === "pdf" ? (
+            <LoadingSpinner
+              label="Downloading PDF resume..."
+              size="sm"
+              showLabel
+            />
+          ) : (
+            "Download PDF"
+          )}
         </button>
       </div>
 

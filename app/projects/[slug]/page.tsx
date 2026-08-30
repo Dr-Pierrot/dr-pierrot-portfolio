@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import ContactMe from "@/components/ContactMe";
 import CaseStudyCover from "@/components/CaseStudyCover";
 import ProjectGallery from "@/components/ProjectGallery";
+import { MAIN_CONTENT_ID } from "@/lib/accessibility";
 
 type TagVariant = "neutral" | "accent" | "accent2" | "accent3";
 
@@ -111,7 +112,7 @@ export default async function ProjectPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <main>
+      <main id={MAIN_CONTENT_ID} tabIndex={-1}>
         {/* ---------------- HERO ---------------- */}
         <section className="relative overflow-hidden bg-ed-paper-alt pt-[clamp(7rem,14vw,10.5rem)] pb-[clamp(3.5rem,7vw,5.5rem)]">
           <span

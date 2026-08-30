@@ -8,6 +8,8 @@
 "use client";
 
 import { trackResumeDownload } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
+import { FOCUS_VISIBLE_CLASSES } from "@/lib/accessibility";
 
 interface ResumeLinkProps {
   format?: "json" | "pdf";
@@ -33,7 +35,12 @@ export default function ResumeLink({
   return (
     <button
       onClick={handleClick}
-      className={`inline-flex items-center gap-2 text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors ${className}`}
+      type="button"
+      className={cn(
+        "inline-flex items-center gap-2 text-ed-accent-text hover:text-ed-accent underline decoration-dotted underline-offset-2 transition-colors focus:outline-none",
+        FOCUS_VISIBLE_CLASSES,
+        className,
+      )}
     >
       {icon && <span>{icon}</span>}
       {children || defaultText}
