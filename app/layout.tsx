@@ -8,6 +8,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SkipToContent from "@/components/SkipToContent";
 import PerformanceOptimizer from "@/components/PerformanceOptimizer";
 import PerformanceDashboard from "@/components/PerformanceDashboard";
+import PerformanceMonitor from "@/components/PerformanceMonitor";
 import ServiceWorkerRegister from "@/lib/serviceWorker";
 import RootLoading from "./loading";
 
@@ -158,8 +159,15 @@ export default function RootLayout({
         <SkipToContent />
         <Suspense fallback={<RootLoading />}>{children}</Suspense>
         
-        {/* Performance Dashboard (Development Only) */}
+        {/* Performance Optimization Components */}
+        <PerformanceOptimizer 
+          criticalImages={['/profile.jpg', '/hero-bg.webp']}
+          enableMonitoring={true}
+        />
         <PerformanceDashboard />
+        
+        {/* Performance Monitor (Development Only) */}
+        <PerformanceMonitor />
       </body>
     </html>
   );

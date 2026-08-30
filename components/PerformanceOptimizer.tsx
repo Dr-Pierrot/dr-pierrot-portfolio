@@ -33,11 +33,11 @@ export default function PerformanceOptimizer({
       preloadImage(src);
     });
 
-    // Preload critical fonts
+    // Preload critical fonts with Google Fonts URLs
     const fontPreloads = [
-      '/fonts/inter-var.woff2',
-      '/fonts/space-grotesk-var.woff2',
-      '/fonts/jetbrains-mono-var.woff2',
+      'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
+      'https://fonts.gstatic.com/s/spacegrotesk/v16/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C4sVBs3zzPw.woff2',
+      'https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2',
     ];
 
     fontPreloads.forEach(font => {
