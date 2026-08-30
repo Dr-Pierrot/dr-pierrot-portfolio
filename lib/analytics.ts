@@ -277,7 +277,7 @@ export function optOutOfAnalytics(): void {
   if (analyticsConfig.gaMeasurementId) {
     // Set the GA opt-out flag using proper typing
     const optOutProperty = `ga-disable-${analyticsConfig.gaMeasurementId}`;
-    (window as any)[optOutProperty] = true;
+    (window as unknown as Window & Record<string, boolean>)[optOutProperty] = true;
 
     // Clear existing GA cookies
     document.cookie = "_ga=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

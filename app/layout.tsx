@@ -6,21 +6,30 @@ import { cn } from "@/lib/utils";
 import { getOrganizationSchema, getWebsiteSchema } from "@/lib/seo";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SkipToContent from "@/components/SkipToContent";
+import PerformanceOptimizer from "@/components/PerformanceOptimizer";
+import PerformanceDashboard from "@/components/PerformanceDashboard";
+import ServiceWorkerRegister from "@/lib/serviceWorker";
 import RootLoading from "./loading";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: 'swap',
+  preload: true,
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
+  display: 'swap',
+  preload: true,
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
+  display: 'swap',
+  preload: false, // Only preload if needed
 });
 
 const SITE_URL = "https://dr-pierrot-portfolio.vercel.app";
@@ -120,6 +129,15 @@ export default function RootLayout({
       )}
     >
       <body>
+        {/* Service Worker Registration */}
+        <ServiceWorkerRegister />
+        
+        {/* Performance Optimization */}
+        <PerformanceOptimizer 
+          criticalImages={['/profile.jpg', '/hero-bg.webp']}
+          enableMonitoring={process.env.NODE_ENV === 'development'}
+        />
+        
         {/* Google Analytics */}
         <GoogleAnalytics 
           trackPageViews={true}
@@ -139,6 +157,9 @@ export default function RootLayout({
         />
         <SkipToContent />
         <Suspense fallback={<RootLoading />}>{children}</Suspense>
+        
+        {/* Performance Dashboard (Development Only) */}
+        <PerformanceDashboard />
       </body>
     </html>
   );
