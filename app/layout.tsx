@@ -10,6 +10,9 @@ import PerformanceOptimizer from "@/components/PerformanceOptimizer";
 import PerformanceDashboard from "@/components/PerformanceDashboard";
 import PerformanceMonitor from "@/components/PerformanceMonitor";
 import ServiceWorkerRegister from "@/lib/serviceWorker";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import ScrollProgress from "@/components/ScrollProgress";
+import BackToTop from "@/components/BackToTop";
 import RootLoading from "./loading";
 
 const inter = Inter({
@@ -156,8 +159,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        <SkipToContent />
-        <Suspense fallback={<RootLoading />}>{children}</Suspense>
+        
+        {/* Theme Provider with New Features */}
+        <ThemeProvider>
+          <SkipToContent />
+          <ScrollProgress showOnPages={['/blog/', '/projects/']} />
+          <Suspense fallback={<RootLoading />}>{children}</Suspense>
+          <BackToTop showAfter={400} />
+        </ThemeProvider>
         
         {/* Performance Optimization Components */}
         <PerformanceOptimizer 
